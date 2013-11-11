@@ -1,0 +1,22 @@
+{
+  "name": "Terra Incognita",
+  "description": "Monitors and maps your Internet browsing",
+  "version": "2.0",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "webNavigation",
+    "history",
+    "http://*/*", 
+    "https://*/*"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_title": "Terra Incognita"
+  },
+  
+  "manifest_version": 2
+}
