@@ -12,21 +12,21 @@
 });
 */
 var urlMap = new Array();
-var serverURL = "http://127.0.0.1:5000/";
-
+var serverURL = "http://new-host-2.home:5000/";
+var daysHistory = 30;
 /*
   Stuff to do right when app is installed:
-  - Grab 30 days of browser history & send to server
-  - mark the data as "not using the extension"
+  - Get 30 days of browser history & send to server
+  - mark the data as history i.e. "not using the extension"
   - save metadata and URLs
 */
 chrome.runtime.onInstalled.addListener(function(details) {
   console.log("on installed");
   var today = new Date();
-  var thirtyDaysAgo = today.getTime() - 30*24*60*60*1000;
-  chrome.history.search({text: '', startTime:thirtyDaysAgo, maxResults:1000000000}, function(results) 
+  var startCollecting = today.getTime() - daysHistory*24*60*60*1000;
+  chrome.history.search({text: '', startTime:startCollecting, maxResults:1000000000}, function(results) 
     { 
-      console.log("logging 30 days browsing history"); 
+      console.log("logging " + daysHistory + " days browsing history"); 
       console.log(results.length + " results");
       postData('history/', 'history', results);
     });
@@ -56,15 +56,14 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
         
     if (changeInfo.status == "loading" && changeInfo.url != "undefined"){
             urlMap[tabId] = true;
-            console.log("the tab just changed url, wait til complete");
     }
     else if (urlMap[tabId] && changeInfo.status == "complete"){
             urlMap[tabId] = false;
-            console.log("new tab url is " + tab.url)
+            
             //retrieve latest URL from history so we get the metadata
             chrome.history.search({text: '', maxResults:1}, function(results) 
             { 
-              console.log("history url is " + results[0].url)
+              
               if (tab.url == results[0].url){
                 postData('monitor/', 'logURL', results[0]);
               }
@@ -76,7 +75,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   Handles post requests to server
 */
 function postData(routeName, paramName, data){
-  console.log("Route: " + route + " -- " + data);
+  console.log("Route: " + routeName);
   var json = JSON.stringify(data);
   var http = new XMLHttpRequest();
   var params = paramName+"="+encodeURIComponent(json);
