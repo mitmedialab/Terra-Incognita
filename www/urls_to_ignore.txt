@@ -1,0 +1,9 @@
+mail.google.com
+drive.google.com
+.png
+.jpg
+.jpeg
+.pdf
+www.google.com/calendar
+docs.google.com
+www.twitter.com

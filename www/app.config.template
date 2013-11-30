@@ -4,3 +4,6 @@ user:
 pass: 
 name: terra_incognita
 collection: history_items
+
+[geoparser]
+geoserver_url:http://localhost:8080/parse

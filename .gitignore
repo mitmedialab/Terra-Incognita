@@ -2,3 +2,10 @@
 www/app.config
 
 *.log
+
+*.zip
+
+
+*.pyc
+
+www/csd_metadata.txt

@@ -40,15 +40,18 @@ def map():
 @app.route('/history/', methods=['POST'])
 def processHistory():
 	log.info("Processing browser history")
-	history30days = json.loads(request.form['history'])
-	docIDs = db_collection.insert(history30days)
+	historyItems = json.loads(request.form['history'])
+	docIDs = db_collection.insert(historyItems)
+	#batchExtractor = BatchExtractor(docIDs, db_collection)
+	#batchExtractor.run()
 	# TODO
+	# batchExtractor = BatchExtractor(docIDs, db_collection)
 	# check if this user already has history doc, if so, then ignore this request
 	# save 30 days of history to mongoDB as single doc
 	# mark that info as history (documentType = history) so can compare to after using extension
 	# start the geoparsing, text processing queue for that info
 	# send back status "Working on your map"
-	return 'Got your message dude - inserted ' + str(len(docIDs)) + ' history items'
+	return 'Got your message dude - inserted and extracted' + str(len(docIDs)) + ' history items'
 
 # Receives a single URL object from user, geoparses and stores in DB
 @app.route('/monitor/', methods=['POST'])
