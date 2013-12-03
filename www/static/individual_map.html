@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+
+<style>
+
+body{
+	margin:0;
+	padding:0;
+
+}
+h1{
+	font-size:28.5px; 
+}
+.news-source{
+	color:#555;
+	font-weight:normal;
+	margin: 1px;
+	padding: 20px;
+	background: rgba(0,0,0,0.2);
+	
+}
+#left-info{
+	top: 40px;
+	position: absolute;
+	width:335px;
+	background-color: rgba(255,255,255,0.8);
+}
+#tooltip{
+	position: absolute;
+	display: none;
+	font-family: "Lucida Grande", sans-serif;
+	font-size: 10px;
+	background:rgba(20,20,20,0.5);
+	padding:1px;
+	color:#fff;
+	border:1px solid #000;
+	min-width: 100px;
+	text-align: center;
+}
+form{
+	position: absolute;
+}
+
+#key{
+	width: 125px;
+	position: absolute;
+	bottom: 10px;
+	right: 20px;
+}
+
+.shift-text{
+	display: none;
+}
+</style>
+<script src="js/d3.v3.min.js"></script>
+<script src="js/d3.geo.projection.v0.min.js"></script>
+<!--<script src="http://d3js.org/queue.v1.min.js"></script>-->
+<script src="js/queue.min.js"></script>
+<script src="js/topojson.v1.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/jquery-1.8.3.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<script>
+	
+	
+	function getQueryVariable(variable) {
+	    var query = window.location.search.substring(1);
+	    var vars = query.split('&');
+	    for (var i = 0; i < vars.length; i++) {
+	        var pair = vars[i].split('=');
+	        if (decodeURIComponent(pair[0]) == variable) {
+	            return decodeURIComponent(pair[1]);
+	        }
+	    }
+	    return null;
+	}
+	String.prototype.toTitleCase = function () {
+	    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+	};
+
+	$(document).ready(function() {
+		window.showingTerraIncognita = false;
+		$('#show-terra-incognita').click(function(){
+			
+			if (!window.showingTerraIncognita){
+				$( ".terra-incognita" ).css("fill", "black");
+				$( ".terra-incognita" ).css("stroke", "black");
+				$( ".terra-cognita" ).hide();
+				window.showingTerraIncognita = true;
+			} else {
+				$( ".terra-cognita" ).show();
+				$( ".terra-incognita" ).css("fill", "#fff");
+				$( ".terra-incognita" ).css("stroke", "#fff");
+				window.showingTerraIncognita = false;
+				
+			}
+			return false;
+		});
+    	if (getQueryVariable("i") != 0 )
+    		$('#myModal').modal();
+		if (getQueryVariable("sourceWeek")){
+			window.MAP_PROPERTY = getQueryVariable("sourceWeek");
+		} else {
+			window.MAP_PROPERTY = "csd_metadata.json";
+		}
+		window.SOURCE = window.MAP_PROPERTY.substring(0, window.MAP_PROPERTY.length - 6);
+		
+		
+		switch(window.SOURCE){
+			case "bostonglobe":
+				window.SOURCE_PROPER = "The Boston Globe";
+				break;
+			case "bbc":
+				window.SOURCE_PROPER = "BBC";
+				break;
+			case "nyt":
+				window.SOURCE_PROPER = "The New York Times";
+				break;
+			case "aljazeera":
+				window.SOURCE_PROPER = "Al Jazeera English";
+				break;
+		}
+		
+		$('#source-proper-name').text(window.SOURCE_PROPER);
+		
+		
+		
+
+		console.log(window.SOURCE)
+		
+
+	});
+</script>
+<div class="navbar navbar-fixed-top navbar-inverse">
+  <div class="navbar-inner">
+    <a class="brand" href="#" style="color:white;margin-left:0px">CSD Map
+	
+  </div>
+</div>
+<div id="left-info">
+	
+	<h1 class="news-source"><span id="source-proper-name">Your Media Geography</span></h1>
+	<h4 class="news-source">
+		Web pages: <span id="total_docs"></span><br/>
+		Extracted pages: <span id="total_extracted_docs"></span><br/>
+		Geoparsed pages: <span id="total_geoparsed_docs"></span><br/>
+	</h4>
+	<h4 class="news-source">
+		<strong>Top countries:</strong> <span id="top_countries"></span><br/>
+		
+		
+	</h4>
+	<h4 class="news-source">
+		
+		<strong>Top states:</strong> <span id="top_states"></span><br/>
+		
+	</h4>
+	<h4 class="news-source">
+		
+		<a href="#" id="show-terra-incognita"><strong>Toggle Terra Incognita</strong></a>
+	</h4>
+
+	<div id="tooltip"></div>
+	
+	
+</div>
+
+<div id="key"><img src="images/key.png"></div>
+<div id="tooltip"></div>
+
+
+<script>
+
+var width = $(window).width(),
+    height = 790;
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var rateById = d3.map();
+
+
+
+queue()
+    .defer(d3.json, "data/WorldAndStates.json")
+    .defer(d3.json, "data/csd_metadata.json")
+    .defer(d3.csv, "data/state_and_country_codes.csv")
+    .await(ready);
+function ready(error, shapesData, propertiesData, geoCodes) {
+	$('#total_docs').text(propertiesData.total_docs);
+	$('#total_extracted_docs').text(propertiesData.total_extracted_docs);
+	$('#total_geoparsed_docs').text(propertiesData.total_geoparsed_docs);
+
+
+	var shapeClass = function(d) { 
+    	if (d.properties.attention_value && d.properties.attention_value > 0){
+    		return 'terra-cognita';	
+	    }
+	    else
+	    	return 'terra-incognita';
+    };
+	var fillShape = function(d) { 
+    	if (d.properties.attention_value){
+    		var val = d.properties.attention_value;
+    		//bad hack for returning extra bright color for outlying upper values
+    		/*if (val > mean * 10)
+    			return countryColors[countryColors.length -1];
+    		else*/
+    			var result = quantize(val);
+	    		return result; 
+	    }
+	    else
+	    	return "rgb(255,255,255)"; 
+    };
+	var countryColors = new Array(	
+									"rgb(254, 240, 217)",
+									"rgb(253, 212, 158)",
+									"rgb(253, 187, 132)",
+									"rgb(252, 141, 89)",
+									"rgb(251, 106, 74)",
+									"rgb(179, 0, 0)");
+									
+	
+
+  	var projection = d3.geo.winkel3()
+	    .scale(240)
+	    .translate([width / 2, height / 2])
+	    .precision(.1)
+		.rotate([20, 0])
+		;
+  		/*d3.geo.ginzburg8()
+    	.scale(240)
+    	.translate([width / 2, height / 2])
+    	.precision(.1);*/
+    var hoverOn = function(d){
+	    	if (d.properties.attention_value){ 
+	    		var mousePos = d3.mouse(this);
+	    		$('#tooltip').css("left", mousePos[0]).css("top", mousePos[1])
+	    		$('#tooltip').text(d.properties.metadata.name.toTitleCase() + " - " + d.properties.attention_value);
+	    		$('#tooltip').show();
+	    	}  		
+	};
+	var hoverOff = function(d){	
+	    $('#tooltip').hide();
+	};
+
+	var path = d3.geo.path().projection(projection);
+	var graticule = d3.geo.graticule();
+
+	svg.append("defs").append("path")
+	    .datum({type: "Sphere"})
+	    .attr("id", "sphere")
+	    .attr("d", path);
+
+	svg.append("use")
+	    .attr("class", "stroke")
+	    .style("fill","none")
+	    .style("stroke","#000")
+	    .style("stroke-width","3px")
+	    .attr("xlink:href", "#sphere");
+
+	/*svg.append("path")
+    .datum(graticule)
+    .style("fill","none")
+	.style("stroke","#777")
+	.style("stroke-width",".5px")
+	.style("stroke-opacity",".5")
+    .attr("d", path);*/
+
+
+	 
+
+    var countryData = topojson.feature(shapesData, shapesData.objects.countries).features;
+	var stateData = topojson.feature(shapesData, shapesData.objects.states).features;
+
+	//make a lookup table for state and country codes
+	var stateCodes = {};
+	var countryCodes = {};
+	
+	var allValues = [];
+
+	geoCodes.forEach(function(e, i, a){
+		if (e.state_code_letter != null && e.state_code_letter.length ==2){
+			stateCodes[e.state_code_letter] = e;
+		} else {
+			countryCodes[e.country_code_letter] = e;
+		}
+	});
+
+
+	Object.keys(propertiesData["primaryStates"]).forEach(function(e, i, a){
+		var stateAbbreviation = e;
+		var stateMetadata = stateCodes[stateAbbreviation];
+		var stateNumber = stateMetadata.state_code_number;
+		stateData.forEach(function(stateElement, i, a){
+			if (stateNumber == stateElement.id){
+				stateElement.properties["attention_value"] = propertiesData["primaryStates"][e];
+				stateElement.properties["metadata"] = stateMetadata;
+				allValues.push({"name" : stateMetadata.name, "attention_value" : propertiesData["primaryStates"][e], "is_country":0});
+			}
+   	 	});
+	});
+	Object.keys(propertiesData["primaryCountries"]).forEach(function(e, i, a){
+		var countryAbbreviation = e;
+		var countryMetadata = countryCodes[countryAbbreviation];
+		var countryNumber = countryMetadata.country_code_number;
+		countryData.forEach(function(countryElement, i, a){
+			if (countryNumber == countryElement.id){
+				countryElement.properties["attention_value"] = propertiesData["primaryCountries"][e];
+				countryElement.properties["metadata"] = countryMetadata;
+				allValues.push({"name" : countryMetadata.name, "attention_value" :propertiesData["primaryCountries"][e], "is_country":1});
+				
+			}
+   	 	});
+	});
+	
+
+	
+	var mean = d3.mean(allValues, function(d) { return d['attention_value']; });
+	var max = d3.max(allValues, function(d) { return d['attention_value']; });
+	
+	allValues.sort(function (a, b) {
+	    if (a.attention_value < b.attention_value)
+	      return 1;
+	    if (a.attention_value > b.attention_value)
+	      return -1;
+	    return 0;
+	});
+
+	var topCountries = 0, topStates = 0;
+	for (var i=0;i<allValues.length;i++){
+		var e = allValues[i];
+		if (e.is_country && topCountries < 3){
+			$('#top_countries').append( "<br/>" + e.name + " (" + e.attention_value + ")" );
+			topCountries++;
+		}
+		else if (!e.is_country && topStates < 3){
+			$('#top_states').append( "<br/>" + e.name + " (" + e.attention_value + ")" );
+			topStates++;
+		}
+		if (topStates == 3 && topCountries == 3)
+			break;
+	}
+
+	var quantize = d3.scale.quantize()
+		//.domain([0, 30])
+	    .domain([0, mean])
+	    .range(d3.range(countryColors.length).map(function(i){ 
+	    	return countryColors[i]; 
+	    }));
+	svg.selectAll(".country")
+		    .data(countryData)
+		  	.enter().append("path")
+		    .attr("id", function(d) { 
+		    	return "country-" + d.id; 
+		    })
+		    .style("stroke","#fff")
+		    .on("mouseover", hoverOn)
+	  		.on("mouseout", hoverOff)
+		    .style("stroke-width","0.5px")
+		    .attr("fill", fillShape)
+			.attr("class", shapeClass)
+		    .attr("d", path);
+	
+                    
+	svg.selectAll(".state")
+	    .data(stateData)
+	    .attr("id", function(d) { 
+		    	return "state-" + d.id; 
+		    })
+	  	.enter().append("path")
+	  	.on("mouseover", hoverOn)
+	  	.on("mouseout", hoverOff)
+	    .style("stroke","#fff")
+	    .style("stroke-width","0.5px")
+	    .attr("fill", fillShape)
+	    .attr("class", shapeClass)
+	    .attr("d", path);
+
+
+    svg.select("#country-840").attr("fill", "none");
+}
+
+</script>

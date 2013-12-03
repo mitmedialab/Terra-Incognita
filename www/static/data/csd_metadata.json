@@ -1,0 +1,2604 @@
+{
+    "geocoords": [
+        {
+            "count": 2,
+            "lat": 0.43902,
+            "lon": 33.20317,
+            "name": "Jinja"
+        },
+        {
+            "count": 1,
+            "lat": 37.37678,
+            "lon": -81.82678,
+            "name": "Rockridge"
+        },
+        {
+            "count": 1,
+            "lat": -33.45694,
+            "lon": -70.64827,
+            "name": "Santiago"
+        },
+        {
+            "count": 3,
+            "lat": -16.05832,
+            "lon": 123.4018,
+            "name": "Longitude Island"
+        },
+        {
+            "count": 4,
+            "lat": -27.63917,
+            "lon": 153.10944,
+            "name": "Logan City"
+        },
+        {
+            "count": 17,
+            "lat": 52.33333,
+            "lon": 0.08333,
+            "name": "Cambridgeshire"
+        },
+        {
+            "count": 95,
+            "lat": 42.37649,
+            "lon": -71.23561,
+            "name": "Waltham"
+        },
+        {
+            "count": 22,
+            "lat": 48.8534,
+            "lon": 2.3486,
+            "name": "Paris"
+        },
+        {
+            "count": 7,
+            "lat": 41.45704,
+            "lon": -71.6634,
+            "name": "Carolina"
+        },
+        {
+            "count": 2,
+            "lat": 26.40008,
+            "lon": -80.07226,
+            "name": "Caribbean Key"
+        },
+        {
+            "count": 25,
+            "lat": 35.50472,
+            "lon": 11.06222,
+            "name": "Mahdia"
+        },
+        {
+            "count": 1,
+            "lat": 37.66243,
+            "lon": -121.87468,
+            "name": "Pleasanton"
+        },
+        {
+            "count": 1,
+            "lat": 37.55376,
+            "lon": -77.46026,
+            "name": "Richmond"
+        },
+        {
+            "count": 3,
+            "lat": 45.60798,
+            "lon": 9.31035,
+            "name": "Villasanta"
+        },
+        {
+            "count": 26,
+            "lat": 51.51279,
+            "lon": -0.09184,
+            "name": "City of London"
+        },
+        {
+            "count": 155,
+            "lat": 42.35843,
+            "lon": -71.05977,
+            "name": "Boston"
+        },
+        {
+            "count": 37,
+            "lat": 39.88645,
+            "lon": -83.44825,
+            "name": "London"
+        },
+        {
+            "count": 10,
+            "lat": 34.54426,
+            "lon": -91.96903,
+            "name": "England"
+        },
+        {
+            "count": 1,
+            "lat": 45.93655,
+            "lon": -60.29857,
+            "name": "Huntington"
+        },
+        {
+            "count": 1,
+            "lat": -17.16338,
+            "lon": 145.87539,
+            "name": "Mount Sophia"
+        },
+        {
+            "count": 8,
+            "lat": 33.749,
+            "lon": -84.38798,
+            "name": "Atlanta"
+        },
+        {
+            "count": 1,
+            "lat": 38.40214,
+            "lon": -122.82388,
+            "name": "Sebastopol"
+        },
+        {
+            "count": 11,
+            "lat": 50.95194,
+            "lon": 1.85635,
+            "name": "Calais"
+        },
+        {
+            "count": 2,
+            "lat": -32.95,
+            "lon": 151.66667,
+            "name": "Charlestown"
+        },
+        {
+            "count": 28,
+            "lat": 37.98869,
+            "lon": -84.47772,
+            "name": "Lexington"
+        },
+        {
+            "count": 1,
+            "lat": 40.95977,
+            "lon": -74.07441,
+            "name": "Bergen County"
+        },
+        {
+            "count": 4,
+            "lat": 42.29649,
+            "lon": -71.29256,
+            "name": "Wellesley"
+        },
+        {
+            "count": 1,
+            "lat": 38.89428,
+            "lon": -77.4311,
+            "name": "Chantilly"
+        },
+        {
+            "count": 60,
+            "lat": 41.85003,
+            "lon": -87.65005,
+            "name": "Chicago"
+        },
+        {
+            "count": 1,
+            "lat": 41.21335,
+            "lon": -98.62285,
+            "name": "Czechoslovakia Cemetery"
+        },
+        {
+            "count": 9,
+            "lat": 7.89421,
+            "lon": 1.86057,
+            "name": "Amazon"
+        },
+        {
+            "count": 3,
+            "lat": 60.17556,
+            "lon": 24.93417,
+            "name": "Helsinki"
+        },
+        {
+            "count": 1,
+            "lat": 53.06667,
+            "lon": -0.81667,
+            "name": "Newark on Trent"
+        },
+        {
+            "count": 3,
+            "lat": 41.76371,
+            "lon": -72.68509,
+            "name": "Hartford"
+        },
+        {
+            "count": 12,
+            "lat": 40.6501,
+            "lon": -73.94958,
+            "name": "Brooklyn"
+        },
+        {
+            "count": 5,
+            "lat": 40.71427,
+            "lon": -74.00597,
+            "name": "New York City"
+        },
+        {
+            "count": 34,
+            "lat": 41.4036,
+            "lon": -95.01388,
+            "name": "Atlantic"
+        },
+        {
+            "count": 2,
+            "lat": 37.98888,
+            "lon": 23.73604,
+            "name": "Dimos Athens"
+        },
+        {
+            "count": 3,
+            "lat": 30.22409,
+            "lon": -92.01984,
+            "name": "Lafayette"
+        },
+        {
+            "count": 1,
+            "lat": 38.98067,
+            "lon": -77.10026,
+            "name": "Bethesda"
+        },
+        {
+            "count": 2,
+            "lat": 40.82732,
+            "lon": -73.92357,
+            "name": "Bronx"
+        },
+        {
+            "count": 1,
+            "lat": 52.38084,
+            "lon": 4.63683,
+            "name": "Haarlem"
+        },
+        {
+            "count": 13,
+            "lat": 47.60621,
+            "lon": -122.33207,
+            "name": "Seattle"
+        },
+        {
+            "count": 9,
+            "lat": 43.70011,
+            "lon": -79.4163,
+            "name": "Toronto"
+        },
+        {
+            "count": 14,
+            "lat": 39.95234,
+            "lon": -75.16379,
+            "name": "Philadelphia"
+        },
+        {
+            "count": 52,
+            "lat": 51.50853,
+            "lon": -0.12574,
+            "name": "London"
+        },
+        {
+            "count": 7,
+            "lat": 40.44062,
+            "lon": -79.99589,
+            "name": "Pittsburgh"
+        },
+        {
+            "count": 1,
+            "lat": 37.22793,
+            "lon": -77.40193,
+            "name": "Petersburg"
+        },
+        {
+            "count": 4,
+            "lat": 40.78343,
+            "lon": -73.96625,
+            "name": "Manhattan"
+        },
+        {
+            "count": 1,
+            "lat": 45.63873,
+            "lon": -122.66149,
+            "name": "Vancouver"
+        },
+        {
+            "count": 15,
+            "lat": 46.32021,
+            "lon": -112.10722,
+            "name": "Amazon"
+        },
+        {
+            "count": 5,
+            "lat": 34.05223,
+            "lon": -118.24368,
+            "name": "Los Angeles"
+        },
+        {
+            "count": 1,
+            "lat": -12.04318,
+            "lon": -77.02824,
+            "name": "Lima"
+        },
+        {
+            "count": 2,
+            "lat": 18.11667,
+            "lon": 121.4,
+            "name": "Flora"
+        },
+        {
+            "count": 16,
+            "lat": 37.87159,
+            "lon": -122.27275,
+            "name": "Berkeley"
+        },
+        {
+            "count": 3,
+            "lat": 29.76328,
+            "lon": -95.36327,
+            "name": "Houston"
+        },
+        {
+            "count": 5,
+            "lat": 21.30694,
+            "lon": -157.85833,
+            "name": "Honolulu"
+        },
+        {
+            "count": 1,
+            "lat": 10.39972,
+            "lon": -75.51444,
+            "name": "Cartagena"
+        },
+        {
+            "count": 6,
+            "lat": 44.97997,
+            "lon": -93.26384,
+            "name": "Minneapolis"
+        },
+        {
+            "count": 1,
+            "lat": 46.05362,
+            "lon": -66.93588,
+            "name": "Zealand"
+        },
+        {
+            "count": 2,
+            "lat": 45.52345,
+            "lon": -122.67621,
+            "name": "Portland"
+        },
+        {
+            "count": 5,
+            "lat": 39.76838,
+            "lon": -86.15804,
+            "name": "Indianapolis"
+        },
+        {
+            "count": 1,
+            "lat": 40.77263,
+            "lon": -124.18395,
+            "name": "Bayview"
+        },
+        {
+            "count": 1,
+            "lat": 40.71649,
+            "lon": -73.99625,
+            "name": "Chinatown"
+        },
+        {
+            "count": 4,
+            "lat": 11.25,
+            "lon": 125.0,
+            "name": "Tacloban City"
+        },
+        {
+            "count": 2,
+            "lat": 11.3697,
+            "lon": 124.4873,
+            "name": "Leyte"
+        },
+        {
+            "count": 1,
+            "lat": 52.22977,
+            "lon": 21.01178,
+            "name": "Warsaw"
+        },
+        {
+            "count": 1,
+            "lat": 33.96095,
+            "lon": -83.37794,
+            "name": "Athens"
+        },
+        {
+            "count": 6,
+            "lat": 38.482,
+            "lon": -90.74152,
+            "name": "Pacific"
+        },
+        {
+            "count": 1,
+            "lat": 14.6042,
+            "lon": 120.9822,
+            "name": "Manila"
+        },
+        {
+            "count": 1,
+            "lat": 21.0245,
+            "lon": 105.84117,
+            "name": "Hanoi"
+        },
+        {
+            "count": 5,
+            "lat": 42.97839,
+            "lon": -78.79976,
+            "name": "Amherst"
+        },
+        {
+            "count": 17,
+            "lat": 37.21533,
+            "lon": -93.29824,
+            "name": "Springfield"
+        },
+        {
+            "count": 1,
+            "lat": 32.81874,
+            "lon": -85.17939,
+            "name": "Valley"
+        },
+        {
+            "count": 1,
+            "lat": 40.09312,
+            "lon": -83.01796,
+            "name": "Worthington"
+        },
+        {
+            "count": 2,
+            "lat": 43.83333,
+            "lon": 11.33333,
+            "name": "Provincia di Firenze"
+        },
+        {
+            "count": 1,
+            "lat": 57.79,
+            "lon": -152.40722,
+            "name": "Kodiak"
+        },
+        {
+            "count": 1,
+            "lat": -26.20227,
+            "lon": 28.04363,
+            "name": "Johannesburg"
+        },
+        {
+            "count": 3,
+            "lat": 30.26715,
+            "lon": -97.74306,
+            "name": "Austin"
+        },
+        {
+            "count": 1,
+            "lat": 32.22174,
+            "lon": -110.92648,
+            "name": "Tucson"
+        },
+        {
+            "count": 4,
+            "lat": 44.46867,
+            "lon": -71.18508,
+            "name": "Berlin"
+        },
+        {
+            "count": 1,
+            "lat": 40.74399,
+            "lon": -74.03236,
+            "name": "Hoboken"
+        },
+        {
+            "count": 9,
+            "lat": 33.66094,
+            "lon": -95.55551,
+            "name": "Paris"
+        },
+        {
+            "count": 4,
+            "lat": 38.25424,
+            "lon": -85.75941,
+            "name": "Louisville"
+        },
+        {
+            "count": 1,
+            "lat": 32.76663,
+            "lon": -96.77787,
+            "name": "Dallas County"
+        },
+        {
+            "count": 1,
+            "lat": 42.39972,
+            "lon": 43.93667,
+            "name": "Java"
+        },
+        {
+            "count": 1,
+            "lat": -22.7538,
+            "lon": -41.8853,
+            "name": "Hotel Pousada La Mandragora"
+        },
+        {
+            "count": 13,
+            "lat": 52.2,
+            "lon": 0.11667,
+            "name": "Cambridge"
+        },
+        {
+            "count": 2,
+            "lat": 51.62079,
+            "lon": -3.94323,
+            "name": "Swansea"
+        },
+        {
+            "count": 3,
+            "lat": 37.97945,
+            "lon": 23.71622,
+            "name": "Athens"
+        },
+        {
+            "count": 2,
+            "lat": 37.49944,
+            "lon": 23.45361,
+            "name": "P\u00f3ros"
+        },
+        {
+            "count": 4,
+            "lat": 52.48142,
+            "lon": -1.89983,
+            "name": "Birmingham"
+        },
+        {
+            "count": 3,
+            "lat": 53.81667,
+            "lon": -3.05,
+            "name": "Blackpool"
+        },
+        {
+            "count": 8,
+            "lat": 53.48095,
+            "lon": -2.23743,
+            "name": "Manchester"
+        },
+        {
+            "count": 1,
+            "lat": 51.40033,
+            "lon": -1.32059,
+            "name": "Newbury"
+        },
+        {
+            "count": 1,
+            "lat": 51.58774,
+            "lon": -2.99835,
+            "name": "Newport"
+        },
+        {
+            "count": 8,
+            "lat": 50.82838,
+            "lon": -0.13947,
+            "name": "Brighton"
+        },
+        {
+            "count": 2,
+            "lat": 51.73575,
+            "lon": 0.46958,
+            "name": "Chelmsford"
+        },
+        {
+            "count": 1,
+            "lat": 50.41667,
+            "lon": -4.75,
+            "name": "Cornwall"
+        },
+        {
+            "count": 1,
+            "lat": 53.83333,
+            "lon": -2.5,
+            "name": "Lancashire"
+        },
+        {
+            "count": 2,
+            "lat": 50.87363,
+            "lon": 0.01133,
+            "name": "Lewes"
+        },
+        {
+            "count": 6,
+            "lat": 55.95206,
+            "lon": -3.19648,
+            "name": "Edinburgh"
+        },
+        {
+            "count": 2,
+            "lat": 50.75,
+            "lon": -3.75,
+            "name": "Devon"
+        },
+        {
+            "count": 2,
+            "lat": 52.66667,
+            "lon": 1.0,
+            "name": "Norfolk"
+        },
+        {
+            "count": 1,
+            "lat": 51.41334,
+            "lon": -0.36701,
+            "name": "Hampton"
+        },
+        {
+            "count": 1,
+            "lat": 52.61098,
+            "lon": -1.04501,
+            "name": "Stoughton"
+        },
+        {
+            "count": 1,
+            "lat": -32.04158,
+            "lon": -63.56978,
+            "name": "Oliva"
+        },
+        {
+            "count": 1,
+            "lat": 44.79719,
+            "lon": -106.95618,
+            "name": "Sheridan"
+        },
+        {
+            "count": 2,
+            "lat": -21.66667,
+            "lon": 143.46667,
+            "name": "Hera Bore"
+        },
+        {
+            "count": 1,
+            "lat": 47.68149,
+            "lon": -122.20874,
+            "name": "Kirkland"
+        },
+        {
+            "count": 2,
+            "lat": 43.67952,
+            "lon": -70.44422,
+            "name": "Gorham"
+        },
+        {
+            "count": 2,
+            "lat": 45.44045,
+            "lon": 12.32632,
+            "name": "Provincia di Venezia"
+        },
+        {
+            "count": 1,
+            "lat": 44.55023,
+            "lon": 4.41518,
+            "name": "Vog\u00fc\u00e9"
+        },
+        {
+            "count": 1,
+            "lat": 42.30008,
+            "lon": -83.01654,
+            "name": "Windsor"
+        },
+        {
+            "count": 1,
+            "lat": 51.01494,
+            "lon": -3.10293,
+            "name": "Taunton"
+        },
+        {
+            "count": 1,
+            "lat": 27.33643,
+            "lon": -82.53065,
+            "name": "Sarasota"
+        },
+        {
+            "count": 1,
+            "lat": 41.22232,
+            "lon": -73.0565,
+            "name": "Milford"
+        },
+        {
+            "count": 1,
+            "lat": 40.94046,
+            "lon": -72.68524,
+            "name": "Suffolk County"
+        },
+        {
+            "count": 1,
+            "lat": 36.16589,
+            "lon": -86.78444,
+            "name": "Nashville"
+        },
+        {
+            "count": 10,
+            "lat": 30.5927,
+            "lon": -94.83132,
+            "name": "Schwab City"
+        },
+        {
+            "count": 4,
+            "lat": 44.66978,
+            "lon": -70.5934,
+            "name": "Roxbury"
+        },
+        {
+            "count": 3,
+            "lat": 35.22709,
+            "lon": -80.84313,
+            "name": "Charlotte"
+        },
+        {
+            "count": 8,
+            "lat": 55.75222,
+            "lon": 37.61556,
+            "name": "Moscow"
+        },
+        {
+            "count": 1,
+            "lat": 28.76333,
+            "lon": -81.37224,
+            "name": "Heathrow"
+        },
+        {
+            "count": 1,
+            "lat": 40.8126,
+            "lon": -73.99903,
+            "name": "Fairview"
+        },
+        {
+            "count": 1,
+            "lat": 31.32712,
+            "lon": -89.29034,
+            "name": "Hattiesburg"
+        },
+        {
+            "count": 2,
+            "lat": 32.35265,
+            "lon": -90.87788,
+            "name": "Vicksburg"
+        },
+        {
+            "count": 2,
+            "lat": 30.36742,
+            "lon": -89.09282,
+            "name": "Gulfport"
+        },
+        {
+            "count": 2,
+            "lat": 30.39603,
+            "lon": -88.88531,
+            "name": "Biloxi"
+        },
+        {
+            "count": 1,
+            "lat": 34.68455,
+            "lon": -90.38288,
+            "name": "Tunica"
+        },
+        {
+            "count": 1,
+            "lat": 35.61266,
+            "lon": -77.36635,
+            "name": "Greenville"
+        },
+        {
+            "count": 1,
+            "lat": 31.56044,
+            "lon": -91.40317,
+            "name": "Natchez"
+        },
+        {
+            "count": 1,
+            "lat": 34.25761,
+            "lon": -88.70339,
+            "name": "Tupelo"
+        },
+        {
+            "count": 1,
+            "lat": 39.96118,
+            "lon": -82.99879,
+            "name": "Columbus"
+        },
+        {
+            "count": 1,
+            "lat": 32.62347,
+            "lon": -89.13812,
+            "name": "Neshoba"
+        },
+        {
+            "count": 1,
+            "lat": 30.4077,
+            "lon": -89.06976,
+            "name": "Gulfport-Biloxi Regional Airport"
+        },
+        {
+            "count": 4,
+            "lat": 32.99762,
+            "lon": -87.63001,
+            "name": "Moundville"
+        },
+        {
+            "count": 1,
+            "lat": 30.7638,
+            "lon": -88.07472,
+            "name": "Chickasaw"
+        },
+        {
+            "count": 1,
+            "lat": 35.74788,
+            "lon": -95.36969,
+            "name": "Muskogee"
+        },
+        {
+            "count": 4,
+            "lat": 34.73037,
+            "lon": -86.5861,
+            "name": "Huntsville"
+        },
+        {
+            "count": 4,
+            "lat": 32.78306,
+            "lon": -96.80667,
+            "name": "Dallas"
+        },
+        {
+            "count": 3,
+            "lat": 33.20984,
+            "lon": -87.56917,
+            "name": "Tuscaloosa"
+        },
+        {
+            "count": 1,
+            "lat": 39.84031,
+            "lon": -88.9548,
+            "name": "Decatur"
+        },
+        {
+            "count": 1,
+            "lat": 36.29606,
+            "lon": -119.14205,
+            "name": "Exeter"
+        },
+        {
+            "count": 1,
+            "lat": 36.8656,
+            "lon": -87.48862,
+            "name": "Hopkinsville"
+        },
+        {
+            "count": 7,
+            "lat": 33.52066,
+            "lon": -86.80249,
+            "name": "Birmingham"
+        },
+        {
+            "count": 1,
+            "lat": 36.57078,
+            "lon": -119.61208,
+            "name": "Selma"
+        },
+        {
+            "count": 9,
+            "lat": 34.02893,
+            "lon": -84.19858,
+            "name": "Johns Creek"
+        },
+        {
+            "count": 3,
+            "lat": 32.78031,
+            "lon": -90.39642,
+            "name": "Yazoo County"
+        },
+        {
+            "count": 2,
+            "lat": 36.04044,
+            "lon": -77.15635,
+            "name": "Cahaba"
+        },
+        {
+            "count": 14,
+            "lat": 23.7104,
+            "lon": 90.40744,
+            "name": "Dhaka"
+        },
+        {
+            "count": 2,
+            "lat": 25.01039,
+            "lon": 89.39468,
+            "name": "Mirpur"
+        },
+        {
+            "count": 12,
+            "lat": 23.10787,
+            "lon": 91.97006,
+            "name": "Khagrachhari"
+        },
+        {
+            "count": 6,
+            "lat": 23.99507,
+            "lon": 85.36109,
+            "name": "Haz\u0101r\u012bb\u0101g"
+        },
+        {
+            "count": 2,
+            "lat": 33.41458,
+            "lon": -82.31262,
+            "name": "Harlem"
+        },
+        {
+            "count": 2,
+            "lat": 45.43341,
+            "lon": -73.86586,
+            "name": "Beaconsfield"
+        },
+        {
+            "count": 5,
+            "lat": 45.50884,
+            "lon": -73.58781,
+            "name": "Montr\u00e9al"
+        },
+        {
+            "count": 4,
+            "lat": 41.26465,
+            "lon": 69.21627,
+            "name": "Tashkent"
+        },
+        {
+            "count": 11,
+            "lat": 50.56678,
+            "lon": -91.20022,
+            "name": "Reddit Creek"
+        },
+        {
+            "count": 1,
+            "lat": 39.27205,
+            "lon": -76.73192,
+            "name": "Catonsville"
+        },
+        {
+            "count": 1,
+            "lat": 15.36546,
+            "lon": -9.57715,
+            "name": "Mounia"
+        },
+        {
+            "count": 4,
+            "lat": 41.36616,
+            "lon": -81.8543,
+            "name": "Berea"
+        },
+        {
+            "count": 1,
+            "lat": 39.162,
+            "lon": -84.45689,
+            "name": "Cincinnati"
+        },
+        {
+            "count": 1,
+            "lat": 30.63269,
+            "lon": -97.67723,
+            "name": "Georgetown"
+        },
+        {
+            "count": 1,
+            "lat": 41.4901,
+            "lon": -71.31283,
+            "name": "Newport"
+        },
+        {
+            "count": 2,
+            "lat": 33.44838,
+            "lon": -112.07404,
+            "name": "Phoenix"
+        },
+        {
+            "count": 1,
+            "lat": 48.98249,
+            "lon": -95.36496,
+            "name": "Longworth"
+        },
+        {
+            "count": 1,
+            "lat": 37.69224,
+            "lon": -97.33754,
+            "name": "Wichita"
+        },
+        {
+            "count": 1,
+            "lat": 20.89111,
+            "lon": -156.50472,
+            "name": "Wailuku"
+        },
+        {
+            "count": 4,
+            "lat": -6.21462,
+            "lon": 106.84513,
+            "name": "Jakarta"
+        },
+        {
+            "count": 1,
+            "lat": 38.42213,
+            "lon": -122.72804,
+            "name": "Roseland"
+        },
+        {
+            "count": 1,
+            "lat": 33.57261,
+            "lon": -84.41326,
+            "name": "Riverdale"
+        },
+        {
+            "count": 2,
+            "lat": 39.73915,
+            "lon": -104.9847,
+            "name": "Denver"
+        },
+        {
+            "count": 1,
+            "lat": 41.8526,
+            "lon": -72.6437,
+            "name": "Windsor"
+        },
+        {
+            "count": 4,
+            "lat": 27.09978,
+            "lon": -82.45426,
+            "name": "Venice"
+        },
+        {
+            "count": 2,
+            "lat": 30.06263,
+            "lon": 31.24967,
+            "name": "Cairo"
+        },
+        {
+            "count": 10,
+            "lat": 39.85174,
+            "lon": -81.09233,
+            "name": "Jerusalem"
+        },
+        {
+            "count": 1,
+            "lat": 20.86774,
+            "lon": -156.61706,
+            "name": "Maui County"
+        },
+        {
+            "count": 1,
+            "lat": 21.13333,
+            "lon": -156.99861,
+            "name": "Moloka\u2018i District"
+        },
+        {
+            "count": 1,
+            "lat": 41.65448,
+            "lon": -87.60199,
+            "name": "Altgeld Gardens"
+        },
+        {
+            "count": 1,
+            "lat": 43.06914,
+            "lon": 12.61646,
+            "name": "Assisi"
+        },
+        {
+            "count": 1,
+            "lat": -13.38333,
+            "lon": 23.05,
+            "name": "Makondu"
+        },
+        {
+            "count": 1,
+            "lat": 33.74752,
+            "lon": -116.97197,
+            "name": "Hemet"
+        },
+        {
+            "count": 1,
+            "lat": 50.99911,
+            "lon": 3.51462,
+            "name": "Deinze"
+        },
+        {
+            "count": 1,
+            "lat": 34.02343,
+            "lon": -84.61549,
+            "name": "Kennesaw"
+        },
+        {
+            "count": 1,
+            "lat": 53.692,
+            "lon": -1.633,
+            "name": "Dewsbury Railway Station"
+        },
+        {
+            "count": 2,
+            "lat": 24.27446,
+            "lon": -106.0869,
+            "name": "California"
+        },
+        {
+            "count": 1,
+            "lat": 44.19504,
+            "lon": 3.65476,
+            "name": "Le Pompidou"
+        },
+        {
+            "count": 3,
+            "lat": 36.20124,
+            "lon": 37.16117,
+            "name": "Aleppo"
+        },
+        {
+            "count": 1,
+            "lat": 33.88894,
+            "lon": 35.49442,
+            "name": "Beirut"
+        },
+        {
+            "count": 1,
+            "lat": 33.27333,
+            "lon": 35.46361,
+            "name": "Qantara"
+        },
+        {
+            "count": 3,
+            "lat": 42.33176,
+            "lon": -71.12116,
+            "name": "Brookline"
+        },
+        {
+            "count": 1,
+            "lat": 42.63759,
+            "lon": -70.9495,
+            "name": "Topsfield"
+        },
+        {
+            "count": 1,
+            "lat": 42.19593,
+            "lon": -70.72587,
+            "name": "Scituate"
+        },
+        {
+            "count": 1,
+            "lat": 43.15478,
+            "lon": -77.61556,
+            "name": "Rochester"
+        },
+        {
+            "count": 1,
+            "lat": 42.32652,
+            "lon": -122.87559,
+            "name": "Medford"
+        },
+        {
+            "count": 2,
+            "lat": 55.67594,
+            "lon": 12.56553,
+            "name": "Copenhagen"
+        },
+        {
+            "count": 2,
+            "lat": 42.7262,
+            "lon": -71.19089,
+            "name": "Methuen"
+        },
+        {
+            "count": 2,
+            "lat": 42.22093,
+            "lon": -70.93977,
+            "name": "Weymouth"
+        },
+        {
+            "count": 3,
+            "lat": 42.27926,
+            "lon": -71.41617,
+            "name": "Framingham"
+        },
+        {
+            "count": 2,
+            "lat": 42.08343,
+            "lon": -71.01838,
+            "name": "Brockton"
+        },
+        {
+            "count": 1,
+            "lat": 50.68886,
+            "lon": -2.1104,
+            "name": "Wareham"
+        },
+        {
+            "count": 2,
+            "lat": 42.20426,
+            "lon": -72.6162,
+            "name": "Holyoke"
+        },
+        {
+            "count": 2,
+            "lat": 42.52509,
+            "lon": -71.75979,
+            "name": "Leominster"
+        },
+        {
+            "count": 1,
+            "lat": 35.60095,
+            "lon": -82.55402,
+            "name": "Asheville"
+        },
+        {
+            "count": 3,
+            "lat": 9.0,
+            "lon": 155.0,
+            "name": "Micronesia"
+        },
+        {
+            "count": 2,
+            "lat": 28.06403,
+            "lon": -16.73012,
+            "name": "Playa de las Am\u00e9ricas"
+        },
+        {
+            "count": 2,
+            "lat": -17.82772,
+            "lon": 31.05337,
+            "name": "Harare"
+        },
+        {
+            "count": 2,
+            "lat": 29.69106,
+            "lon": -95.2091,
+            "name": "Pasadena"
+        },
+        {
+            "count": 23,
+            "lat": 42.3751,
+            "lon": -71.10561,
+            "name": "Cambridge"
+        },
+        {
+            "count": 2,
+            "lat": 42.95,
+            "lon": -8.1,
+            "name": "Gol\u00e1n"
+        },
+        {
+            "count": 2,
+            "lat": 47.61038,
+            "lon": -122.20068,
+            "name": "Bellevue"
+        },
+        {
+            "count": 3,
+            "lat": 41.24006,
+            "lon": -81.44067,
+            "name": "Hudson"
+        },
+        {
+            "count": 4,
+            "lat": 39.65345,
+            "lon": -75.51659,
+            "name": "Pennsville"
+        },
+        {
+            "count": 3,
+            "lat": 52.23323,
+            "lon": 6.89695,
+            "name": "Watertoren N.J. Menko"
+        },
+        {
+            "count": 9,
+            "lat": 42.06538,
+            "lon": -71.24783,
+            "name": "Foxborough"
+        },
+        {
+            "count": 5,
+            "lat": 42.3876,
+            "lon": -71.0995,
+            "name": "Somerville"
+        },
+        {
+            "count": 14,
+            "lat": 42.27232,
+            "lon": -71.087,
+            "name": "Mattapan"
+        },
+        {
+            "count": 1,
+            "lat": 53.47778,
+            "lon": -3.03333,
+            "name": "Crosby"
+        },
+        {
+            "count": 3,
+            "lat": 37.97798,
+            "lon": -122.03107,
+            "name": "Concord"
+        },
+        {
+            "count": 6,
+            "lat": 40.86643,
+            "lon": -87.36364,
+            "name": "Brook"
+        },
+        {
+            "count": 1,
+            "lat": 42.47926,
+            "lon": -71.15228,
+            "name": "Woburn"
+        },
+        {
+            "count": 4,
+            "lat": 40.07566,
+            "lon": -75.45908,
+            "name": "Chesterbrook"
+        },
+        {
+            "count": 1,
+            "lat": -33.8841,
+            "lon": 151.26356,
+            "name": "Waverley"
+        },
+        {
+            "count": 3,
+            "lat": 39.9687,
+            "lon": -77.58721,
+            "name": "Scotland"
+        },
+        {
+            "count": 2,
+            "lat": 46.73239,
+            "lon": -117.00017,
+            "name": "Moscow"
+        },
+        {
+            "count": 2,
+            "lat": 27.94752,
+            "lon": -82.45843,
+            "name": "Tampa"
+        },
+        {
+            "count": 1,
+            "lat": 48.20849,
+            "lon": 16.37208,
+            "name": "Vienna"
+        },
+        {
+            "count": 2,
+            "lat": 42.33143,
+            "lon": -83.04575,
+            "name": "Detroit"
+        },
+        {
+            "count": 4,
+            "lat": 34.05557,
+            "lon": -117.18254,
+            "name": "Redlands"
+        },
+        {
+            "count": 5,
+            "lat": 42.38863,
+            "lon": -89.52623,
+            "name": "Dakota"
+        },
+        {
+            "count": 2,
+            "lat": 34.56535,
+            "lon": -99.80149,
+            "name": "Louis"
+        },
+        {
+            "count": 9,
+            "lat": 46.73716,
+            "lon": -90.88018,
+            "name": "Sioux"
+        },
+        {
+            "count": 2,
+            "lat": 59.91273,
+            "lon": 10.74609,
+            "name": "Oslo"
+        },
+        {
+            "count": 1,
+            "lat": 35.6895,
+            "lon": 139.69171,
+            "name": "Tokyo"
+        },
+        {
+            "count": 1,
+            "lat": 41.18144,
+            "lon": -84.74051,
+            "name": "Antwerp"
+        },
+        {
+            "count": 1,
+            "lat": 50.85045,
+            "lon": 4.34878,
+            "name": "Brussels"
+        },
+        {
+            "count": 3,
+            "lat": 42.93869,
+            "lon": -74.18819,
+            "name": "Amsterdam"
+        },
+        {
+            "count": 11,
+            "lat": -33.86785,
+            "lon": 151.20732,
+            "name": "Sydney"
+        },
+        {
+            "count": 1,
+            "lat": 51.22339,
+            "lon": 2.91185,
+            "name": "Oostende"
+        },
+        {
+            "count": 1,
+            "lat": -6.16394,
+            "lon": 39.19793,
+            "name": "Zanzibar"
+        },
+        {
+            "count": 1,
+            "lat": 46.07043,
+            "lon": 11.12074,
+            "name": "Trento"
+        },
+        {
+            "count": 1,
+            "lat": 43.14667,
+            "lon": -88.30676,
+            "name": "Merton"
+        },
+        {
+            "count": 2,
+            "lat": 42.14177,
+            "lon": -71.2495,
+            "name": "Walpole"
+        },
+        {
+            "count": 1,
+            "lat": 51.4108,
+            "lon": -0.18919,
+            "name": "Merton"
+        },
+        {
+            "count": 2,
+            "lat": 25.53844,
+            "lon": -80.40894,
+            "name": "Princeton"
+        },
+        {
+            "count": 1,
+            "lat": 47.5584,
+            "lon": 7.57327,
+            "name": "Basel"
+        },
+        {
+            "count": 3,
+            "lat": -37.814,
+            "lon": 144.96332,
+            "name": "Melbourne"
+        },
+        {
+            "count": 1,
+            "lat": 54.9,
+            "lon": -1.51667,
+            "name": "Washington"
+        },
+        {
+            "count": 1,
+            "lat": 43.58085,
+            "lon": -65.33932,
+            "name": "Atlantic"
+        },
+        {
+            "count": 3,
+            "lat": 24.9056,
+            "lon": 67.0822,
+            "name": "Karachi"
+        },
+        {
+            "count": 1,
+            "lat": 42.0978,
+            "lon": -88.53036,
+            "name": "Hampshire"
+        },
+        {
+            "count": 1,
+            "lat": 44.05135,
+            "lon": -94.83804,
+            "name": "Darfur"
+        },
+        {
+            "count": 1,
+            "lat": 31.53954,
+            "lon": -110.7562,
+            "name": "Patagonia"
+        },
+        {
+            "count": 2,
+            "lat": 37.68077,
+            "lon": -122.39997,
+            "name": "Brisbane"
+        },
+        {
+            "count": 1,
+            "lat": 40.36979,
+            "lon": -80.63396,
+            "name": "Steubenville"
+        },
+        {
+            "count": 1,
+            "lat": 24.8717,
+            "lon": 67.0839,
+            "name": "Bang\u0101lore Town"
+        },
+        {
+            "count": 1,
+            "lat": 35.69439,
+            "lon": 51.42151,
+            "name": "Tehr\u0101n"
+        },
+        {
+            "count": 1,
+            "lat": 47.25288,
+            "lon": -122.44429,
+            "name": "Tacoma"
+        },
+        {
+            "count": 3,
+            "lat": 46.18788,
+            "lon": -123.83125,
+            "name": "Astoria"
+        },
+        {
+            "count": 10,
+            "lat": 25.77427,
+            "lon": -80.19366,
+            "name": "Miami"
+        },
+        {
+            "count": 1,
+            "lat": 39.75895,
+            "lon": -84.19161,
+            "name": "Dayton"
+        },
+        {
+            "count": 3,
+            "lat": 40.73566,
+            "lon": -74.17237,
+            "name": "Newark"
+        },
+        {
+            "count": 2,
+            "lat": 43.41136,
+            "lon": -106.28002,
+            "name": "Midwest"
+        },
+        {
+            "count": 2,
+            "lat": 43.14756,
+            "lon": -77.55055,
+            "name": "Brighton"
+        },
+        {
+            "count": 1,
+            "lat": 41.07621,
+            "lon": -73.85875,
+            "name": "Tarrytown"
+        },
+        {
+            "count": 1,
+            "lat": 40.15511,
+            "lon": -74.82877,
+            "name": "Levittown"
+        },
+        {
+            "count": 1,
+            "lat": 40.93121,
+            "lon": -73.89875,
+            "name": "Yonkers"
+        },
+        {
+            "count": 36,
+            "lat": 43.00445,
+            "lon": -88.37676,
+            "name": "Wales"
+        },
+        {
+            "count": 1,
+            "lat": 40.4165,
+            "lon": -3.70256,
+            "name": "Madrid"
+        },
+        {
+            "count": 1,
+            "lat": 40.39776,
+            "lon": -105.07498,
+            "name": "Loveland"
+        },
+        {
+            "count": 2,
+            "lat": 40.11257,
+            "lon": -79.38254,
+            "name": "Donegal"
+        },
+        {
+            "count": 3,
+            "lat": 39.507,
+            "lon": -84.74523,
+            "name": "Oxford"
+        },
+        {
+            "count": 1,
+            "lat": 50.83857,
+            "lon": 4.37599,
+            "name": "European Union"
+        },
+        {
+            "count": 1,
+            "lat": 28.8094,
+            "lon": -96.99839,
+            "name": "Juan Linn Cyberspace Magnet School"
+        },
+        {
+            "count": 2,
+            "lat": 44.77635,
+            "lon": -94.98972,
+            "name": "Olivia"
+        },
+        {
+            "count": 2,
+            "lat": 40.72967,
+            "lon": -111.89549,
+            "name": "Vogue Park"
+        },
+        {
+            "count": 1,
+            "lat": 42.6587,
+            "lon": -71.40812,
+            "name": "Boston University Tyngsborough Campus"
+        },
+        {
+            "count": 1,
+            "lat": 40.62593,
+            "lon": -75.37046,
+            "name": "Bethlehem"
+        },
+        {
+            "count": 1,
+            "lat": 31.43516,
+            "lon": -97.74391,
+            "name": "Gatesville"
+        },
+        {
+            "count": 1,
+            "lat": 50.08804,
+            "lon": 14.42076,
+            "name": "Prague"
+        },
+        {
+            "count": 1,
+            "lat": 35.16778,
+            "lon": -114.57302,
+            "name": "Laughlin"
+        },
+        {
+            "count": 1,
+            "lat": 44.4078,
+            "lon": 5.201,
+            "name": "Condorcet"
+        },
+        {
+            "count": 1,
+            "lat": 20.14444,
+            "lon": -75.20917,
+            "name": "Guant\u00e1namo"
+        },
+        {
+            "count": 1,
+            "lat": 51.9225,
+            "lon": 4.47917,
+            "name": "Rotterdam"
+        },
+        {
+            "count": 1,
+            "lat": 38.32686,
+            "lon": -122.70721,
+            "name": "Cotati"
+        },
+        {
+            "count": 3,
+            "lat": 26.43814,
+            "lon": -81.80675,
+            "name": "Estero"
+        },
+        {
+            "count": 1,
+            "lat": 44.58883,
+            "lon": 33.5224,
+            "name": "Sevastopol"
+        },
+        {
+            "count": 2,
+            "lat": 38.10409,
+            "lon": -122.25664,
+            "name": "Vallejo"
+        },
+        {
+            "count": 1,
+            "lat": 38.36047,
+            "lon": -123.06889,
+            "name": "Miwok Beach"
+        },
+        {
+            "count": 15,
+            "lat": 55.86515,
+            "lon": -4.25763,
+            "name": "Glasgow"
+        },
+        {
+            "count": 1,
+            "lat": 39.19289,
+            "lon": -76.72414,
+            "name": "Hanover"
+        },
+        {
+            "count": 4,
+            "lat": 52.5233,
+            "lon": 13.41377,
+            "name": "Berlin"
+        },
+        {
+            "count": 2,
+            "lat": 49.4095,
+            "lon": 8.6935,
+            "name": "Heidelberg"
+        },
+        {
+            "count": 1,
+            "lat": 41.37388,
+            "lon": -94.50636,
+            "name": "Prussia"
+        },
+        {
+            "count": 1,
+            "lat": 50.13083,
+            "lon": 8.66361,
+            "name": "Kreisfreie Stadt Frankfurt am Main"
+        },
+        {
+            "count": 1,
+            "lat": 51.26249,
+            "lon": -1.08708,
+            "name": "Basingstoke"
+        },
+        {
+            "count": 1,
+            "lat": 47.9959,
+            "lon": 7.85222,
+            "name": "Freiburg"
+        },
+        {
+            "count": 1,
+            "lat": 35.48674,
+            "lon": -96.68502,
+            "name": "Prague"
+        },
+        {
+            "count": 1,
+            "lat": 41.88753,
+            "lon": -88.30535,
+            "name": "Geneva"
+        },
+        {
+            "count": 1,
+            "lat": 44.20167,
+            "lon": 0.4375,
+            "name": "Montesquieu"
+        },
+        {
+            "count": 4,
+            "lat": 39.29038,
+            "lon": -76.61219,
+            "name": "Baltimore"
+        },
+        {
+            "count": 5,
+            "lat": 40.46423,
+            "lon": -80.60091,
+            "name": "Toronto"
+        },
+        {
+            "count": 1,
+            "lat": 42.44063,
+            "lon": -76.49661,
+            "name": "Ithaca"
+        },
+        {
+            "count": 1,
+            "lat": 42.49276,
+            "lon": -92.34296,
+            "name": "Waterloo"
+        },
+        {
+            "count": 1,
+            "lat": 34.06334,
+            "lon": -117.65089,
+            "name": "Ontario"
+        },
+        {
+            "count": 1,
+            "lat": 0.0,
+            "lon": 0.0,
+            "name": "Earth"
+        },
+        {
+            "count": 1,
+            "lat": 38.94949,
+            "lon": -90.58873,
+            "name": "Brussels"
+        },
+        {
+            "count": 2,
+            "lat": 51.05,
+            "lon": 13.75,
+            "name": "Dresden"
+        },
+        {
+            "count": 1,
+            "lat": 53.57532,
+            "lon": 10.01534,
+            "name": "Hamburg"
+        },
+        {
+            "count": 2,
+            "lat": 40.65844,
+            "lon": -74.29959,
+            "name": "Cranford"
+        },
+        {
+            "count": 1,
+            "lat": 51.45657,
+            "lon": 7.01228,
+            "name": "Essen"
+        },
+        {
+            "count": 2,
+            "lat": 28.53834,
+            "lon": -81.37924,
+            "name": "Orlando"
+        },
+        {
+            "count": 1,
+            "lat": -7.50794,
+            "lon": -47.14907,
+            "name": "Carolina"
+        },
+        {
+            "count": 1,
+            "lat": 41.08144,
+            "lon": -81.51901,
+            "name": "Akron"
+        },
+        {
+            "count": 4,
+            "lat": 33.83529,
+            "lon": -117.9145,
+            "name": "Anaheim"
+        },
+        {
+            "count": 2,
+            "lat": 38.58157,
+            "lon": -121.4944,
+            "name": "Sacramento"
+        },
+        {
+            "count": 1,
+            "lat": 42.20115,
+            "lon": -85.58,
+            "name": "Portage"
+        },
+        {
+            "count": 1,
+            "lat": 38.92511,
+            "lon": -77.02609,
+            "name": "Cowtown (historical)"
+        },
+        {
+            "count": 1,
+            "lat": 18.42495,
+            "lon": -65.83294,
+            "name": "Vieques"
+        },
+        {
+            "count": 1,
+            "lat": -34.62897,
+            "lon": 144.0484,
+            "name": "Hells Gate"
+        },
+        {
+            "count": 1,
+            "lat": 31.21564,
+            "lon": 29.95527,
+            "name": "Alexandria"
+        },
+        {
+            "count": 1,
+            "lat": -34.48333,
+            "lon": 150.85,
+            "name": "Berkeley"
+        },
+        {
+            "count": 2,
+            "lat": 51.37891,
+            "lon": 0.52786,
+            "name": "Chatham"
+        },
+        {
+            "count": 2,
+            "lat": 51.75222,
+            "lon": -1.25596,
+            "name": "Oxford"
+        },
+        {
+            "count": 2,
+            "lat": -33.0,
+            "lon": 151.6,
+            "name": "Toronto"
+        },
+        {
+            "count": 2,
+            "lat": 40.77593,
+            "lon": -74.60071,
+            "name": "Mendham"
+        },
+        {
+            "count": 1,
+            "lat": 34.79033,
+            "lon": -100.38179,
+            "name": "Swearingen"
+        },
+        {
+            "count": 1,
+            "lat": 43.09722,
+            "lon": -89.50429,
+            "name": "Middleton"
+        },
+        {
+            "count": 1,
+            "lat": 52.16667,
+            "lon": -2.16667,
+            "name": "Worcestershire"
+        },
+        {
+            "count": 1,
+            "lat": 39.61332,
+            "lon": -105.01665,
+            "name": "Littleton"
+        },
+        {
+            "count": 1,
+            "lat": 42.1876,
+            "lon": -71.30645,
+            "name": "Medfield"
+        },
+        {
+            "count": 1,
+            "lat": 41.87871,
+            "lon": -71.38256,
+            "name": "Pawtucket"
+        },
+        {
+            "count": 2,
+            "lat": -33.74016,
+            "lon": 150.86253,
+            "name": "Blacktown"
+        },
+        {
+            "count": 1,
+            "lat": 40.39177,
+            "lon": -74.39848,
+            "name": "Spotswood"
+        },
+        {
+            "count": 1,
+            "lat": 34.79981,
+            "lon": -87.67725,
+            "name": "Florence"
+        },
+        {
+            "count": 1,
+            "lat": 51.48755,
+            "lon": -0.16936,
+            "name": "Chelsea"
+        },
+        {
+            "count": 1,
+            "lat": 37.80437,
+            "lon": -122.2708,
+            "name": "Oakland"
+        },
+        {
+            "count": 1,
+            "lat": -45.87416,
+            "lon": 170.50361,
+            "name": "Dunedin"
+        },
+        {
+            "count": 1,
+            "lat": 44.20012,
+            "lon": -78.99957,
+            "name": "Durham"
+        },
+        {
+            "count": 1,
+            "lat": 33.66946,
+            "lon": -117.82311,
+            "name": "Irvine"
+        },
+        {
+            "count": 1,
+            "lat": 56.01839,
+            "lon": 92.86717,
+            "name": "Krasnoyarsk"
+        },
+        {
+            "count": 1,
+            "lat": -19.51946,
+            "lon": 139.9193,
+            "name": "Siberia"
+        },
+        {
+            "count": 1,
+            "lat": 22.28552,
+            "lon": 114.15769,
+            "name": "Hong Kong"
+        },
+        {
+            "count": 1,
+            "lat": 32.50223,
+            "lon": -116.97212,
+            "name": "Tijuana"
+        },
+        {
+            "count": 2,
+            "lat": 38.75095,
+            "lon": -77.47527,
+            "name": "Manassas"
+        },
+        {
+            "count": 1,
+            "lat": 33.42227,
+            "lon": -111.82264,
+            "name": "Mesa"
+        },
+        {
+            "count": 1,
+            "lat": 57.00293,
+            "lon": -5.83082,
+            "name": "Mallaig"
+        },
+        {
+            "count": 1,
+            "lat": 55.58333,
+            "lon": -3.83333,
+            "name": "Lanarkshire"
+        },
+        {
+            "count": 1,
+            "lat": 32.08354,
+            "lon": -81.09983,
+            "name": "Savannah"
+        },
+        {
+            "count": 1,
+            "lat": 42.78702,
+            "lon": -73.97096,
+            "name": "Rotterdam"
+        },
+        {
+            "count": 3,
+            "lat": 44.03146,
+            "lon": -70.1045,
+            "name": "Lisbon"
+        },
+        {
+            "count": 1,
+            "lat": 52.37052,
+            "lon": 9.73322,
+            "name": "Hannover"
+        },
+        {
+            "count": 1,
+            "lat": 53.38046,
+            "lon": -6.27113,
+            "name": "Baile \u00c1tha Cliath"
+        },
+        {
+            "count": 4,
+            "lat": 35.37274,
+            "lon": -117.63478,
+            "name": "Johannesburg"
+        },
+        {
+            "count": 1,
+            "lat": 27.7202,
+            "lon": -82.4525,
+            "name": "Netherland"
+        },
+        {
+            "count": 1,
+            "lat": 49.4998,
+            "lon": 4.36227,
+            "name": "Sault-l\u00e8s-Rethel"
+        },
+        {
+            "count": 1,
+            "lat": 41.73333,
+            "lon": 25.51667,
+            "name": "Anatolik\u00ed Rodh\u00f3pi"
+        },
+        {
+            "count": 3,
+            "lat": 18.31326,
+            "lon": -77.90252,
+            "name": "Cambridge"
+        },
+        {
+            "count": 1,
+            "lat": 40.65749,
+            "lon": -73.83875,
+            "name": "Queens County"
+        },
+        {
+            "count": 1,
+            "lat": 50.71667,
+            "lon": -2.43333,
+            "name": "Dorchester"
+        },
+        {
+            "count": 2,
+            "lat": 42.29121,
+            "lon": -71.1245,
+            "name": "Roslindale"
+        },
+        {
+            "count": 1,
+            "lat": 45.00302,
+            "lon": -90.33569,
+            "name": "Dorchester"
+        },
+        {
+            "count": 1,
+            "lat": 42.35843,
+            "lon": -71.12589,
+            "name": "Allston"
+        },
+        {
+            "count": 1,
+            "lat": 41.55419,
+            "lon": -91.53489,
+            "name": "Hills"
+        },
+        {
+            "count": 2,
+            "lat": 31.22222,
+            "lon": 121.45806,
+            "name": "Shanghai"
+        },
+        {
+            "count": 2,
+            "lat": 39.9075,
+            "lon": 116.39723,
+            "name": "Beijing"
+        },
+        {
+            "count": 2,
+            "lat": 33.34058,
+            "lon": 44.40088,
+            "name": "Baghdad"
+        },
+        {
+            "count": 1,
+            "lat": 34.52813,
+            "lon": 69.17233,
+            "name": "Kabul"
+        },
+        {
+            "count": 1,
+            "lat": 30.199,
+            "lon": 67.00971,
+            "name": "Quetta"
+        },
+        {
+            "count": 1,
+            "lat": 31.5819,
+            "lon": 64.99308,
+            "name": "Maywand"
+        },
+        {
+            "count": 1,
+            "lat": 30.65407,
+            "lon": -91.25178,
+            "name": "Bonn"
+        },
+        {
+            "count": 2,
+            "lat": 44.43333,
+            "lon": 24.36667,
+            "name": "Slatina"
+        },
+        {
+            "count": 1,
+            "lat": 44.43225,
+            "lon": 26.10626,
+            "name": "Bucharest"
+        },
+        {
+            "count": 2,
+            "lat": 45.5,
+            "lon": 9.5,
+            "name": "Provincia di Milano"
+        },
+        {
+            "count": 2,
+            "lat": 42.37093,
+            "lon": -71.18283,
+            "name": "Watertown"
+        },
+        {
+            "count": 1,
+            "lat": 51.48836,
+            "lon": -0.47757,
+            "name": "Harmondsworth"
+        },
+        {
+            "count": 1,
+            "lat": 8.75,
+            "lon": -79.9,
+            "name": "L\u00eddice"
+        },
+        {
+            "count": 1,
+            "lat": 41.14961,
+            "lon": -8.61099,
+            "name": "Porto"
+        },
+        {
+            "count": 1,
+            "lat": 3.3223,
+            "lon": -76.2348,
+            "name": "Florida"
+        },
+        {
+            "count": 1,
+            "lat": 49.24966,
+            "lon": -123.11934,
+            "name": "Vancouver"
+        },
+        {
+            "count": 1,
+            "lat": 7.34709,
+            "lon": -72.94518,
+            "name": "California"
+        },
+        {
+            "count": 1,
+            "lat": 45.337,
+            "lon": -62.10992,
+            "name": "Denver"
+        },
+        {
+            "count": 1,
+            "lat": 43.5501,
+            "lon": -80.71641,
+            "name": "Wellesley"
+        },
+        {
+            "count": 1,
+            "lat": 43.00091,
+            "lon": -73.84901,
+            "name": "Ballston Spa"
+        },
+        {
+            "count": 1,
+            "lat": 32.95087,
+            "lon": 69.95764,
+            "name": "North Waz\u012brist\u0101n Agency"
+        },
+        {
+            "count": 4,
+            "lat": 4.91333,
+            "lon": -8.84972,
+            "name": "Karbada"
+        },
+        {
+            "count": 4,
+            "lat": 25.7091,
+            "lon": 55.80772,
+            "name": "Al Jaz\u012brah al \u1e28amr\u0101\u2019"
+        },
+        {
+            "count": 2,
+            "lat": 36.19257,
+            "lon": 44.01062,
+            "name": "Erbil"
+        },
+        {
+            "count": 6,
+            "lat": 35.56496,
+            "lon": 45.4329,
+            "name": "As Sulaym\u0101n\u012byah"
+        },
+        {
+            "count": 2,
+            "lat": 36.86709,
+            "lon": 42.98845,
+            "name": "Dihok"
+        },
+        {
+            "count": 4,
+            "lat": 36.22675,
+            "lon": 44.76106,
+            "name": "Kurdistan"
+        },
+        {
+            "count": 2,
+            "lat": 30.53302,
+            "lon": 47.79747,
+            "name": "Al Ba\u015frah"
+        },
+        {
+            "count": 2,
+            "lat": 31.05799,
+            "lon": 46.25726,
+            "name": "An N\u0101\u015fir\u012byah"
+        }
+    ],
+    "mentionedCountries": {
+        "AE": 8,
+        "AF": 28,
+        "AL": 6,
+        "AM": 2,
+        "AO": 1,
+        "AR": 4,
+        "AT": 6,
+        "AU": 61,
+        "AZ": 2,
+        "BB": 1,
+        "BD": 65,
+        "BE": 5,
+        "BG": 1,
+        "BH": 1,
+        "BJ": 9,
+        "BR": 10,
+        "BW": 2,
+        "BY": 2,
+        "CA": 64,
+        "CD": 1,
+        "CH": 5,
+        "CL": 5,
+        "CM": 1,
+        "CN": 31,
+        "CO": 14,
+        "CU": 3,
+        "CY": 2,
+        "CZ": 1,
+        "DE": 44,
+        "DK": 4,
+        "DZ": 1,
+        "EC": 1,
+        "EG": 8,
+        "ES": 17,
+        "ET": 1,
+        "FI": 4,
+        "FR": 62,
+        "GB": 358,
+        "GE": 1,
+        "GG": 1,
+        "GL": 1,
+        "GN": 1,
+        "GR": 14,
+        "HK": 1,
+        "HT": 3,
+        "ID": 29,
+        "IE": 14,
+        "IL": 4,
+        "IN": 13,
+        "IQ": 158,
+        "IR": 20,
+        "IS": 2,
+        "IT": 34,
+        "JE": 2,
+        "JM": 5,
+        "JO": 5,
+        "JP": 17,
+        "KE": 9,
+        "KG": 2,
+        "KR": 3,
+        "KW": 6,
+        "LB": 3,
+        "LR": 4,
+        "LT": 1,
+        "LY": 2,
+        "MA": 2,
+        "ML": 1,
+        "MX": 28,
+        "MY": 6,
+        "NG": 1,
+        "NL": 7,
+        "NO": 7,
+        "NZ": 9,
+        "OM": 2,
+        "PA": 2,
+        "PE": 2,
+        "PF": 1,
+        "PH": 17,
+        "PK": 23,
+        "PL": 5,
+        "PR": 1,
+        "PS": 1,
+        "PT": 2,
+        "RO": 6,
+        "RU": 23,
+        "SD": 2,
+        "SE": 3,
+        "SG": 3,
+        "SY": 23,
+        "TH": 4,
+        "TM": 1,
+        "TN": 30,
+        "TR": 44,
+        "TW": 3,
+        "TZ": 1,
+        "UA": 3,
+        "UG": 4,
+        "US": 2190,
+        "UZ": 28,
+        "VN": 5,
+        "WS": 1,
+        "YE": 1,
+        "ZA": 1,
+        "ZW": 2
+    },
+    "mentionedStates": {
+        "AK": 17,
+        "AL": 59,
+        "AR": 12,
+        "AZ": 11,
+        "CA": 105,
+        "CO": 13,
+        "CT": 9,
+        "DC": 7,
+        "DE": 5,
+        "FL": 48,
+        "GA": 33,
+        "HI": 38,
+        "IA": 42,
+        "ID": 2,
+        "IL": 83,
+        "IN": 13,
+        "KS": 8,
+        "KY": 58,
+        "LA": 9,
+        "MA": 400,
+        "MD": 11,
+        "ME": 18,
+        "MI": 19,
+        "MN": 27,
+        "MO": 25,
+        "MS": 81,
+        "MT": 15,
+        "NC": 7,
+        "NE": 2,
+        "NH": 4,
+        "NJ": 15,
+        "NV": 4,
+        "NY": 42,
+        "OH": 72,
+        "OK": 4,
+        "OR": 8,
+        "PA": 40,
+        "RI": 9,
+        "TN": 2,
+        "TX": 41,
+        "UT": 2,
+        "VA": 23,
+        "VT": 2,
+        "WA": 70,
+        "WI": 56,
+        "WV": 1,
+        "WY": 5
+    },
+    "primaryCountries": {
+        "AE": 1,
+        "AF": 1,
+        "AU": 7,
+        "BD": 14,
+        "BE": 1,
+        "BJ": 8,
+        "BR": 2,
+        "CA": 9,
+        "CH": 1,
+        "CN": 1,
+        "CO": 2,
+        "DE": 8,
+        "DK": 1,
+        "DZ": 1,
+        "EG": 2,
+        "ES": 1,
+        "FI": 1,
+        "FR": 9,
+        "GB": 30,
+        "GE": 1,
+        "GR": 2,
+        "ID": 2,
+        "IE": 1,
+        "IL": 1,
+        "IQ": 2,
+        "IR": 1,
+        "IT": 15,
+        "KW": 2,
+        "LT": 1,
+        "ML": 1,
+        "MX": 3,
+        "NL": 2,
+        "NO": 3,
+        "PE": 1,
+        "PH": 1,
+        "RU": 1,
+        "SY": 5,
+        "UG": 2,
+        "US": 321,
+        "UZ": 4,
+        "ZA": 1,
+        "ZW": 2
+    },
+    "primaryStates": {
+        "AK": 3,
+        "AL": 1,
+        "AZ": 1,
+        "CA": 12,
+        "CO": 2,
+        "CT": 2,
+        "DC": 1,
+        "FL": 6,
+        "GA": 5,
+        "HI": 8,
+        "IA": 1,
+        "IL": 7,
+        "IN": 2,
+        "KS": 1,
+        "KY": 5,
+        "MA": 80,
+        "MD": 2,
+        "ME": 2,
+        "MI": 1,
+        "MN": 6,
+        "MO": 2,
+        "MS": 1,
+        "MT": 1,
+        "NJ": 4,
+        "NY": 9,
+        "OH": 6,
+        "OR": 2,
+        "PA": 4,
+        "TX": 14,
+        "WA": 18,
+        "WI": 3,
+        "WV": 1
+    },
+    "total_docs": 4267,
+    "total_extracted_docs": 2304,
+    "total_geoparsed_docs": 475
+}

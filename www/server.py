@@ -14,7 +14,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 config = ConfigParser.ConfigParser()
 config.read(os.path.join(BASE_DIR,CONFIG_FILENAME))
 
-app = Flask(__name__)
+app = Flask(__name__,static_url_path='')
 db_client = MongoClient()
 db = db_client[config.get('db','name')]
 db_collection = db[config.get('db','collection')]
@@ -31,6 +31,11 @@ log.info("----------------------------------------------------------------------
 @app.route('/')
 def hello():
 	return "Hello Supposed Human. This server is running."
+
+#Individual Map test 
+@app.route('/individual_map.html')
+def individual_map():
+	return app.send_static_file('individual_map.html')
 
 #Example sending JSON
 @app.route('/map.json')
