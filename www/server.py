@@ -37,6 +37,11 @@ def hello():
 def individual_map():
 	return app.send_static_file('individual_map.html')
 
+#DR Map test 
+@app.route('/dr_map.html')
+def dr():
+	return app.send_static_file('dr_map.html')
+
 #Example sending JSON
 @app.route('/map.json')
 def map():

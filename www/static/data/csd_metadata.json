@@ -1,28 +1,10 @@
 {
     "geocoords": [
         {
-            "count": 2,
-            "lat": 0.43902,
-            "lon": 33.20317,
-            "name": "Jinja"
-        },
-        {
             "count": 1,
             "lat": 37.37678,
             "lon": -81.82678,
             "name": "Rockridge"
-        },
-        {
-            "count": 1,
-            "lat": -33.45694,
-            "lon": -70.64827,
-            "name": "Santiago"
-        },
-        {
-            "count": 3,
-            "lat": -16.05832,
-            "lon": 123.4018,
-            "name": "Longitude Island"
         },
         {
             "count": 4,
@@ -77,12 +59,6 @@
             "lat": 37.55376,
             "lon": -77.46026,
             "name": "Richmond"
-        },
-        {
-            "count": 3,
-            "lat": 45.60798,
-            "lon": 9.31035,
-            "name": "Villasanta"
         },
         {
             "count": 26,
@@ -191,36 +167,6 @@
             "lat": 60.17556,
             "lon": 24.93417,
             "name": "Helsinki"
-        },
-        {
-            "count": 1,
-            "lat": 53.06667,
-            "lon": -0.81667,
-            "name": "Newark on Trent"
-        },
-        {
-            "count": 3,
-            "lat": 41.76371,
-            "lon": -72.68509,
-            "name": "Hartford"
-        },
-        {
-            "count": 12,
-            "lat": 40.6501,
-            "lon": -73.94958,
-            "name": "Brooklyn"
-        },
-        {
-            "count": 5,
-            "lat": 40.71427,
-            "lon": -74.00597,
-            "name": "New York City"
-        },
-        {
-            "count": 34,
-            "lat": 41.4036,
-            "lon": -95.01388,
-            "name": "Atlantic"
         },
         {
             "count": 2,
@@ -457,10 +403,22 @@
             "name": "Provincia di Firenze"
         },
         {
+            "count": 5,
+            "lat": 40.71427,
+            "lon": -74.00597,
+            "name": "New York City"
+        },
+        {
             "count": 1,
             "lat": 57.79,
             "lon": -152.40722,
             "name": "Kodiak"
+        },
+        {
+            "count": 2,
+            "lat": 0.43902,
+            "lon": 33.20317,
+            "name": "Jinja"
         },
         {
             "count": 1,
@@ -751,6 +709,12 @@
             "name": "Fairview"
         },
         {
+            "count": 34,
+            "lat": 41.4036,
+            "lon": -95.01388,
+            "name": "Atlantic"
+        },
+        {
             "count": 1,
             "lat": 31.32712,
             "lon": -89.29034,
@@ -931,6 +895,12 @@
             "name": "Harlem"
         },
         {
+            "count": 12,
+            "lat": 40.6501,
+            "lon": -73.94958,
+            "name": "Brooklyn"
+        },
+        {
             "count": 2,
             "lat": 45.43341,
             "lon": -73.86586,
@@ -1109,6 +1079,12 @@
             "lat": 34.02343,
             "lon": -84.61549,
             "name": "Kennesaw"
+        },
+        {
+            "count": 3,
+            "lat": 41.76371,
+            "lon": -72.68509,
+            "name": "Hartford"
         },
         {
             "count": 1,
@@ -1441,6 +1417,12 @@
             "name": "Oostende"
         },
         {
+            "count": 3,
+            "lat": -16.05832,
+            "lon": 123.4018,
+            "name": "Longitude Island"
+        },
+        {
             "count": 1,
             "lat": -6.16394,
             "lon": 39.19793,
@@ -1691,6 +1673,12 @@
             "lat": 35.16778,
             "lon": -114.57302,
             "name": "Laughlin"
+        },
+        {
+            "count": 3,
+            "lat": 45.60798,
+            "lon": 9.31035,
+            "name": "Villasanta"
         },
         {
             "count": 1,
@@ -2363,6 +2351,18 @@
             "lat": 31.05799,
             "lon": 46.25726,
             "name": "An N\u0101\u015fir\u012byah"
+        },
+        {
+            "count": 1,
+            "lat": -33.45694,
+            "lon": -70.64827,
+            "name": "Santiago"
+        },
+        {
+            "count": 1,
+            "lat": 53.06667,
+            "lon": -0.81667,
+            "name": "Newark on Trent"
         }
     ],
     "mentionedCountries": {
@@ -2520,85 +2520,1143 @@
         "WV": 1,
         "WY": 5
     },
-    "primaryCountries": {
-        "AE": 1,
-        "AF": 1,
-        "AU": 7,
-        "BD": 14,
-        "BE": 1,
-        "BJ": 8,
-        "BR": 2,
-        "CA": 9,
-        "CH": 1,
-        "CN": 1,
-        "CO": 2,
-        "DE": 8,
-        "DK": 1,
-        "DZ": 1,
-        "EG": 2,
-        "ES": 1,
-        "FI": 1,
-        "FR": 9,
-        "GB": 30,
-        "GE": 1,
-        "GR": 2,
-        "ID": 2,
-        "IE": 1,
-        "IL": 1,
-        "IQ": 2,
-        "IR": 1,
-        "IT": 15,
-        "KW": 2,
-        "LT": 1,
-        "ML": 1,
-        "MX": 3,
-        "NL": 2,
-        "NO": 3,
-        "PE": 1,
-        "PH": 1,
-        "RU": 1,
-        "SY": 5,
-        "UG": 2,
-        "US": 321,
-        "UZ": 4,
-        "ZA": 1,
-        "ZW": 2
-    },
-    "primaryStates": {
-        "AK": 3,
-        "AL": 1,
-        "AZ": 1,
-        "CA": 12,
-        "CO": 2,
-        "CT": 2,
-        "DC": 1,
-        "FL": 6,
-        "GA": 5,
-        "HI": 8,
-        "IA": 1,
-        "IL": 7,
-        "IN": 2,
-        "KS": 1,
-        "KY": 5,
-        "MA": 80,
-        "MD": 2,
-        "ME": 2,
-        "MI": 1,
-        "MN": 6,
-        "MO": 2,
-        "MS": 1,
-        "MT": 1,
-        "NJ": 4,
-        "NY": 9,
-        "OH": 6,
-        "OR": 2,
-        "PA": 4,
-        "TX": 14,
-        "WA": 18,
-        "WI": 3,
-        "WV": 1
-    },
+    "primaryCountries": [
+        {
+            "count": 0,
+            "countryCode": "DZ",
+            "titles": [
+                "GeoExamples: Kartograph tutorial III: Symbols"
+            ]
+        },
+        {
+            "count": 1,
+            "countryCode": "BR",
+            "titles": [
+                "\"Todos n\u00f3s adoramos espelhos\", diz Fernanda Vi\u00e9gas",
+                "PyPLN - Distributed Natural Language Processing, with Python"
+            ]
+        },
+        {
+            "count": 14,
+            "countryCode": "IT",
+            "titles": [
+                "Investigator Quick Guide | Welcome to COUHES",
+                "Kartograph aims to make interactive vector maps easier",
+                "La Bella Italia",
+                "Waltham Weekend Weather Forecast - weather.com",
+                "After Getting Flu Shot Are You Contagious? - HealthCentral",
+                "SMFA Boston",
+                "CNN.com - Breaking News, U.S., World, Weather, Entertainment & Video News",
+                "La Bella Italia",
+                "kartograph.org/showcase/italia/index.html at master \u00b7 kartograph/kartograph.org",
+                "SMFA Boston",
+                "A Declaration of the Independence of Cyberspace - Wikipedia, the free encyclopedia",
+                "Salinity - Wikipedia, the free encyclopedia",
+                "Ami - Wikipedia, the free encyclopedia",
+                "M\u0103d\u0103lina Diana Ghenea - Wikipedia, the free encyclopedia",
+                "cal - Google Search"
+            ]
+        },
+        {
+            "count": 320,
+            "countryCode": "US",
+            "titles": [
+                "Frequently Asked Questions | Welcome to COUHES",
+                "In Gentrified Oakland, Private Security Takes Hold - COLORLINES",
+                "Geo Projections \u00b7 mbostock/d3 Wiki",
+                "https://www.msu.edu/~eisthen/yeast/diy.html",
+                "Fernanda Vi\u00e9gas \u2013 Wikip\u00e9dia, a enciclop\u00e9dia livre",
+                "ami software - Google Search",
+                "ami - Google Search",
+                "kanarinka | MIT Center for Civic Media",
+                "Honoring Tech Inclusion Champions of Change at the White House | The White House",
+                "Civic Media Lunch: D.C. Vito, \"Media Breaker\" | MIT Center for Civic Media",
+                "John Carter Brown Library",
+                "Public Education or Public Segregation? | transformED",
+                "fog of war - Google Search",
+                "Map of the World, 1676",
+                "From Our Cabinet: New England Maps",
+                "Jon Orwant - Research at Google",
+                "boston map stereotype - Google Search",
+                "SMFA Faculty | Information about the Faculty at SMFA Boston",
+                "Waltham News - Events - School Info - City Services - Boston.com",
+                "MWRA - Home",
+                "Definitions | Welcome to COUHES",
+                "Zeega Team |",
+                "Registration Instructions: MIT Office of the Registrar",
+                "Registration Instructions: MIT Office of the Registrar",
+                "Lippman Chapter 15",
+                "Where does Chrome save the Sqlite Databases created by Javascript - Stack Overflow",
+                "Mapping the (Boston) Globe: A project from the MIT Center for Civic Media",
+                "Matthew W. Wilson",
+                "http://www.amazon.com/Streetwise-Class-Change-Urban-Community/dp/0226018164",
+                "http://books.google.com/books?id=pTDz93y6QS4C&pg=PA14&lpg=PA14&dq=benedict+anderson+segregation&source=bl&ots=aajSMgkk7Y&sig=Wrl3iGQngLWNDCtsN8FjzKo1cj0&hl=en&sa=X&ei=DG6DUv-aMKzNsQTj_YCwBw&ved=0CC4Q6AEwAA#v=onepage&q=benedict%20anderson%20segregation&f=false",
+                "Results for 'there are no children here' [WorldCat.org]",
+                "Race, Opportunity and Uneven Development in Urban America",
+                "Michael J. Rosenfeld, Dept of Sociology",
+                "Some basic issues in the Urban Underclass",
+                "Chapter IV: Time and Attention",
+                "Chapter XXI The Buying Public",
+                "Rhizome | Art Criticism in the Age of Yelp",
+                "Deep Zoom - Wikipedia, the free encyclopedia",
+                "What did you give up to SAHM?",
+                "Buy a Book",
+                "Smart Wheel By FlyKly Could Change Everything About Commuting",
+                ".cc - Wikipedia, the free encyclopedia",
+                "Terra Incognita | Interactive Design For Museums and Cultural Institutions",
+                "Calais Marmoset | OpenCalais",
+                "Jon Waterhouse, Environmental Steward Information, Facts, News, Photos -- National Geographic",
+                "Vintage Solid Wood Dining Table w/leaf",
+                "c4fcm (MIT Center for Civic Media)",
+                "Upcoming Events | MIT Center for Civic Media",
+                "What We Do - Black Girls Code\u00a0\u00a0 imagine. build. create.",
+                "More parents are refusing immunizations for their children, raising fears among the medical community of disease outbreaks - Health & wellness - The Boston Globe",
+                "The New York Times - Breaking News, World News & Multimedia",
+                "Job Listings - Stack Overflow Careers 2.0",
+                "Build a Game to Map the Brain @ MIT: Full Stack Developer at Massachusetts Institute of Technology (MIT), EyeWire - JavaScript - Stack Overflow Careers 2.0",
+                "02451 to undefined 1 WORCESTER ROAD FRAMINGHAM, MA 01701 - Google Maps",
+                "The Loneliness Of The Female Coder \u2699 Co.Labs \u2699 code + community",
+                "Diversity Correlates With Success: Gender and Synthetic Biology | Oscillator, Scientific American Blog Network",
+                "http://news.dice.com/2012/09/26/javascript-interview-questions/",
+                "Seeing Power: Art and Activism in the Age of Cultural Production: Nato Thompson: 9781612190440: Amazon.com: Books",
+                "five-essential-phone-screen-questions - steveyegge2",
+                "c4fcm (MIT Center for Civic Media)",
+                "http://cyber.law.harvard.edu/node/8618",
+                "123456 and other things that shouldn't be your password | Al Jazeera America",
+                "Parchment",
+                "Parchment Exchange - Leader in eTranscript Exchange - Massachusetts Institute of Technology",
+                "Transcripts: MIT Office of the Registrar",
+                "http://web.mit.edu/registrar/records/transcripts/official.html",
+                "Lewis Canyon Petroglyph Site - Gigapan Images - Archaeology News from Past Horizons : Archaeology News from Past Horizons",
+                "SMFA Boston",
+                "Map and Directions to the Gorham Campus | About USM | University of Southern Maine",
+                "SMFA Boston",
+                "SMFA Boston",
+                "School of the Museum of Fine Arts | SMFA Boston",
+                "Massachusetts insurers see health care use picking up, and that could make your insurance more costly - Business - The Boston Globe",
+                "Jared Remy, son of Red Sox broadcaster Jerry Remy, arrested in girlfriend\u2019s killing - Boston.com",
+                "Waltham museum's executive director resigns - Waltham - Your Town - Boston.com",
+                "Waltham liquor license proposal draws fire from restaurant owners - West - The Boston Globe",
+                "Parexel forecast beats analyst estimates - Business - The Boston Globe",
+                "Gridiron Club honors Bentley quarterback Bryant Johnson, Harvard and Framingham state coaches - West - The Boston Globe",
+                "ImmunoGen terminates lung cancer clinical trial - Technology - Boston.com",
+                "Your Town - Local News for Eastern Massachusetts & Boston - Boston.com",
+                "Boston, MA news, breaking news, sports, video | Boston.com",
+                "Job Opening: Research Scientist | MIT Center for Civic Media",
+                "Kacey Musgraves Miranda Lambert Feud? Musgraves Frowns at CMAs - Us Weekly",
+                "c4fcm/Boston-Attention-Mapping",
+                "Charles Schwab Client Center",
+                "Now to keep Boston voters\u2019 faith - Metro - The Boston Globe",
+                "Schwab Bank Bill Pay | Bill Pay",
+                "Charles Schwab Client Center",
+                "http://www.theguardian.com/world/the-nsa-files",
+                "Schwab Bank Bill Pay | Bill Pay",
+                "Charles Schwab Client Center",
+                "Transactions History",
+                "Transactions History",
+                "Online Transfers",
+                "Schwab BillPay\u00ae | Sign In",
+                "Online Transfers",
+                "Client Login: Charles Schwab: For Clients",
+                "Bank of America | Online Banking | Customer Service | Change Address and/or Phone Number Acknowledgement",
+                "Bank of America | Online Banking | Customer Service | Change Address and/or Phone Number",
+                "Bank of America | Online Banking | Customer Service | Change Address and/or Phone Number",
+                "Bank of America | Online Banking | Accounts Overview",
+                "Bank of America | Online Banking | Accounts Overview",
+                "Bank of America \u2014 Banking, Credit Cards, Mortgages and Investing",
+                "MIT School of Architecture + Planning",
+                "Review of The Baffler, issue no.19 | Open Letters Monthly - an Arts and Literature Review",
+                "Mississippi - Wikipedia, the free encyclopedia",
+                "Alabama - Wikipedia, the free encyclopedia",
+                "A Reloaded 'Baffler' Blasts Away - PageView - The Chronicle of Higher Education",
+                "https://www.facebook.com/help/www/452842778086837",
+                "Civic Media Initiative: Assistant Professor, Visual and Media Arts",
+                "Emerson College Employment Opportunities",
+                "http://parenting.blogs.nytimes.com/",
+                "Are Flu Shot Symptoms Contagious? | LIVESTRONG.COM",
+                "I'm an atheist Palestinian whose name is Jehad, lived in Palestine for most of my life and ready to share my experience. AMA : IAmA",
+                "Yogurt & Vaginal Health | LIVESTRONG.COM",
+                "Kentucky's Obamacare Website Works, But Word Of Mouth Is What Sells It",
+                "Freebase - Wikipedia, the free encyclopedia",
+                "Barack Obama - Wikipedia, the free encyclopedia",
+                "NSA files decoded: Edward Snowden's surveillance revelations explained | World news | theguardian.com",
+                "http://www.theguardian.com/world/interactive/2013/nov/01/snowden-nsa-files-surveillance-revelations-decoded#section-1",
+                "NSA files decoded: Edward Snowden's surveillance revelations explained | World news | theguardian.com",
+                "http://www.theguardian.com/world/interactive/2013/nov/01/snowden-nsa-files-surveillance-revelations-decoded#section-2",
+                "NSA files decoded: Edward Snowden's surveillance revelations explained | World news | theguardian.com",
+                "http://www.theguardian.com/world/interactive/2013/nov/01/snowden-nsa-files-surveillance-revelations-decoded#section-3",
+                "NSA files decoded: Edward Snowden's surveillance revelations explained | World news | theguardian.com",
+                "http://www.theguardian.com/world/interactive/2013/nov/01/snowden-nsa-files-surveillance-revelations-decoded#section-4",
+                "NSA files decoded: Edward Snowden's surveillance revelations explained | World news | theguardian.com",
+                "http://www.theguardian.com/world/interactive/2013/nov/01/snowden-nsa-files-surveillance-revelations-decoded#section-5",
+                "NSA files decoded: Edward Snowden's surveillance revelations explained | World news | theguardian.com",
+                "http://www.theguardian.com/world/interactive/2013/nov/01/snowden-nsa-files-surveillance-revelations-decoded#section-6",
+                "Flow measurement - Wikipedia, the free encyclopedia",
+                "Public Lab: Kite mapping tundra plots",
+                "Electronic Parts, Components and Suppliers | DigiKey",
+                "DigiKey Electronics - Electronic Components Distributor",
+                "Ultrasonic Flow Meter Rental and Sales - InstrumentsDirect.com",
+                "Plympton School PTO: Election Day Bake Sale 2013",
+                "Sign Me Up",
+                "S & S Oil Company, Inc. > Home",
+                "AMI - Google Search",
+                "sean munson",
+                "The Border Crossed Us on Vimeo",
+                "Results for 'rewire' [WorldCat.org]",
+                "The Boston Globe",
+                "Nate Harrison",
+                "SMFA Boston",
+                "SMFA Boston",
+                "SMFA Boston",
+                "SMFA Boston",
+                "boston all for sale / wanted classifieds \"farm\" - craigslist",
+                "boston all for sale / wanted classifieds \"exersaucer\" - craigslist",
+                "Balance Hydrologics - Codornices Creek Gage:",
+                "Amazon.com: Buying Choices: Cracking the Coding Interview: 150 Programming Questions and Solutions",
+                "Amazon.com: Buying Choices: Cracking the Coding Interview: 150 Programming Questions and Solutions",
+                "Invitations, Free eCards and Party Planning Ideas from Evite",
+                "http://t.co/qWc9iKEmDo",
+                "https://t.co/redirect?url=http%3A%2F%2Ft.co%2FqWc9iKEmDo&sig=7694f2d134245a9f8521dedfa6faae4d86bac605&uid=15378754&iid=6da9a70069ff48559a1c1fec928102a8&nid=4+1268&t=1",
+                "Curious About The Cost Of Converting From Oil To Natural Gas \u00ab CBS Boston",
+                "C section rates vary by hospital - White Coat Notes - Boston.com",
+                "Maternity hospitals push to reduce C-section rate and medical interventions - Health & wellness - The Boston Globe",
+                "Cesarean sections and nurse-midwives",
+                "Karastan Area Rug, Original Karastan 785 Red Sarouk 8' 8\" x 10' 6\" - Rugs - Macy's",
+                "boston all for sale / wanted classifieds \"counter stool\" - craigslist",
+                "boston all for sale / wanted classifieds \"counter stools\" - craigslist",
+                "\u25b6 Visualizing Natural and Cultural Phenomena - Fernanda Vi\u00e9gas & Martin Wattenberg - May 23, 2013 - YouTube",
+                "Media Lab Conversations Series: Jillian York | MIT Media Lab",
+                "Civic Media Initiative: Assistant Professor, Journalism",
+                "boston/cambridge/brookline all for sale / wanted classifieds - craigslist",
+                "Flagship Carpets Places-To-Go Rug (3' W x 6' L) at School Outfitters",
+                "LUCA AND CO 'Traffic' Play Rug | Nordstrom",
+                "LEGO.com Products",
+                "http://www.lego.com/en-us/games/",
+                "boston all for sale / wanted classifieds \"counter stools\" - craigslist",
+                "Frequently Asked Questions | Welcome to COUHES",
+                "The Institute of Politics at Harvard University |",
+                "Definitions | Welcome to COUHES",
+                "Definitions | Welcome to COUHES",
+                "Definitions | Welcome to COUHES",
+                "Possible shooting reported at Los Angeles airport - News Nation - Boston.com",
+                "http://t.co/OlKnBe8aq2",
+                "http://www.latimes.com/local/lanow/la-me-ln-live-lax-shooting-tsa-agent-alleged-gunman-shot-20131101,0,3517669.story#axzz2jPrq4bss",
+                "http://t.co/QnlrVJSsSc",
+                "Lexington Freecycle - OFFER: Mid-century Modern Sofa (Lexington, MA)",
+                "Mapping the Globe: Initial Research into Regional Media Attention in Massachusetts | MIT Center for Civic Media",
+                "Emerson College Employment Opportunities",
+                "Pet Costumes Boston.com 2011 - Boston.com",
+                "Dogtown and Z-Boys (2001) - IMDb",
+                "Benefits | Emerson College",
+                "STOLMEN 3 sections - IKEA",
+                "Western Greenway \u2014 Waltham Land Trust",
+                "River ecosystem - Wikipedia, the free encyclopedia",
+                "River ecosystem - Wikipedia, the free encyclopedia",
+                "Fireflies Blink in Sync : Discovery News : Discovery News",
+                "Fireflies blink in synch to send a uniform message (w/ Video)",
+                "MIT SENSEable City Lab | Engaging Data 2013",
+                "boston all for sale / wanted classifieds \"counter stool\" - craigslist",
+                "MWRA School Program - \"Water Quality Testing Manual\" Guide for Middle Schools and High Schools - Free download",
+                "Underneath it all: Inside Boston's sewer system",
+                "Berico-Technologies/CLAVIN-NERD",
+                "Data transparency effort \u2013 successful in U.K. \u2013 to be tested in U.S. - Knight Foundation",
+                "http://t.co/uFYWorXhdV",
+                "Ta-Nehesi Coates and Hendrik Hertzberg at MIT on opinion journalism | ... My heart\u2019s in Accra",
+                "http://t.co/KBVAZDPUmV",
+                "Session Types | AAG Annual Meeting",
+                "Session Types | AAG Annual Meeting",
+                "Register for the Meeting | AAG Annual Meeting",
+                "Dues | AAG",
+                "About the Meeting | AAG Annual Meeting",
+                "Register for the Meeting | AAG Annual Meeting",
+                "'American Futures': Introducing Our New Project - James Fallows - The Atlantic",
+                "On Becoming a Father - Alexis C. Madrigal - The Atlantic",
+                "Martin Wattenberg: Research",
+                "Journalism and GIS \u2013 What They Can Teach Each Other with James Fallows | Esri Video",
+                "Happening - Wikipedia, the free encyclopedia",
+                "the institute for infinitely small things - Search results - Wikipedia, the free encyclopedia",
+                "Green America: Green Business Interview: New Generation Energy",
+                "The story of Chuck Lewin: How one curious kid came to found a motion-control company | Editorial Comment content from Machine Design",
+                "Bumping into the news: New Pew data shows Facebook users find news there, but don\u2019t seek it out \u00bb Nieman Journalism Lab",
+                "ManyAngles :: How many aspects of news do you know? :: BALANCE Study",
+                "Sean Munson: Projects",
+                "About the Center for Civic Media | MIT Center for Civic Media",
+                "The travels and adventures of serendipity : a study in sociological semantics and the sociology of science (eBook, 2004) [WorldCat.org]",
+                "Results for 'travels serendipity' [WorldCat.org]",
+                "http://press.princeton.edu/titles/7576.html",
+                "Constructive Politics as Public Work: Organizing the Literature",
+                "monica stephens - Google Scholar",
+                "Aaron Halfaker: publications",
+                "a blade of grass - Guidelines",
+                "Lexington Freecycle - OFFER: Sofa (Lexington Center)",
+                "newscube - Google Scholar",
+                "... My heart\u2019s in Accra | Ethan Zuckerman\u2019s online home, since 2003",
+                "Invitations, Free eCards and Party Planning Ideas from Evite",
+                "Invitations, Free eCards and Party Planning Ideas from Evite",
+                "The Society of the Spectacle - Wikipedia, the free encyclopedia",
+                "Why is the Ocean Salty?",
+                "Alewife Constructed Wetlands\u00a0Unveiled - News/Blog - Mystic River Watershed",
+                "HackerFarm01007 | research, production, creative expression, bespoke open hardware, sauna",
+                "Putting up the Gates",
+                "Fortress America",
+                "The dangers of self-segregation | The Chronicle",
+                "Wikipedia - Wikipedia, the free encyclopedia",
+                "The Decline of Wikipedia: Even As More People Than Ever Rely on It, Fewer People Create It | MIT Technology Review",
+                "The Decline of Wikipedia: Even As More People Than Ever Rely on It, Fewer People Create It | MIT Technology Review",
+                "Why has the Internet changed so little? | openDemocracy",
+                "10 Websites and Services We Loved in the 90s \u00ab BoxedArt.com Web Design Blog",
+                "1990s Internet & World Wide Web | Lisa's Nostalgia Cafe",
+                "boston all for sale / wanted classifieds \"counter stool\" - craigslist",
+                "boston all for sale / wanted classifieds \"counter stool\" - craigslist",
+                "boston all for sale / wanted classifieds \"counter stool\" - craigslist",
+                "DIY Halloween Costume Ideas: Cheap, Creative Costumes For Everyone (PHOTOS)",
+                "DIY Halloween Costume Ideas: Cheap, Creative Costumes For Everyone (PHOTOS)",
+                "Amazon.com: LEGO The Hobbit: An Unexpected Journey 3920: Toys & Games",
+                "boston all for sale / wanted classifieds \"armoire\" - craigslist",
+                "hunter boots kids | eBay",
+                "boston all for sale / wanted classifieds \"dining table\" - craigslist",
+                "Medium Oak 7 Piece Farmhouse Dining Set",
+                "boston all for sale / wanted classifieds \"bar stools\" - craigslist",
+                "History of the Internet",
+                "jupiterjenkins.com \u00bb small hope (rereading McCluhan and Yeats)",
+                "MICROSOFT DROPS AD CAMPAIGN",
+                "Cognitive Democracy \u2014 Crooked Timber",
+                "ABOUT / Fernanda Viegas & Martin Wattenberg",
+                "Convert mho to uS - Conversion of Measurement Units",
+                "Americano Creek - Wikipedia, the free encyclopedia",
+                "Balance Hydrologics",
+                "Arendt, Hannah\u00a0[Internet Encyclopedia of Philosophy]",
+                "Hannah Arendt (Stanford Encyclopedia of Philosophy)",
+                "http://www.acousticecology.org/soundbites1.html",
+                "105 Galen Street, Waltham MA - Trulia",
+                "Untitled Page",
+                "Geographic Information Systems (GIS) | Waltham",
+                "http://www.balancehydrologics.com/raingage/index.php",
+                "pH - Wikipedia, the free encyclopedia",
+                "Water quality - Wikipedia, the free encyclopedia",
+                "Water quality - Wikipedia, the free encyclopedia",
+                "Oxygen sensor - Wikipedia, the free encyclopedia",
+                "Inequality for All Movie Review (2013) | Roger Ebert",
+                "Metrics for Evaluating the Serendipity of Recommendation Lists - Springer",
+                "Linguistic Data Consortium Catalog",
+                "The Messy Link Between Slave Owners And Modern Management - Forbes",
+                "Share a link on Twitter",
+                "Share a link on Twitter",
+                "Globe creates online tool to help parents find good public schools Globe creates online tool to help parents find good public schools - West - The Boston Globe",
+                "National Security and Human Rights Campaign | Open Society Foundations (OSF)",
+                "Please, banish \u2018Sweet Caroline\u2019 from Fenway Park - Sports - The Boston Globe",
+                "Rajai Davis - Wikipedia, the free encyclopedia",
+                "David Greenspan - Wikipedia, the free encyclopedia",
+                "Randy Rainbow - Wikipedia, the free encyclopedia",
+                "George Zimmerman - Wikipedia, the free encyclopedia",
+                "http://cmp.gsas.harvard.edu/?page_id=24",
+                "Big Data, News and Geography: Research Update | MIT Center for Civic Media",
+                "Fernanda Viegas",
+                "Fernanda Vi\u00e9gas - Wikipedia, the free encyclopedia",
+                "Training: Research Involving Human Subjects | Welcome to COUHES",
+                "Kimberly Bryant and Black Girls Code | Diversity@ML",
+                "Kimberly Bryant and Black Girls Code | MIT Center for Civic Media",
+                "Kimberly Bryant and Black Girls Code | Diversity@ML",
+                "Diversity@ML",
+                "Guide to the Research Collections",
+                "University of South Carolina Libraries - Rare Books and Special Collections",
+                "Teri Rueb | DMS",
+                "Boston: Demystifying its Colonial-Era Neighborhoods | Urbane",
+                "http://www.bostonmagazine.com/news/blog/2013/11/12/urbane-boston-map-stereotypes/",
+                "Edward Snowden | World news | The Guardian",
+                "Assess hand coded test failures \u00b7 Issue #5 \u00b7 c4fcm/CLAVIN-Server",
+                "Welcome Marketplace Listeners, to American Futures - James Fallows - The Atlantic",
+                "Between Flights - James Fallows - The Atlantic",
+                "Edward J Blakely - Google Scholar Citations",
+                "Balance Hydrologics - Codornices Creek Gage:",
+                "MBTA > Schedules & Maps > Commuter Rail > Waltham",
+                "Sean Munson: Curriculum Vitae",
+                "Big Data, News and Geography: Research Update | MIT Center for Civic Media",
+                "Big Red & Shiny: The artists of the deCordova Biennial",
+                "http://gigapan.com/",
+                "Amazon.com: Buying Choices: Cracking the Coding Interview: 150 Programming Questions and Solutions",
+                "The Boston Globe",
+                "So you want to make a map\u2026 | School of Data - Evidence is Power",
+                "http://www.dailymail.co.uk/news/article-2497613/Which-11-American-nations-live-The-map-shows-U-S-divided-separate-cultures-settlers-spread-West.html",
+                "Erase the Border: A petition of 57 voices against the US-Mexico border fence on the Tohono O\u2019odham Indian Reservation",
+                "404 Not Found",
+                "Erase the Border: A petition of 57 voices against the US-Mexico border fence on the Tohono O\u2019odham Indian Reservation",
+                "Poster Boy (street artist) - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 6,
+            "countryCode": "AU",
+            "titles": [
+                "Murphy Fuel - Contact Us",
+                "http://dm.risd.edu/",
+                "http://books.google.com/books?id=qMM43x2MZ14C&pg=PA84&lpg=PA84&dq=mass+observation+documentary+film&source=bl&ots=cN9hzIN5_f&sig=5v4V-JMFy1n65cut0KFl2GoX7rQ&hl=en&sa=X&ei=aAB9UsmDOdfd4APpioHYAQ&ved=0CFkQ6AEwBQ#v=onepage&q=mass%20observation%20documentary%20film&f=false",
+                "Pierre J. Proudhon Memorial Computer",
+                "Natural resource management - Wikipedia, the free encyclopedia",
+                "Toni Collette - Wikipedia, the free encyclopedia",
+                "Terra incognita - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 7,
+            "countryCode": "DE",
+            "titles": [
+                "Why We Need Another Mapping Framework | vis4.net",
+                "Mandrake (plant) - Wikipedia, the free encyclopedia",
+                "Mandrake (plant) - Wikipedia, the free encyclopedia",
+                "\"Driving the Future Sustainable Collaborative Economy\"... Registration, Cambridge - Eventbrite",
+                "\"Good Girls & Great Leaders: Leadership in a Gendered... Tickets, Cambridge - Eventbrite",
+                "Where do you want to go today? - Wikipedia, the free encyclopedia",
+                "Project MUSE - Hannah Arendt",
+                "Boilerplate Detection Using Shallow Text Features - VideoLectures.NET"
+            ]
+        },
+        {
+            "count": 29,
+            "countryCode": "GB",
+            "titles": [
+                "Fernanda Vi\u00e9gas Bio",
+                "Massachusetts and New England 1678",
+                "social media - Google Search",
+                "Chapter XXIII The Nature Of News",
+                "The Open City | MIT Architecture",
+                "Matthew Blumberg | Berkman Center",
+                "Buyatoyota.com",
+                "The Complete Humphrey Jennings Volume One: The First Days \u2013 review | Film | The Observer",
+                "Humphrey Jennings - Wikipedia, the free encyclopedia",
+                "Humphrey Jennings - Wikipedia, the free encyclopedia",
+                "Mass Observation Archive | News 2005-6",
+                "Surveillance Society : The New Yorker",
+                "http://en.wikipedia.org/wiki/Mass-Observation",
+                "Kate Middleton Slim Figure Pictures: London Poppy Day With William - Us Weekly",
+                "Kate Middleton Slimmer Than Ever at London Poppy Day Event With Prince William: Pictures - Yahoo omg!",
+                "http://www.belmonttechinc.com/",
+                "Cambridge Acupuncture Associates - Cambridge, MA",
+                "Waltham Weather Forecast and Conditions - weather.com",
+                "boston all for sale / wanted classifieds \"pottery barn\" - craigslist",
+                "boston all for sale / wanted classifieds \"dining table\" - craigslist",
+                "Transportation Benefits | Emerson College",
+                "Charles Lewin - Wikipedia, the free encyclopedia",
+                "Civic Media Lunch: James Stewart | MIT Center for Civic Media",
+                "boston all for sale / wanted classifieds \"dining table\" - craigslist",
+                "the color of data \u2014 Visual Hint",
+                "Reuters Corpora @ NIST",
+                "People - stemming & people disambiguating \u00b7 Issue #16 \u00b7 c4fcm/AttentionMapDemo",
+                "http://en.wikipedia.org/wiki/Johann_Lamont",
+                "Emilia Clarke - Wikipedia, the free encyclopedia",
+                "BFI Screenonline: Jennings, Humphrey (1907-1950) Biography"
+            ]
+        },
+        {
+            "count": 8,
+            "countryCode": "CA",
+            "titles": [
+                "Email Preferences | Wayfair",
+                "Pregnancy Risk Categories : KellyMom",
+                "OAuth 2.0 from Chrome Extensions | Boris Smus",
+                "MEDIA-CORPS - Connecting to content that grows business",
+                "http://t.co/VWYe9q9CIp",
+                "I Am Andrew Simmons, correspondent for Al Jazeera English, and fresh out of Syria. Ask me anything! : IAmA",
+                "BALANCE: Enhancing Diversity in News and Opinion Aggregators",
+                "http://en.wikipedia.org/wiki/Lidar",
+                "Out of the press box and onto the field \u00bb Pressthink"
+            ]
+        },
+        {
+            "count": 8,
+            "countryCode": "FR",
+            "titles": [
+                "Calais Linked Data | OpenCalais",
+                "REST | OpenCalais",
+                "http://www.opencalais.com/files/RESTClient.java_.txt",
+                "Calais Viewer",
+                "GeoNames",
+                "Yahoo",
+                "OpenCalais Documentation | OpenCalais",
+                "D\u00e9rive - Wikipedia, the free encyclopedia",
+                "Theory of the Derive (Debord)"
+            ]
+        },
+        {
+            "count": 7,
+            "countryCode": "BJ",
+            "titles": [
+                "First Steps with Celery \u2014 Celery 3.1.3 documentation",
+                "Re: Just got my Sony NEX 5n - wow! A few questions about continuous shooting.: Sony NEX Talk Forum: Digital Photography Review",
+                "The Google Resume: How to Prepare for a Career and Land a Job at Apple, Microsoft, Google, or any Top Tech Company: Gayle Laakmann McDowell: 9780470927625: Amazon.com: Books",
+                "Scrapy at a glance \u2014 Scrapy 0.19.0 documentation",
+                "How to add variety to a Pandora station | How To - CNET",
+                "Amazon.com: LEGO Minecraft (Original) 21102: Toys & Games",
+                "Gold Box Deals | Today's Deals - Amazon.com",
+                "Hip-Hop Japan: Rap and the Paths of Cultural Globalization: Ian Condry: 9780822338925: Amazon.com: Books"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "FI",
+            "titles": [
+                "The Belmont Report | HHS.gov"
+            ]
+        },
+        {
+            "count": 1,
+            "countryCode": "GR",
+            "titles": [
+                "The Law of Group Polarization - Sunstein - 2002 - Journal of Political Philosophy - Wiley Online Library",
+                "The Law of Group Polarization - Sunstein - 2002 - Journal of Political Philosophy - Wiley Online Library"
+            ]
+        },
+        {
+            "count": 1,
+            "countryCode": "NL",
+            "titles": [
+                "Some Notes on the Effects of Residential Segregation, and Spatial Isolation:",
+                "David Peritz - Sarah Lawrence College Faculty David Peritz"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "PE",
+            "titles": [
+                "7 Data Viz Sites to Inspire Your Creative Eye"
+            ]
+        },
+        {
+            "count": 1,
+            "countryCode": "EG",
+            "titles": [
+                "Portal:Time - Wikipedia, the free encyclopedia",
+                "http://en.wikipedia.org/wiki/Hydrometer"
+            ]
+        },
+        {
+            "count": 1,
+            "countryCode": "ID",
+            "titles": [
+                "Sumatran tiger | Fauna & Flora International",
+                "Benedict Anderson - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 1,
+            "countryCode": "CO",
+            "titles": [
+                ".co - Wikipedia, the free encyclopedia",
+                "Nicole Holofcener - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "PH",
+            "titles": [
+                "Nearly 1,000 confirmed dead from typhoon in Philippines - World - The Boston Globe"
+            ]
+        },
+        {
+            "count": 2,
+            "countryCode": "NO",
+            "titles": [
+                "ylvis massachusetts - YouTube",
+                "Interactive Globe: Small Arms Imports & Exports",
+                "http://riittaikonen.com/projects/eyes-as-big-as-plates/"
+            ]
+        },
+        {
+            "count": 1,
+            "countryCode": "UG",
+            "titles": [
+                "Quickstart \u2014 Flask 0.10.1 documentation",
+                "Quickstart \u2014 Flask 0.10.1 documentation"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "ZA",
+            "titles": [
+                "Sexism in tech: why gender needs to stop being an issue for female geeks | memeburn"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "GE",
+            "titles": [
+                "Top 9 computer science interview questions answers"
+            ]
+        },
+        {
+            "count": 1,
+            "countryCode": "KW",
+            "titles": [
+                "GCC eyes medical test to detect homosexuality \u2013 official - Politics & Economics - ArabianBusiness.com",
+                "http://t.co/PUky2DCWDz"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "CN",
+            "titles": [
+                "The Baffler: No. 19 by John Summers \u2014 Reviews, Discussion, Bookclubs, Lists"
+            ]
+        },
+        {
+            "count": 13,
+            "countryCode": "BD",
+            "titles": [
+                "Kiwis win lone Bangladesh T20 | Sport24",
+                "http://www.dhakatribune.com/bangladesh/2013/nov/04/public-road-cut-down-brick-kilns-panchhari",
+                "\u25b6 Bangladesh: Toxic Tanneries - YouTube",
+                "http://t.co/yBdpe6UVjY",
+                "Public road cut down for brick kilns in Panchhari | Dhaka Tribune",
+                "http://t.co/wK0YlNMApx",
+                "Functional Manager (Water and Environment) Job ( ref : 6451221) in Bangladesh | Expat Engineer",
+                "Daily Sun - Opposition violating HR attacking people :: Top Bangladesh News",
+                "http://t.co/oDsjtU09In",
+                "http://t.co/OBdrpJD4uL",
+                "N.Zealand end Bangladesh tour with Twenty20 win : Mirror Sports",
+                "http://t.co/fjKv9858TW",
+                "http://t.co/BgV63NVduB",
+                "New Zealand end Bangladesh tour with Twenty20 win"
+            ]
+        },
+        {
+            "count": 2,
+            "countryCode": "MX",
+            "titles": [
+                "Twitter / Search - mexico natural resources",
+                "About: Influenza",
+                "Demi\u00e1n Bichir - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 4,
+            "countryCode": "SY",
+            "titles": [
+                "flu shot contagious - Google Search",
+                "syria sports - Google Search",
+                "syria - Google Search",
+                "Twitter / Search - syria",
+                "I am Tracey Shelton, an award-winning multimedia war correspondent who has spent the last year working inside Syria, living with civilians, rebels and \"terrorist\" leaders. (I survived and captured a deadly tank blast that went to the front page last year.) Ask me anything! : IAmA"
+            ]
+        },
+        {
+            "count": 3,
+            "countryCode": "UZ",
+            "titles": [
+                "Events | Center for Russian, East European, and Eurasian Studies | University of Michigan",
+                "http://t.co/mdvr92UE0K",
+                "Will Googoosha Be Uzbekistan's Next Dictator? - Bloomberg",
+                "http://t.co/cQJPg8GDq6"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "ML",
+            "titles": [
+                ""
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "BE",
+            "titles": [
+                "http://www.slideshare.net/bramus/geoshizzle-notes is not available"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "DK",
+            "titles": [
+                "Contemporary Furniture - Modern Furniture - BoConcept"
+            ]
+        },
+        {
+            "count": 1,
+            "countryCode": "ZW",
+            "titles": [
+                "boston all for sale / wanted classifieds \"mid century\" - craigslist",
+                "boston all for sale / wanted classifieds \"mid century\" - craigslist"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "LT",
+            "titles": [
+                "Low Cost Water Flow Sensor and Ambient Display"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "ES",
+            "titles": [
+                "The Fight for the Future: How People Defeated Hollywood and Saved the Internet--For Now | Berkman Center"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "CH",
+            "titles": [
+                "Effect of treadmill exercise on circ... [Med Princ Pract. 2004 Ja"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "IR",
+            "titles": [
+                "Emerald | Library Hi Tech News | Did webrings die? An exploratory study"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "IE",
+            "titles": [
+                "David Shukman - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "RU",
+            "titles": [
+                "Nadezhda Tolokonnikova - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "IL",
+            "titles": [
+                "Fog of War"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "AF",
+            "titles": [
+                "Abdul Ghani Baradar - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 1,
+            "countryCode": "IQ",
+            "titles": [
+                "Tuesday Tigris Tales: Jennifer Veilleux's Interview with Johanna Rivera, Water & Human Rights Activist in Iraq - WaterWired",
+                "https://t.co/LU3GasKuPw"
+            ]
+        },
+        {
+            "count": 0,
+            "countryCode": "AE",
+            "titles": [
+                "doodle - Google Search"
+            ]
+        }
+    ],
+    "primaryStates": [
+        {
+            "count": 79,
+            "stateCode": "MA",
+            "titles": [
+                "Frequently Asked Questions | Welcome to COUHES",
+                "ami software - Google Search",
+                "ami - Google Search",
+                "From Our Cabinet: New England Maps",
+                "boston map stereotype - Google Search",
+                "SMFA Faculty | Information about the Faculty at SMFA Boston",
+                "Waltham News - Events - School Info - City Services - Boston.com",
+                "Registration Instructions: MIT Office of the Registrar",
+                "Registration Instructions: MIT Office of the Registrar",
+                "Mapping the (Boston) Globe: A project from the MIT Center for Civic Media",
+                "What did you give up to SAHM?",
+                "c4fcm (MIT Center for Civic Media)",
+                "More parents are refusing immunizations for their children, raising fears among the medical community of disease outbreaks - Health & wellness - The Boston Globe",
+                "Build a Game to Map the Brain @ MIT: Full Stack Developer at Massachusetts Institute of Technology (MIT), EyeWire - JavaScript - Stack Overflow Careers 2.0",
+                "c4fcm (MIT Center for Civic Media)",
+                "http://cyber.law.harvard.edu/node/8618",
+                "Parchment",
+                "Parchment Exchange - Leader in eTranscript Exchange - Massachusetts Institute of Technology",
+                "Transcripts: MIT Office of the Registrar",
+                "http://web.mit.edu/registrar/records/transcripts/official.html",
+                "SMFA Boston",
+                "SMFA Boston",
+                "SMFA Boston",
+                "School of the Museum of Fine Arts | SMFA Boston",
+                "Massachusetts insurers see health care use picking up, and that could make your insurance more costly - Business - The Boston Globe",
+                "Jared Remy, son of Red Sox broadcaster Jerry Remy, arrested in girlfriend\u2019s killing - Boston.com",
+                "Waltham liquor license proposal draws fire from restaurant owners - West - The Boston Globe",
+                "Parexel forecast beats analyst estimates - Business - The Boston Globe",
+                "Gridiron Club honors Bentley quarterback Bryant Johnson, Harvard and Framingham state coaches - West - The Boston Globe",
+                "ImmunoGen terminates lung cancer clinical trial - Technology - Boston.com",
+                "c4fcm/Boston-Attention-Mapping",
+                "Now to keep Boston voters\u2019 faith - Metro - The Boston Globe",
+                "MIT School of Architecture + Planning",
+                "Civic Media Initiative: Assistant Professor, Visual and Media Arts",
+                "AMI - Google Search",
+                "The Boston Globe",
+                "SMFA Boston",
+                "SMFA Boston",
+                "SMFA Boston",
+                "SMFA Boston",
+                "boston all for sale / wanted classifieds \"farm\" - craigslist",
+                "boston all for sale / wanted classifieds \"exersaucer\" - craigslist",
+                "C section rates vary by hospital - White Coat Notes - Boston.com",
+                "boston all for sale / wanted classifieds \"counter stool\" - craigslist",
+                "boston all for sale / wanted classifieds \"counter stools\" - craigslist",
+                "Civic Media Initiative: Assistant Professor, Journalism",
+                "boston/cambridge/brookline all for sale / wanted classifieds - craigslist",
+                "boston all for sale / wanted classifieds \"counter stools\" - craigslist",
+                "Frequently Asked Questions | Welcome to COUHES",
+                "Mapping the Globe: Initial Research into Regional Media Attention in Massachusetts | MIT Center for Civic Media",
+                "Pet Costumes Boston.com 2011 - Boston.com",
+                "Benefits | Emerson College",
+                "Western Greenway \u2014 Waltham Land Trust",
+                "MIT SENSEable City Lab | Engaging Data 2013",
+                "boston all for sale / wanted classifieds \"counter stool\" - craigslist",
+                "MWRA School Program - \"Water Quality Testing Manual\" Guide for Middle Schools and High Schools - Free download",
+                "Underneath it all: Inside Boston's sewer system",
+                "Green America: Green Business Interview: New Generation Energy",
+                "Sean Munson: Projects",
+                "About the Center for Civic Media | MIT Center for Civic Media",
+                "The travels and adventures of serendipity : a study in sociological semantics and the sociology of science (eBook, 2004) [WorldCat.org]",
+                "boston all for sale / wanted classifieds \"counter stool\" - craigslist",
+                "boston all for sale / wanted classifieds \"counter stool\" - craigslist",
+                "boston all for sale / wanted classifieds \"counter stool\" - craigslist",
+                "boston all for sale / wanted classifieds \"armoire\" - craigslist",
+                "boston all for sale / wanted classifieds \"dining table\" - craigslist",
+                "boston all for sale / wanted classifieds \"bar stools\" - craigslist",
+                "105 Galen Street, Waltham MA - Trulia",
+                "Untitled Page",
+                "Geographic Information Systems (GIS) | Waltham",
+                "Share a link on Twitter",
+                "Share a link on Twitter",
+                "Globe creates online tool to help parents find good public schools Globe creates online tool to help parents find good public schools - West - The Boston Globe",
+                "Please, banish \u2018Sweet Caroline\u2019 from Fenway Park - Sports - The Boston Globe",
+                "Fernanda Vi\u00e9gas - Wikipedia, the free encyclopedia",
+                "Boston: Demystifying its Colonial-Era Neighborhoods | Urbane",
+                "http://www.bostonmagazine.com/news/blog/2013/11/12/urbane-boston-map-stereotypes/",
+                "MBTA > Schedules & Maps > Commuter Rail > Waltham",
+                "Big Red & Shiny: The artists of the deCordova Biennial",
+                "The Boston Globe"
+            ]
+        },
+        {
+            "count": 0,
+            "stateCode": "WV",
+            "titles": [
+                "In Gentrified Oakland, Private Security Takes Hold - COLORLINES"
+            ]
+        },
+        {
+            "count": 7,
+            "stateCode": "HI",
+            "titles": [
+                "Geo Projections \u00b7 mbostock/d3 Wiki",
+                "Smart Wheel By FlyKly Could Change Everything About Commuting",
+                "https://www.facebook.com/help/www/452842778086837",
+                "Amazon.com: Buying Choices: Cracking the Coding Interview: 150 Programming Questions and Solutions",
+                "Amazon.com: Buying Choices: Cracking the Coding Interview: 150 Programming Questions and Solutions",
+                "River ecosystem - Wikipedia, the free encyclopedia",
+                "River ecosystem - Wikipedia, the free encyclopedia",
+                "Amazon.com: Buying Choices: Cracking the Coding Interview: 150 Programming Questions and Solutions"
+            ]
+        },
+        {
+            "count": 0,
+            "stateCode": "KS",
+            "titles": [
+                "Fernanda Vi\u00e9gas \u2013 Wikip\u00e9dia, a enciclop\u00e9dia livre"
+            ]
+        },
+        {
+            "count": 1,
+            "stateCode": "ME",
+            "titles": [
+                "kanarinka | MIT Center for Civic Media",
+                "Map and Directions to the Gorham Campus | About USM | University of Southern Maine"
+            ]
+        },
+        {
+            "count": 0,
+            "stateCode": "DC",
+            "titles": [
+                "Civic Media Lunch: D.C. Vito, \"Media Breaker\" | MIT Center for Civic Media"
+            ]
+        },
+        {
+            "count": 11,
+            "stateCode": "CA",
+            "titles": [
+                "Public Education or Public Segregation? | transformED",
+                "Map of the World, 1676",
+                "Deep Zoom - Wikipedia, the free encyclopedia",
+                "Freebase - Wikipedia, the free encyclopedia",
+                "Dogtown and Z-Boys (2001) - IMDb",
+                "Martin Wattenberg: Research",
+                "Amazon.com: LEGO The Hobbit: An Unexpected Journey 3920: Toys & Games",
+                "Americano Creek - Wikipedia, the free encyclopedia",
+                "Balance Hydrologics",
+                "http://www.balancehydrologics.com/raingage/index.php",
+                "Rajai Davis - Wikipedia, the free encyclopedia",
+                "David Greenspan - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 4,
+            "stateCode": "GA",
+            "titles": [
+                "Jon Orwant - Research at Google",
+                "Ultrasonic Flow Meter Rental and Sales - InstrumentsDirect.com",
+                "Balance Hydrologics - Codornices Creek Gage:",
+                "Fireflies blink in synch to send a uniform message (w/ Video)",
+                "Balance Hydrologics - Codornices Creek Gage:"
+            ]
+        },
+        {
+            "count": 3,
+            "stateCode": "NJ",
+            "titles": [
+                "Zeega Team |",
+                "Possible shooting reported at Los Angeles airport - News Nation - Boston.com",
+                "http://t.co/OlKnBe8aq2",
+                "pH - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 0,
+            "stateCode": "AZ",
+            "titles": [
+                "Where does Chrome save the Sqlite Databases created by Javascript - Stack Overflow"
+            ]
+        },
+        {
+            "count": 17,
+            "stateCode": "WA",
+            "titles": [
+                "Matthew W. Wilson",
+                "http://www.amazon.com/Streetwise-Class-Change-Urban-Community/dp/0226018164",
+                ".cc - Wikipedia, the free encyclopedia",
+                "Calais Marmoset | OpenCalais",
+                "http://news.dice.com/2012/09/26/javascript-interview-questions/",
+                "Lewis Canyon Petroglyph Site - Gigapan Images - Archaeology News from Past Horizons : Archaeology News from Past Horizons",
+                "Job Opening: Research Scientist | MIT Center for Civic Media",
+                "Review of The Baffler, issue no.19 | Open Letters Monthly - an Arts and Literature Review",
+                "sean munson",
+                "Cesarean sections and nurse-midwives",
+                "LUCA AND CO 'Traffic' Play Rug | Nordstrom",
+                "Session Types | AAG Annual Meeting",
+                "Session Types | AAG Annual Meeting",
+                "Register for the Meeting | AAG Annual Meeting",
+                "Dues | AAG",
+                "Register for the Meeting | AAG Annual Meeting",
+                "Medium Oak 7 Piece Farmhouse Dining Set",
+                "Sean Munson: Curriculum Vitae"
+            ]
+        },
+        {
+            "count": 6,
+            "stateCode": "IL",
+            "titles": [
+                "Chapter IV: Time and Attention",
+                "A Reloaded 'Baffler' Blasts Away - PageView - The Chronicle of Higher Education",
+                "Are Flu Shot Symptoms Contagious? | LIVESTRONG.COM",
+                "http://www.latimes.com/local/lanow/la-me-ln-live-lax-shooting-tsa-agent-alleged-gunman-shot-20131101,0,3517669.story#axzz2jPrq4bss",
+                "http://t.co/QnlrVJSsSc",
+                "MICROSOFT DROPS AD CAMPAIGN",
+                "Edward J Blakely - Google Scholar Citations"
+            ]
+        },
+        {
+            "count": 3,
+            "stateCode": "PA",
+            "titles": [
+                "Chapter XXI The Buying Public",
+                "Invitations, Free eCards and Party Planning Ideas from Evite",
+                "Invitations, Free eCards and Party Planning Ideas from Evite",
+                "Linguistic Data Consortium Catalog"
+            ]
+        },
+        {
+            "count": 0,
+            "stateCode": "MT",
+            "titles": [
+                "Rhizome | Art Criticism in the Age of Yelp"
+            ]
+        },
+        {
+            "count": 5,
+            "stateCode": "MN",
+            "titles": [
+                "Terra Incognita | Interactive Design For Museums and Cultural Institutions",
+                "Plympton School PTO: Election Day Bake Sale 2013",
+                "Sign Me Up",
+                "The story of Chuck Lewin: How one curious kid came to found a motion-control company | Editorial Comment content from Machine Design",
+                "Constructive Politics as Public Work: Organizing the Literature",
+                "Aaron Halfaker: publications"
+            ]
+        },
+        {
+            "count": 4,
+            "stateCode": "KY",
+            "titles": [
+                "Vintage Solid Wood Dining Table w/leaf",
+                "Your Town - Local News for Eastern Massachusetts & Boston - Boston.com",
+                "Kentucky's Obamacare Website Works, But Word Of Mouth Is What Sells It",
+                "Lexington Freecycle - OFFER: Mid-century Modern Sofa (Lexington, MA)",
+                "Lexington Freecycle - OFFER: Sofa (Lexington Center)"
+            ]
+        },
+        {
+            "count": 1,
+            "stateCode": "IN",
+            "titles": [
+                "Upcoming Events | MIT Center for Civic Media",
+                "Results for 'rewire' [WorldCat.org]"
+            ]
+        },
+        {
+            "count": 8,
+            "stateCode": "NY",
+            "titles": [
+                "What We Do - Black Girls Code\u00a0\u00a0 imagine. build. create.",
+                "Job Listings - Stack Overflow Careers 2.0",
+                "Boston, MA news, breaking news, sports, video | Boston.com",
+                "http://parenting.blogs.nytimes.com/",
+                "The Border Crossed Us on Vimeo",
+                "Invitations, Free eCards and Party Planning Ideas from Evite",
+                "HackerFarm01007 | research, production, creative expression, bespoke open hardware, sauna",
+                "Fortress America",
+                "Poster Boy (street artist) - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 2,
+            "stateCode": "AK",
+            "titles": [
+                "The New York Times - Breaking News, World News & Multimedia",
+                "02451 to undefined 1 WORCESTER ROAD FRAMINGHAM, MA 01701 - Google Maps",
+                "Public Lab: Kite mapping tundra plots"
+            ]
+        },
+        {
+            "count": 13,
+            "stateCode": "TX",
+            "titles": [
+                "Diversity Correlates With Success: Gender and Synthetic Biology | Oscillator, Scientific American Blog Network",
+                "Kacey Musgraves Miranda Lambert Feud? Musgraves Frowns at CMAs - Us Weekly",
+                "Charles Schwab Client Center",
+                "Schwab Bank Bill Pay | Bill Pay",
+                "Charles Schwab Client Center",
+                "Schwab Bank Bill Pay | Bill Pay",
+                "Charles Schwab Client Center",
+                "Transactions History",
+                "Transactions History",
+                "Online Transfers",
+                "Schwab BillPay\u00ae | Sign In",
+                "Online Transfers",
+                "\u25b6 Visualizing Natural and Cultural Phenomena - Fernanda Vi\u00e9gas & Martin Wattenberg - May 23, 2013 - YouTube",
+                "Metrics for Evaluating the Serendipity of Recommendation Lists - Springer"
+            ]
+        },
+        {
+            "count": 5,
+            "stateCode": "FL",
+            "titles": [
+                "Waltham museum's executive director resigns - Waltham - Your Town - Boston.com",
+                "About the Meeting | AAG Annual Meeting",
+                "Results for 'travels serendipity' [WorldCat.org]",
+                "Randy Rainbow - Wikipedia, the free encyclopedia",
+                "George Zimmerman - Wikipedia, the free encyclopedia",
+                "Training: Research Involving Human Subjects | Welcome to COUHES"
+            ]
+        },
+        {
+            "count": 0,
+            "stateCode": "MS",
+            "titles": [
+                "Mississippi - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 0,
+            "stateCode": "AL",
+            "titles": [
+                "Alabama - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 1,
+            "stateCode": "MD",
+            "titles": [
+                "Yogurt & Vaginal Health | LIVESTRONG.COM",
+                "Teri Rueb | DMS"
+            ]
+        },
+        {
+            "count": 1,
+            "stateCode": "CT",
+            "titles": [
+                "S & S Oil Company, Inc. > Home",
+                "Fireflies Blink in Sync : Discovery News : Discovery News"
+            ]
+        },
+        {
+            "count": 1,
+            "stateCode": "OR",
+            "titles": [
+                "Curious About The Cost Of Converting From Oil To Natural Gas \u00ab CBS Boston",
+                "http://gigapan.com/"
+            ]
+        },
+        {
+            "count": 0,
+            "stateCode": "IA",
+            "titles": [
+                "Media Lab Conversations Series: Jillian York | MIT Media Lab"
+            ]
+        },
+        {
+            "count": 5,
+            "stateCode": "OH",
+            "titles": [
+                "LEGO.com Products",
+                "http://www.lego.com/en-us/games/",
+                "Arendt, Hannah\u00a0[Internet Encyclopedia of Philosophy]",
+                "Hannah Arendt (Stanford Encyclopedia of Philosophy)",
+                "Water quality - Wikipedia, the free encyclopedia",
+                "Water quality - Wikipedia, the free encyclopedia"
+            ]
+        },
+        {
+            "count": 0,
+            "stateCode": "MI",
+            "titles": [
+                "ManyAngles :: How many aspects of news do you know? :: BALANCE Study"
+            ]
+        },
+        {
+            "count": 1,
+            "stateCode": "CO",
+            "titles": [
+                "newscube - Google Scholar",
+                "So you want to make a map\u2026 | School of Data - Evidence is Power"
+            ]
+        },
+        {
+            "count": 2,
+            "stateCode": "WI",
+            "titles": [
+                "Wikipedia - Wikipedia, the free encyclopedia",
+                "The Decline of Wikipedia: Even As More People Than Ever Rely on It, Fewer People Create It | MIT Technology Review",
+                "The Decline of Wikipedia: Even As More People Than Ever Rely on It, Fewer People Create It | MIT Technology Review"
+            ]
+        },
+        {
+            "count": 1,
+            "stateCode": "MO",
+            "titles": [
+                "Big Data, News and Geography: Research Update | MIT Center for Civic Media",
+                "Big Data, News and Geography: Research Update | MIT Center for Civic Media"
+            ]
+        }
+    ],
     "total_docs": 4267,
-    "total_extracted_docs": 2304,
+    "total_extracted_docs": 2768,
     "total_geoparsed_docs": 475
 }

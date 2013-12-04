@@ -1,6 +1,7 @@
 from boilerpipe.extract import Extractor
 import httplib
 
+
 #	BatchExtractor takes a cursor of MongoDB docs,
 # 	grabs the URLS, extracts the content, and saves the content back to the DB in the 'extracted_text' field
 # 	Use urls_to_ignore.txt to tell it what to ignore
@@ -16,23 +17,30 @@ class BatchExtractor():
 	def run(self):
 		for doc in self.doc_cursor:
 			url = doc['url']
-			print url
+			
 			if (self.keepText(url)):
 				try:
-					extractor = Extractor(extractor='ArticleExtractor', url=url)
+					extractor = Extractor(extractor='DefaultExtractor', url=url)
 					extracted_text = extractor.getText()
-					print extracted_text
-					if (len(extracted_text)) > 0):
-						doc['extracted_text'] = extracted_text
+				
+					if (len(extracted_text) > 0):
+						title = extractor.getTitle()
+						print url
+						print extractor.getTitle()
+						print extracted_text
+						if title != None:
+							doc['extracted_text'] = title + " " + extracted_text
+						else:
+							doc['extracted_text'] = extracted_text
 						self.db_collection.save(doc)
 				except (IOError, httplib.HTTPException):
-					print "HTTPException with url " + url
+					fprint= "HTTPException with url " + url
 				except (LookupError):
-					print "LookupError - Maybe not text or weird encoding " + url
+					fprint ="LookupError - Maybe not text or weird encoding " + url
 	def keepText(self, url):
 		for domain in self.blacklisted_domains:
 			if domain in url:
-				print 'discarding url because its in the urls_to_ignore.txt file'
+				#print 'discarding url because its in the urls_to_ignore.txt file'
 				return False
 		return True
 
