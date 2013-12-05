@@ -64,33 +64,32 @@ for geoDoc in geoparsedDocs:
 	
 	for country in geoDoc["geodata"]["primaryCountries"]:
 		entered = None
+		title = geoDoc["url"]
+		if "title" in geoDoc and len(geoDoc["title"]) > 0: 
+			title = geoDoc["title"]
+		
 		for countryEntry in primaryCountries:
 			if countryEntry["countryCode"] == country:
 				countryEntry["count"] = countryEntry["count"] + 1
-				if len(geoDoc["title"]) > 0: 
-					countryEntry["titles"].append(geoDoc["title"])
-				else:
-					countryEntry["titles"].append(geoDoc["url"])
+				countryEntry["titles"].append(title)
 				entered = True
 		if entered == None:
-			primaryCountries.append({'countryCode':country, 'count':0, 'titles':[ geoDoc["title"] ]})
+			primaryCountries.append({'countryCode':country, 'count':1, 'titles':[ title ]})
 			entered = True
 		
 		# only US states for now
 		if country == "US":
 			for state in geoDoc["geodata"]["primaryStates"]:
 				entered = None
+
 				if len(state) == 2 and state.isalpha():
 					for stateEntry in primaryStates:
 						if stateEntry["stateCode"] == state:
 							stateEntry["count"] = stateEntry["count"] + 1
-							if len(geoDoc["title"]) > 0: 
-								stateEntry["titles"].append(geoDoc["title"])
-							else:
-								stateEntry["titles"].append(geoDoc["url"])
+							stateEntry["titles"].append(title)
 							entered = True
 					if entered == None:
-						primaryStates.append({'stateCode':state, 'count':0, 'titles':[ geoDoc["title"] ]})
+						primaryStates.append({'stateCode':state, 'count':0, 'titles':[ title ]})
 						entered = True
 		
 

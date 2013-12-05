@@ -108,7 +108,7 @@ form{
 		if (getQueryVariable("sourceWeek")){
 			window.MAP_PROPERTY = getQueryVariable("sourceWeek");
 		} else {
-			window.MAP_PROPERTY = "dr_metadata.json";
+			window.MAP_PROPERTY = "rb_metadata.json";
 		}
 		window.SOURCE = window.MAP_PROPERTY.substring(0, window.MAP_PROPERTY.length - 6);
 		
@@ -140,7 +140,7 @@ form{
 </script>
 <div class="navbar navbar-fixed-top navbar-inverse">
   <div class="navbar-inner">
-    <a class="brand" href="#" style="color:white;margin-left:0px">DR Map
+    <a class="brand" href="#" style="color:white;margin-left:0px">RB Map
 	
   </div>
 </div>
@@ -191,7 +191,7 @@ var rateById = d3.map();
 
 queue()
     .defer(d3.json, "data/WorldAndStates.json")
-    .defer(d3.json, "data/dr_metadata.json")
+    .defer(d3.json, "data/rb_metadata.json")
     .defer(d3.csv, "data/state_and_country_codes.csv")
     .await(ready);
 function ready(error, shapesData, propertiesData, geoCodes) {

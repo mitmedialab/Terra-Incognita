@@ -9,3 +9,7 @@ www/app.config
 *.pyc
 
 www/csd_metadata.txt
+
+www/history-rb.txt
+
+www/static/data/rb_metadata.json

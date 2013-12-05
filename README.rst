@@ -22,6 +22,8 @@ You need to install
 
 - MongoDB
 
+- Python Flask
+
 
 
 To test whether python-boilerpipe is working properly - try running test_content_extraction.py.

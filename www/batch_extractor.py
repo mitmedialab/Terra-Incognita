@@ -4,7 +4,7 @@ import httplib
 
 #	BatchExtractor takes a cursor of MongoDB docs,
 # 	grabs the URLS, extracts the content, and saves the content back to the DB in the 'extracted_text' field
-# 	Use urls_to_ignore.txt to tell it what to ignore
+# 	Use urls_to_ignore.txt to tell it what to ignore like gmail, etc
 
 class BatchExtractor():
 	def __init__(self, doc_cursor, db_collection):
@@ -25,18 +25,25 @@ class BatchExtractor():
 				
 					if (len(extracted_text) > 0):
 						title = extractor.getTitle()
-						print url
+						'''print url
 						print extractor.getTitle()
-						print extracted_text
+						print extracted_text'''
 						if title != None:
+							doc['title'] = title
 							doc['extracted_text'] = title + " " + extracted_text
 						else:
 							doc['extracted_text'] = extracted_text
 						self.db_collection.save(doc)
+						print 'OK -' + url
 				except (IOError, httplib.HTTPException):
-					fprint= "HTTPException with url " + url
+					print "HTTPException with url " + url
 				except (LookupError):
-					fprint ="LookupError - Maybe not text or weird encoding " + url
+					print "LookupError - Maybe not text or weird encoding " + url
+				except (UnicodeDecodeError, UnicodeEncodeError):
+					print "UnicodeDecodeError or UnicodeEncodeError- " + url
+				except:
+					print "Unknown Exception: " + url
+					print e
 	def keepText(self, url):
 		for domain in self.blacklisted_domains:
 			if domain in url:
