@@ -13,3 +13,19 @@ www/csd_metadata.txt
 www/history-rb.txt
 
 www/static/data/rb_metadata.json
+
+www/static/csd_map.html
+
+www/static/data/edp_metadata.json
+
+www/static/data/egraf_metadata.json
+
+www/static/data/egraf_metadata_whitelist.json
+
+www/static/edp_map.html
+
+www/static/eg_map.html
+
+www/static/eg_whitelist_map.html
+
+www/static/rb_map.html

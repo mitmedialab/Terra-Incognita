@@ -12,7 +12,7 @@
 });
 */
 var urlMap = new Array();
-var serverURL = "http://new-host-2.home:5000/";
+var serverURL = "http://dhcp-18-111-26-19.dyn.mit.edu:5000/";
 var daysHistory = 30;
 /*
   Stuff to do right when app is installed:
@@ -30,6 +30,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
       console.log(results.length + " results");
       postData('history/', 'history', results);
     });
+
 });
 
 /*
@@ -59,13 +60,14 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     }
     else if (urlMap[tabId] && changeInfo.status == "complete"){
             urlMap[tabId] = false;
-            
+           // chrome.tts.speak('I just got your url. hahahahaha',{'enqueue': true, 'gender':'female','lang':'en-US'});
             //retrieve latest URL from history so we get the metadata
             chrome.history.search({text: '', maxResults:1}, function(results) 
             { 
               
               if (tab.url == results[0].url){
                 postData('monitor/', 'logURL', results[0]);
+
               }
             });
     }

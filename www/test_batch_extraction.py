@@ -17,7 +17,7 @@ config.read(os.path.join(BASE_DIR,CONFIG_FILENAME))
 db_client = MongoClient()
 db = db_client[config.get('db','name')]
 db_collection = db[config.get('db','collection')]
-doc_cursor = db_collection.find()
+doc_cursor = db_collection.find(timeout=False)
 batcher = BatchExtractor(doc_cursor, db_collection)
 batcher.run()
 

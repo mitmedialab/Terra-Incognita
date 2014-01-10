@@ -42,6 +42,32 @@ def individual_map():
 def dr():
 	return app.send_static_file('dr_map.html')
 
+#RB Map test 
+@app.route('/rb_map.html')
+def rb():
+	return app.send_static_file('rb_map.html')
+
+#EDP Map test 
+@app.route('/edp_map.html')
+def edp():
+	return app.send_static_file('edp_map.html')
+
+#EG Map test 
+@app.route('/eg_map.html')
+def eg():
+	return app.send_static_file('eg_map.html')
+
+
+#EG Whitelist Map test 
+@app.route('/eg_whitelist_map.html')
+def eg_whitelist():
+	return app.send_static_file('eg_whitelist_map.html')
+
+#CSD Map test 
+@app.route('/csd_map.html')
+def csd():
+	return app.send_static_file('csd_map.html')
+
 #Example sending JSON
 @app.route('/map.json')
 def map():

@@ -1,0 +1,49 @@
+Search MongoDB using MongoHub for regex
+{"url" : {"$regex" : ".*huffingtonpost.*"}}
+
+
+
+
+Search MongoDB with MongoHub for text length
+{"$where":"this.extracted_text && this.extracted_text.length > 500"}
+
+Remove field from Mongodb
+{"$unset": {"geodata":"1"}}
+
+Regex for matching MediaCloud top level domain names
+https?:((/.*?/(.*?)/)|.*\n)
+
+Regex for newlines
+^\n
+
+Regex select trailing slash
+/$
+
+Regex remove www or something but only from beginning of line
+^www\.
+
+Regex match livejournal accounts
+.*livejournal.com
+
+Match short domains for manual deleting if bad data
+^.{1,6}\n
+
+
+Converting mediacloud csv to tld whitelist (possibly write scripte for this later)
+1. delete other columns in spreadsheet program
+2. use above regex to select tlds
+3. copy to new file
+3.5 delete extra /n generated
+4. manually delete bad uris
+5. delete "#spider" from url
+6. use Sublime "permute lines>unique" to remove dupes
+7. Remove trailing slash from urls if they have one
+8. remove http:// or https://
+9. remove www. and blog. and blogs. and m. to keep the widest range of these sites (e.g. anything blah.nytimes.com would be included rather than just www.nytimes.com)
+10. reorder alphabetically and then permute lines again
+11. manually remove any long-looking or bad looking urls
+12. remove all specific livejournal.com links and replace with top level 'livejournal.com' so any livejournal account will be counted as news
+13. Match domains with length less than 3 chars and delete
+14. Manually delete domains beginnig with xn
+15. Manually delete anything that contains http: because it's definitely bad data at this point
+16. Search for ':' and manually delete anything that looks like bad data

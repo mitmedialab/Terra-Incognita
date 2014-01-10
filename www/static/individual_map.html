@@ -140,7 +140,7 @@ form{
 </script>
 <div class="navbar navbar-fixed-top navbar-inverse">
   <div class="navbar-inner">
-    <a class="brand" href="#" style="color:white;margin-left:0px">RB Map
+    <a class="brand" href="#" style="color:white;margin-left:0px">CSD Map
 	
   </div>
 </div>
@@ -191,7 +191,7 @@ var rateById = d3.map();
 
 queue()
     .defer(d3.json, "data/WorldAndStates.json")
-    .defer(d3.json, "data/rb_metadata.json")
+    .defer(d3.json, "data/csd_metadata.json")
     .defer(d3.csv, "data/state_and_country_codes.csv")
     .await(ready);
 function ready(error, shapesData, propertiesData, geoCodes) {

@@ -41,7 +41,7 @@ db_collection = db[config.get('db','collection')]
 
 #gather stats
 totalDocs = db_collection.find().count()
-totalExtractedTextDocs = db_collection.find({ "extracted_text" : { "$exists" : True } }).count()
+totalExtractedTextDocs = db_collection.find({ "$where" : "this.extracted_text && this.extracted_text.length > 0" }).count()
 geoparsedDocs = db_collection.find({ "geodata" : { "$exists" : True } })
 
 metadata = {}
