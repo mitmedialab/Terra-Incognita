@@ -1,10 +1,23 @@
-import os
-import logging
-import ConfigParser
-import pymongo
+from boilerpipe.extract import Extractor
+from bson.objectid import ObjectId
+from bson import BSON
+from bson import json_util
+from flask import Flask, session, render_template, json, jsonify, request
+from flask.ext.browserid import BrowserID
+from flask.ext.login import LoginManager
 from pymongo import MongoClient
-from flask import Flask, render_template, json, jsonify, request
+from user import get_user_from_DB_row, create_new_user
+from user import User 
+import ConfigParser
+import datetime
+import httplib
+import json
+import logging
+import os
 import pprint
+import pymongo
+import requests
+import requests.exceptions
 
 # constants
 CONFIG_FILENAME = 'app.config'
@@ -15,9 +28,72 @@ config = ConfigParser.ConfigParser()
 config.read(os.path.join(BASE_DIR,CONFIG_FILENAME))
 
 app = Flask(__name__,static_url_path='')
+app.secret_key= config.get('app','secret_key')
+
+# Geoserver
+app.geoserver = config.get('geoparser','geoserver_url')
+
+# MongoDB & links to each collection
 db_client = MongoClient()
-db = db_client[config.get('db','name')]
-db_collection = db[config.get('db','collection')]
+app.db = db_client[config.get('db','name')]
+app.db_user_history_collection = app.db[config.get('db','user_history_item_collection')]
+app.db_user_collection = app.db[config.get('db','user_collection')]
+app.db_recommendation_collection = app.db[config.get('db','recommendation_item_collection')]
+
+# ------------------------- -------------------------------------
+# MOVE THIS SOMEWHERE ELSE
+# This callback is used to reload the user object from the user ID stored in the session.
+# It should take the unicode ID of a user, and return the corresponding user object.
+# It should return None (not raise an exception) if the ID is not valid.
+# (In that case, the ID will manually be removed from the session and processing will continue.)
+def get_user_by_id(id):
+	user = None
+	for row in app.db_user_collection.find({ '_id': ObjectId(id) }):
+		user = get_user_from_DB_row(row)
+		user.lastLoginDate = datetime.datetime.utcnow();
+		break
+	if (user is not None):
+		app.db_user_collection.save(user.__dict__)
+	return user
+
+
+#	Given the response from BrowserID, finds or creates a user.
+#	If a user can neither be found nor created, returns None.
+#	NOTE THAT ID must be converted to STRING from MongoDB
+def get_user_for_browserid(kwargs):
+	
+	for row in app.db_user_collection.find({ 'email': kwargs.get('email') }):
+		if row is not None:
+			return get_user_from_DB_row(row)
+	for row in app.db_user_collection.find({ '_id': kwargs.get('id') }):
+		if row is not None:
+			return get_user_from_DB_row(row)
+	# not found - create the user
+	return create_browserid_user(kwargs)
+
+
+#	Takes browserid response and creates a user.
+def create_browserid_user(kwargs):
+	
+	if kwargs['status'] == 'okay':
+		user = create_new_user(kwargs["email"])
+		user_id = app.db_user_collection.insert(user.__dict__)
+		user._id = user_id
+		return user
+	else:
+		return None
+
+# END MOVE THIS SOMEWHERE ELSE
+# ------------------------- -------------------------------------
+
+#Mozilla Persona
+login_manager = LoginManager()
+login_manager.user_loader(get_user_by_id)
+login_manager.init_app(app)
+
+browser_id = BrowserID()
+browser_id.user_loader(get_user_for_browserid)
+browser_id.init_app(app)
 
 # setup logging and pretty printing
 pp = pprint.PrettyPrinter(indent=4)
@@ -25,6 +101,7 @@ handler = logging.FileHandler('server.log')
 logging.basicConfig(filename='server.log',level=logging.DEBUG)
 log = logging.getLogger('server')
 log.info("---------------------------------------------------------------------------")
+
 
 
 #Index test 
@@ -63,60 +140,98 @@ def eg():
 def eg_whitelist():
 	return app.send_static_file('eg_whitelist_map.html')
 
-#CSD Map test 
+#CSD Map test
 @app.route('/csd_map.html')
 def csd():
 	return app.send_static_file('csd_map.html')
 
 #Example sending JSON
-@app.route('/map.json')
-def map():
-    return jsonify(userid=2, map='this is a json get test');
+@app.route('/map/<user>')
+def map(user=None):
+	if (user is not None):
+		userHistory = []
+		for row in app.db_user_history_collection.find({ 'userID': user }):
+			print row
+			userHistory.append(row)
+		return json.dumps(userHistory, sort_keys=True, indent=4, default=json_util.default) 
+	else:
+		return jsonify(error='No user ID specified');
 
 @app.route('/history/', methods=['POST'])
 def processHistory():
 	log.info("Processing browser history")
 	historyItems = json.loads(request.form['history'])
-	docIDs = db_collection.insert(historyItems)
+	#docIDs = db_collection.insert(historyItems)
+	
 	#batchExtractor = BatchExtractor(docIDs, db_collection)
 	#batchExtractor.run()
-	# TODO
-	# batchExtractor = BatchExtractor(docIDs, db_collection)
-	# check if this user already has history doc, if so, then ignore this request
-	# save 30 days of history to mongoDB as single doc
-	# mark that info as history (documentType = history) so can compare to after using extension
-	# start the geoparsing, text processing queue for that info
-	# send back status "Working on your map"
 	return 'Got your message dude - inserted and extracted' + str(len(docIDs)) + ' history items'
 
-# Receives a single URL object from user, geoparses and stores in DB
-@app.route('/monitor/', methods=['POST'])
-def processURL():
-	log.info("Receiving new URL")
-	historyObject = json.loads(request.form['logURL'])
-	docID = db_collection.insert(historyObject)
-	
-	# TODO
-	# save to mongoDB as single doc
-	# mark as NOT history (documentType = something else)
-	# start the geoparsing, text processing queue for that info
-	# send back status "Updating your map" or something like that
-	return 'Got your URL dude - ' + historyObject["url"]
-
-if __name__ == '__main__':
-	#running on 0.0.0.0 to be accessible to other machines on network
-    app.run(debug=True,host= '0.0.0.0')
-    log.info("Started Server")
-
-'''
 #Example calling a template
 @app.route('/hello/')
 @app.route('/hello/<name>')
-def hello(name=None):
-    return render_template('hello.html', name=name)
+def hello2(name=None):
+	return render_template('hello.html', name=name)
 
-#Example using a variable in the URL
-@app.route('/user/<username>')
-def show_user_profile(username):
-    return 'User %s' % username
-'''
+#Login/Logout page
+@app.route('/login/')
+def loginpage():
+	return render_template('login.html')
+
+
+# Receives a single URL object from user, extracts, geoparses and stores in DB
+@app.route('/monitor/', methods=['POST'])
+def processURL():
+	log.info("Receiving new URL")
+	print "Receiving new url"
+	historyObject = json.loads(request.form['logURL'])
+	historyObject["extractedText"] = extractSingleURL(historyObject["url"])
+	historyObject["geodata"] = geoparseSingleText(historyObject["extractedText"])
+	docID = app.db_user_history_collection.insert(historyObject)
+	
+	return 'Processed your URL dude - ' + historyObject["url"]
+
+def geoparseSingleText(text):
+	try:
+		params = {'text':text}
+		
+		r = requests.get(app.geoserver, params=params)
+		print r.url
+		print json.dumps(r.json(),sort_keys=True,indent=4, separators=(',', ': '))
+		
+		geodata = r.json()
+		if len(geodata["places"]) > 0:
+			return geodata
+			
+	except requests.exceptions.RequestException as e:
+		print "ERROR RequestException " + str(e)
+
+def extractSingleURL(url):
+	try:
+		extractor = Extractor(extractor='ArticleExtractor', url=url)
+		extractedText = extractor.getText()
+	
+		if (len(extractedText) > 0):
+			# make sure to include title in the extracted text object so it
+			# gets geoparsed
+			title = extractor.getTitle()
+			
+			if title is not None:
+				extractedText = title + " " + extractedText
+			print 'EXTRACTED -' + url
+			return extractedText
+	except IOError, err:
+		print "IOError with url " + url
+		print str(err)
+	except (LookupError):
+		print "LookupError - Maybe not text or weird encoding " + url
+	except (UnicodeDecodeError, UnicodeEncodeError):
+		print "UnicodeDecodeError or UnicodeEncodeError- " + url
+	except Exception, err:
+		print "Unknown Exception: " + url
+		print str(err)
+
+if __name__ == '__main__':
+	#running on 0.0.0.0 to be accessible to other machines on network
+	app.run(debug=True,host= '0.0.0.0')
+	log.info("Started Server")

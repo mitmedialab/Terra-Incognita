@@ -1,14 +1,37 @@
+SET PYTHON BREAKPOINT
+-----------------------------------------------------------
+import pdb; pdb.set_trace()
+
+MONGODB SHELL
+-----------------------------------------------------------
+Launch: /usr/local/bin/mongo
+
+
+QUERIES FOR MONGO HUB
+-----------------------------------------------------------
+
 Search MongoDB using MongoHub for regex
 {"url" : {"$regex" : ".*huffingtonpost.*"}}
-
-
 
 
 Search MongoDB with MongoHub for text length
 {"$where":"this.extracted_text && this.extracted_text.length > 500"}
 
-Remove field from Mongodb
+Remove field from Mongodb in MongoHub
 {"$unset": {"geodata":"1"}}
+
+Delete db
+
+
+Delete collection (use Mongo shell)
+db.collection-name.drop()
+
+INTEGRATING WITH FLASK-LOGIN & PERSONA
+-----------------------------------------------------------
+http://stackoverflow.com/questions/21033870/how-to-run-flask-login-flask-browserid-and-flask-sqlalchemy-in-harmony
+
+CLEANING MEDIACLOUD SOURCES FILE WITH REGEXES
+-----------------------------------------------------------
 
 Regex for matching MediaCloud top level domain names
 https?:((/.*?/(.*?)/)|.*\n)

@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script src="https://login.persona.org/include.js" type="text/javascript"></script>
+        <script src="/js/cookies.js"></script>
+        <script type="text/javascript">{{ auth_script|safe }}</script>
+    </head>
+    <body>
+        <h1>Terra Incognita Login</h1>
+        <h2>On this page you can login and logout of the Terra Incognita system.</h2>
+        {% if current_user.is_authenticated() %}
+        <h3>You are currently logged in.</h3>
+        <h3>To access your Terra Incognita, open a new tab in your browser.</h3>
+        <script>
+            docCookies.setItem('terra-incognita-id', '{{ current_user.get_id() }}', 60*60*24*365);
+            
+        </script>
+            <button id="browserid-logout">Logout</button>
+        {% else %}
+            <h3>You are currently not logged in.</h3>
+            <script>
+                docCookies.removeItem('terra-incognita-id');
+            </script>
+            <button id="browserid-login">Login</button>
+        {% endif %}
+    </body>
+</html>

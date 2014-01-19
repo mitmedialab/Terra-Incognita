@@ -4,20 +4,29 @@
   "version": "2.0",
   "permissions": [
     "activeTab",
-    "tts",
     "tabs",
+    "cookies",
     "webNavigation",
     "history",
     "http://*/*", 
-    "https://*/*"
+    "https://*/*",
+    "webRequest",
+    "webRequestBlocking"
+
   ],
   "background": {
-    "scripts": ["background.js"],
-    "persistent": false
+    "page": "background.html",
+    "persistent": true
   },
   "browser_action": {
     "default_title": "Terra Incognita"
   },
-  
+  "chrome_url_overrides" : {
+    "newtab": "terraincognita.html"
+  },
+  "web_accessible_resources": [
+    "terraincognita.html"
+    
+  ],
   "manifest_version": 2
 }
