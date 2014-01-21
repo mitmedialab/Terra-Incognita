@@ -7,7 +7,6 @@ from flask.ext.browserid import BrowserID
 from flask.ext.login import LoginManager
 from pymongo import MongoClient
 from user import get_user_from_DB_row, create_new_user
-from user import User 
 import ConfigParser
 import datetime
 import httplib
@@ -18,6 +17,7 @@ import pprint
 import pymongo
 import requests
 import requests.exceptions
+from mapreduce import *
 
 # constants
 CONFIG_FILENAME = 'app.config'
@@ -145,14 +145,20 @@ def eg_whitelist():
 def csd():
 	return app.send_static_file('csd_map.html')
 
-#Example sending JSON
+#Send user their map data
 @app.route('/map/<user>')
 def map(user=None):
 	if (user is not None):
-		userHistory = []
-		for row in app.db_user_history_collection.find({ 'userID': user }):
-			print row
-			userHistory.append(row)
+		userHistory = {"countries":[], "states":[], "cities":[]}
+		
+		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_PIPELINE )
+		userHistory["countries"].append(q['result'])
+		'''for row in app.db_user_history_collection.map_reduce(COUNTRY_COUNT_MAP, ALL_COUNT_REDUCE, out="country_count", query={"userID": user}).find():
+			userHistory["countries"].append(row)'''
+		for row in app.db_user_history_collection.map_reduce(STATE_COUNT_MAP, ALL_COUNT_REDUCE, out="state_count", query={"userID": user}).find():
+			userHistory["states"].append(row)
+		for row in app.db_user_history_collection.map_reduce(CITY_COUNT_MAP, ALL_COUNT_REDUCE, out="city_count", query={"userID": user}).find():
+			userHistory["cities"].append(row)
 		return json.dumps(userHistory, sort_keys=True, indent=4, default=json_util.default) 
 	else:
 		return jsonify(error='No user ID specified');

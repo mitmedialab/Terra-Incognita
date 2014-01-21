@@ -18,6 +18,28 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
 	if (request.userJSON){
 	  sendResponse({msg: "thanks for the JSON dodohead"});
-	  $('#userJSON').html('<pre>' + JSON.stringify(request.userJSON, undefined, 2) + '</pre>');
+	  //$('#userJSON').html('<pre>' + JSON.stringify(request.userJSON, undefined, 2) + '</pre>');
+	  
+	  var tableRows = "";
+	  var countries = request.userJSON["countries"];
+	  var states = request.userJSON["states"];
+	  var cities = request.userJSON["cities"];
+	  console.log(request.userJSON)
+	  $.each(countries[0], function(i, country){
+            tableRows += "<tr><td>"+ country._id.country_code + "</td><td>" + country.count + "</td></tr>";
+       });
+	  $('#countryCounts tr:last').after(tableRows);
+
+	  tableRows ="";
+	  $.each(states, function(i, state){
+            tableRows += "<tr><td>"+ state._id + "</td><td>" + state.value + "</td></tr>";
+       });
+	  $('#stateCounts tr:last').after(tableRows);
+
+	  tableRows ="";
+	  $.each(cities, function(i, city){
+            tableRows += "<tr><td>"+ city.name + "</td><td>" + city.value + "</td></tr>";
+       });
+	  $('#cityCounts tr:last').after(tableRows);
 	}
   });
