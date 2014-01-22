@@ -179,12 +179,6 @@ def processHistory():
 	#batchExtractor.run()
 	return 'Got your message dude - inserted and extracted' + str(len(docIDs)) + ' history items'
 
-#Example calling a template
-@app.route('/hello/')
-@app.route('/hello/<name>')
-def hello2(name=None):
-	return render_template('hello.html', name=name)
-
 #Login/Logout page
 @app.route('/login/')
 def loginpage():
@@ -192,7 +186,7 @@ def loginpage():
 
 
 # Receives a single URL object from user, extracts, geoparses and stores in DB
-@app.route('/monitor/', methods=['POST'])
+@app.route('/monitor/', methods=['POST','GET'])
 def processURL():
 	log.info("Receiving new URL")
 	print "Receiving new url"

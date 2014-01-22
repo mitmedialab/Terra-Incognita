@@ -12,7 +12,11 @@
 });
 */
 var urlMap = [];
-var SERVER_URL = "http://127.0.0.1:5000/";
+//var SERVER_URL = "http://127.0.0.1:5000/";
+var SERVER_URL = "http://terra-incognita.co:8080/";
+//var COOKIE_PATH ="http://127.0.0.1/login/";
+var COOKIE_PATH ="http://terra-incognita.co/login/";
+
 var LOGIN_PAGE = "login/";
 var LOGIN_URL = SERVER_URL + LOGIN_PAGE;
 var DAYS_HISTORY = 30;
@@ -20,7 +24,7 @@ var USER_COOKIE = "terra-incognita-id";
 var USER_ID = null;
 var IS_LOGGED_IN = false;
 //gotta make this better but here it is for the moment
-var COOKIE_PATH ="http://127.0.0.1/login/";
+
 var USER_JSON = null;
 /*
 	Listens for pages checking auth status & returns true or false
@@ -131,7 +135,7 @@ function keepURL(url){
 	return false;
 }
 function checkLoggedIn(callback){
-	chrome.cookies.get({ url: 'http://127.0.0.1/login/', name: USER_COOKIE },
+	chrome.cookies.get({ url: COOKIE_PATH, name: USER_COOKIE },
 			function (cookie) {
 				if (cookie) {
 						console.log("user logged in");

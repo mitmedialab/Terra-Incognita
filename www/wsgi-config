@@ -1,0 +1,13 @@
+<VirtualHost *:8080>
+    ServerName terra-incognita.co
+
+    WSGIDaemonProcess terraincognita user=wsgiuser group=wsgigroup threads=5
+    WSGIScriptAlias / /home/kanarinka/Terra Incognita/www/terraincognita.wsgi
+
+    <Directory /home/kanarinka/Terra\ Incognita/www>
+        WSGIProcessGroup terraincognita
+        WSGIApplicationGroup %{GLOBAL}
+        Order deny,allow
+        Allow from all
+    </Directory>
+</VirtualHost>
