@@ -21,25 +21,29 @@ chrome.runtime.onMessage.addListener(
 	  //$('#userJSON').html('<pre>' + JSON.stringify(request.userJSON, undefined, 2) + '</pre>');
 	  
 	  var tableRows = "";
-	  var countries = request.userJSON["countries"];
-	  var states = request.userJSON["states"];
-	  var cities = request.userJSON["cities"];
+	  var countries = request.userJSON["countries"][0];
+	  var states = request.userJSON["states"][0];
+	  var cities = request.userJSON["cities"][0];
 	  console.log(request.userJSON)
-	  $.each(countries[0], function(i, country){
-            tableRows += "<tr><td>"+ country._id.country_code + "</td><td>" + country.count + "</td></tr>";
-       });
+
+	  //countries
+	  $.each(countries, function(i, country){
+			tableRows += "<tr><td>"+ country._id.country_code + "</td><td>" + country.count + "</td></tr>";
+	   });
 	  $('#countryCounts tr:last').after(tableRows);
 
 	  tableRows ="";
+	  //states
 	  $.each(states, function(i, state){
-            tableRows += "<tr><td>"+ state._id + "</td><td>" + state.value + "</td></tr>";
-       });
+			tableRows += "<tr><td>"+ state._id.state_code + "</td><td>" + state.count + "</td></tr>";
+	   });
 	  $('#stateCounts tr:last').after(tableRows);
 
 	  tableRows ="";
+	  //cities
 	  $.each(cities, function(i, city){
-            tableRows += "<tr><td>"+ city.name + "</td><td>" + city.value + "</td></tr>";
-       });
+			tableRows += "<tr><td>"+ city._id.name + ", " + city._id.state_code + ", " + city._id.country_code + "</td><td>" + city.count + "</td></tr>";
+	   });
 	  $('#cityCounts tr:last').after(tableRows);
 	}
   });

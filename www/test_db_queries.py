@@ -18,11 +18,11 @@ db_user_collection = db[config.get('db','user_collection')]
 db_recommendation_collection = db[config.get('db','recommendation_item_collection')]
 
 pipeline = [
-	{ "$project" : { "geodata.primaryCountries":1 }},
-	{ "$unwind" : "$geodata.primaryCountries" },
-	{"$group": {"_id": {"country_code":"$geodata.primaryCountries"}, "count": {"$sum": 1}}},
-	{ "$sort" : { "_id" : -1 } }
+	{ "$project" : { "geodata.primaryCities":1 }},
+	{ "$unwind" : "$geodata.primaryCities" },
+	{ "$group": {"_id": {"geonames_id":"$geodata.primaryCities.id", "name":"$geodata.primaryCities.name","state_code":"$geodata.primaryCities.stateCode","country_code":"$geodata.primaryCities.countryCode" }, "count": {"$sum": 1}}},
+	{ "$sort" : { "count" : -1 } }
 ]
 q = db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=pipeline )
 print q['result']
-import pdb; pdb.set_trace()
+

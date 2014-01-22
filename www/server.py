@@ -106,8 +106,10 @@ log.info("----------------------------------------------------------------------
 
 #Index test 
 @app.route('/')
+@app.route('/index.html')
+@app.route('/index.htm')
 def hello():
-	return "Hello Supposed Human. This server is running."
+	return app.send_static_file('googleForm.html')
 
 #Individual Map test 
 @app.route('/individual_map.html')
@@ -151,14 +153,18 @@ def map(user=None):
 	if (user is not None):
 		userHistory = {"countries":[], "states":[], "cities":[]}
 		
+		#countries
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_PIPELINE )
 		userHistory["countries"].append(q['result'])
-		'''for row in app.db_user_history_collection.map_reduce(COUNTRY_COUNT_MAP, ALL_COUNT_REDUCE, out="country_count", query={"userID": user}).find():
-			userHistory["countries"].append(row)'''
-		for row in app.db_user_history_collection.map_reduce(STATE_COUNT_MAP, ALL_COUNT_REDUCE, out="state_count", query={"userID": user}).find():
-			userHistory["states"].append(row)
-		for row in app.db_user_history_collection.map_reduce(CITY_COUNT_MAP, ALL_COUNT_REDUCE, out="city_count", query={"userID": user}).find():
-			userHistory["cities"].append(row)
+
+		#states
+		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=STATE_COUNT_PIPELINE )
+		userHistory["states"].append(q['result'])
+
+		#cities
+		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CITY_COUNT_PIPELINE )
+		userHistory["cities"].append(q['result'])
+		
 		return json.dumps(userHistory, sort_keys=True, indent=4, default=json_util.default) 
 	else:
 		return jsonify(error='No user ID specified');
@@ -216,7 +222,7 @@ def extractSingleURL(url):
 	try:
 		extractor = Extractor(extractor='ArticleExtractor', url=url)
 		extractedText = extractor.getText()
-	
+		print (extractor.getHTML())
 		if (len(extractedText) > 0):
 			# make sure to include title in the extracted text object so it
 			# gets geoparsed
