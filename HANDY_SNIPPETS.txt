@@ -6,6 +6,12 @@ MONGODB SHELL
 -----------------------------------------------------------
 Launch: /usr/local/bin/mongo
 
+GITHUB HARD RESET
+-----------------------------------------------------------
+For resetting git working dir
+git fetch --all
+git reset --hard origin/master
+
 
 QUERIES FOR MONGO HUB
 -----------------------------------------------------------
