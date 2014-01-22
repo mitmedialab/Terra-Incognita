@@ -238,6 +238,5 @@ def extractSingleURL(url):
 		print str(err)
 
 if __name__ == '__main__':
-	#running on 0.0.0.0 to be accessible to other machines on network
-	app.run(debug=True,host= '0.0.0.0')
+	app.run(debug=True)
 	log.info("Started Server")
