@@ -12,6 +12,9 @@ For resetting git working dir
 git fetch --all
 git reset --hard origin/master
 
+Change permissions to wsgigroup
+sudo chgrp wsgigroup Terra-Incognita -R
+
 START STOP APACHE
 -----------------------------------------------------------
 sudo /etc/init.d/apache2 stop
