@@ -236,6 +236,6 @@ def extractSingleURL(url):
 		log.info(str(err))
 
 if __name__ == '__main__':
-	#reconfigure log to send to separate file
-	app.run(debug=True)
-	log.info("Started Server")
+	app.debug = True
+    app.run(host='0.0.0.0')
+    log.info("Started Server")
