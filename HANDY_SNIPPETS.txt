@@ -12,6 +12,10 @@ For resetting git working dir
 git fetch --all
 git reset --hard origin/master
 
+START STOP APACHE
+-----------------------------------------------------------
+sudo /etc/init.d/apache2 stop
+sudo /etc/init.d/apache2 start
 
 QUERIES FOR MONGO HUB
 -----------------------------------------------------------

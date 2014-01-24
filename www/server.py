@@ -96,7 +96,7 @@ browser_id.user_loader(get_user_for_browserid)
 browser_id.init_app(app)
 
 # setup logging and pretty log.info(ng)
-handler = logging.FileHandler(BASE_DIR + 'server.log')
+handler = logging.FileHandler(BASE_DIR + "/" + 'server.log')
 logging.basicConfig(filename='server.log',level=logging.DEBUG)
 log = logging.getLogger('server')
 log.info("---------------------------------------------------------------------------")
