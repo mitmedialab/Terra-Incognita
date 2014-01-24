@@ -29,6 +29,7 @@ config.read(os.path.join(BASE_DIR,CONFIG_FILENAME))
 
 app = Flask(__name__,static_url_path='')
 app.secret_key= config.get('app','secret_key')
+app.debug = True
 
 # Geoserver
 app.geoserver = config.get('geoparser','geoserver_url')
@@ -237,5 +238,5 @@ def extractSingleURL(url):
 
 if __name__ == '__main__':
 	app.debug = True
-    app.run(host='0.0.0.0')
-    log.info("Started Server")
+	app.run(host='0.0.0.0')
+	log.info("Started Server")
