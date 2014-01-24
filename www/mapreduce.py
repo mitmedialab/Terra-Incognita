@@ -37,7 +37,7 @@ ALL_COUNT_REDUCE = """function(key, count){
 COUNTRY_COUNT_PIPELINE=[
 	{ "$project" : { "geodata.primaryCountries":1 }},
 	{ "$unwind" : "$geodata.primaryCountries" },
-	{"$group": {"_id": {"country_code":"$geodata.primaryCountries"}, "count": {"$sum": 1}}},
+	{ "$group": {"_id": {"country_code":"$geodata.primaryCountries"}, "count": {"$sum": 1}}},
 	{ "$sort" : { "count" : -1 } }
 ]
 STATE_COUNT_PIPELINE=[

@@ -95,9 +95,8 @@ browser_id = BrowserID()
 browser_id.user_loader(get_user_for_browserid)
 browser_id.init_app(app)
 
-# setup logging and pretty printing
-pp = pprint.PrettyPrinter(indent=4)
-handler = logging.FileHandler('server.log')
+# setup logging and pretty log.info(ng)
+handler = logging.FileHandler(BASE_DIR + 'server.log')
 logging.basicConfig(filename='server.log',level=logging.DEBUG)
 log = logging.getLogger('server')
 log.info("---------------------------------------------------------------------------")
@@ -189,7 +188,6 @@ def loginpage():
 @app.route('/monitor/', methods=['POST','GET'])
 def processURL():
 	log.info("Receiving new URL")
-	print "Receiving new url"
 	historyObject = json.loads(request.form['logURL'])
 	historyObject["extractedText"] = extractSingleURL(historyObject["url"])
 	historyObject["geodata"] = geoparseSingleText(historyObject["extractedText"])
@@ -202,21 +200,21 @@ def geoparseSingleText(text):
 		params = {'text':text}
 		
 		r = requests.get(app.geoserver, params=params)
-		print r.url
-		print json.dumps(r.json(),sort_keys=True,indent=4, separators=(',', ': '))
+		log.info(r.url)
+		log.info(json.dumps(r.json(),sort_keys=True,indent=4, separators=(',', ': ')))
 		
 		geodata = r.json()
 		if len(geodata["places"]) > 0:
 			return geodata
 			
 	except requests.exceptions.RequestException as e:
-		print "ERROR RequestException " + str(e)
+		log.info("ERROR RequestException " + str(e))
 
 def extractSingleURL(url):
 	try:
 		extractor = Extractor(extractor='ArticleExtractor', url=url)
 		extractedText = extractor.getText()
-		print (extractor.getHTML())
+		log.info((extractor.getHTML()))
 		if (len(extractedText) > 0):
 			# make sure to include title in the extracted text object so it
 			# gets geoparsed
@@ -224,19 +222,20 @@ def extractSingleURL(url):
 			
 			if title is not None:
 				extractedText = title + " " + extractedText
-			print 'EXTRACTED -' + url
+			log.info('EXTRACTED -' + url)
 			return extractedText
 	except IOError, err:
-		print "IOError with url " + url
-		print str(err)
+		log.info("IOError with url " + url)
+		log.info(str(err))
 	except (LookupError):
-		print "LookupError - Maybe not text or weird encoding " + url
+		log.info("LookupError - Maybe not text or weird encoding " + url)
 	except (UnicodeDecodeError, UnicodeEncodeError):
-		print "UnicodeDecodeError or UnicodeEncodeError- " + url
+		log.info("UnicodeDecodeError or UnicodeEncodeError- " + url)
 	except Exception, err:
-		print "Unknown Exception: " + url
-		print str(err)
+		log.info("Unknown Exception: " + url)
+		log.info(str(err))
 
 if __name__ == '__main__':
+	#reconfigure log to send to separate file
 	app.run(debug=True)
 	log.info("Started Server")
