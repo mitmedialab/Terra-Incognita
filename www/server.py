@@ -11,7 +11,6 @@ import ConfigParser
 import datetime
 import httplib
 import json
-import logging
 import os
 import pprint
 import pymongo
@@ -96,14 +95,6 @@ browser_id = BrowserID()
 browser_id.user_loader(get_user_for_browserid)
 browser_id.init_app(app)
 
-# setup logging 
-handler = logging.FileHandler(BASE_DIR + "/" + 'flask-server.log')
-logging.basicConfig(filename='flask-server.log',level=logging.INFO)
-log = logging.getLogger('server')
-log.info("---------------------------------------------------------------------------")
-
-
-
 #Index test 
 @app.route('/')
 @app.route('/index.html')
@@ -171,7 +162,7 @@ def map(user=None):
 
 @app.route('/history/', methods=['POST'])
 def processHistory():
-	log.info("Processing browser history")
+	print "Processing browser history"
 	historyItems = json.loads(request.form['history'])
 	#docIDs = db_collection.insert(historyItems)
 	
@@ -188,7 +179,7 @@ def loginpage():
 # Receives a single URL object from user, extracts, geoparses and stores in DB
 @app.route('/monitor/', methods=['POST','GET'])
 def processURL():
-	log.info("Receiving new URL")
+	print "Receiving new URL"
 	historyObject = json.loads(request.form['logURL'])
 	historyObject["extractedText"] = extractSingleURL(historyObject["url"])
 	historyObject["geodata"] = geoparseSingleText(historyObject["extractedText"])
@@ -201,21 +192,21 @@ def geoparseSingleText(text):
 		params = {'text':text}
 		
 		r = requests.get(app.geoserver, params=params)
-		log.info(r.url)
-		log.info(json.dumps(r.json(),sort_keys=True,indent=4, separators=(',', ': ')))
+		print r.url
+		print json.dumps(r.json(),sort_keys=True,indent=4, separators=(',', ': '))
 		
 		geodata = r.json()
 		if len(geodata["places"]) > 0:
 			return geodata
 			
 	except requests.exceptions.RequestException as e:
-		log.info("ERROR RequestException " + str(e))
+		print "ERROR RequestException " + str(e)
 
 def extractSingleURL(url):
 	try:
 		extractor = Extractor(extractor='ArticleExtractor', url=url)
 		extractedText = extractor.getText()
-		log.info((extractor.getHTML()))
+		print (extractor.getHTML())
 		if (len(extractedText) > 0):
 			# make sure to include title in the extracted text object so it
 			# gets geoparsed
@@ -223,20 +214,20 @@ def extractSingleURL(url):
 			
 			if title is not None:
 				extractedText = title + " " + extractedText
-			log.info('EXTRACTED -' + url)
+			print 'EXTRACTED -' + url
 			return extractedText
 	except IOError, err:
-		log.info("IOError with url " + url)
-		log.info(str(err))
+		print "IOError with url " + url
+		print str(err)
 	except (LookupError):
-		log.info("LookupError - Maybe not text or weird encoding " + url)
+		print "LookupError - Maybe not text or weird encoding " + url
 	except (UnicodeDecodeError, UnicodeEncodeError):
-		log.info("UnicodeDecodeError or UnicodeEncodeError- " + url)
+		print "UnicodeDecodeError or UnicodeEncodeError- " + url
 	except Exception, err:
-		log.info("Unknown Exception: " + url)
-		log.info(str(err))
+		print "Unknown Exception: " + url
+		print str(err)
 
 if __name__ == '__main__':
 	app.debug = True
 	app.run(host='0.0.0.0')
-	log.info("Started Server")
+	print "Started Server"
