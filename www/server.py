@@ -42,6 +42,12 @@ app.db_user_history_collection = app.db[config.get('db','user_history_item_colle
 app.db_user_collection = app.db[config.get('db','user_collection')]
 app.db_recommendation_collection = app.db[config.get('db','recommendation_item_collection')]
 
+# setup logging
+handler = logging.FileHandler('server.log')
+logging.basicConfig(filename='server.log',level=logging.DEBUG)
+log = logging.getLogger('server')
+log.info("---------------------------------------------------------------------------")
+
 # ------------------------- -------------------------------------
 # MOVE THIS SOMEWHERE ELSE
 # This callback is used to reload the user object from the user ID stored in the session.

@@ -13,4 +13,4 @@ def geoparseSingleText(text):
 	except requests.exceptions.RequestException as e:
 		print "ERROR RequestException " + str(e)
 def lookupContinentAndRegion(geodata):
-	
+	return 1
