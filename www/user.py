@@ -27,6 +27,6 @@ def get_user_from_DB_row(row):
 					firstLoginDate=row["firstLoginDate"],
 					lastLoginDate=row["lastLoginDate"],
 					currentLevel=row["currentLevel"])
+
 def create_new_user(email):
 	return User(email, firstLoginDate=datetime.datetime.utcnow(), lastLoginDate=datetime.datetime.utcnow(),currentLevel=LEVELS[0])
-
