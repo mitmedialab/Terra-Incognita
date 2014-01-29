@@ -19,6 +19,7 @@ import requests.exceptions
 from mapreduce import *
 from geoprocessing import *
 from content_extraction import *
+import logging
 
 # constants
 CONFIG_FILENAME = 'app.config'
