@@ -1,5 +1,5 @@
-import logging
 import sys
-sys.path.insert(0, '/home/kanarinka/Terra-Incognita/www')
 from server import app as application
-logging.basicConfig(stream=sys.stderr)
+
+basedir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(basedir)
