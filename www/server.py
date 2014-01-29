@@ -17,6 +17,8 @@ import pymongo
 import requests
 import requests.exceptions
 from mapreduce import *
+from geoprocessing import *
+from content_extraction import *
 
 # constants
 CONFIG_FILENAME = 'app.config'
@@ -102,42 +104,6 @@ browser_id.init_app(app)
 def hello():
 	return app.send_static_file('googleForm.html')
 
-#Individual Map test 
-@app.route('/individual_map.html')
-def individual_map():
-	return app.send_static_file('individual_map.html')
-
-#DR Map test 
-@app.route('/dr_map.html')
-def dr():
-	return app.send_static_file('dr_map.html')
-
-#RB Map test 
-@app.route('/rb_map.html')
-def rb():
-	return app.send_static_file('rb_map.html')
-
-#EDP Map test 
-@app.route('/edp_map.html')
-def edp():
-	return app.send_static_file('edp_map.html')
-
-#EG Map test 
-@app.route('/eg_map.html')
-def eg():
-	return app.send_static_file('eg_map.html')
-
-
-#EG Whitelist Map test 
-@app.route('/eg_whitelist_map.html')
-def eg_whitelist():
-	return app.send_static_file('eg_whitelist_map.html')
-
-#CSD Map test
-@app.route('/csd_map.html')
-def csd():
-	return app.send_static_file('csd_map.html')
-
 #Send user their map data
 @app.route('/map/<user>')
 def map(user=None):
@@ -183,49 +149,10 @@ def processURL():
 	historyObject = json.loads(request.form['logURL'])
 	historyObject["extractedText"] = extractSingleURL(historyObject["url"])
 	historyObject["geodata"] = geoparseSingleText(historyObject["extractedText"])
+	historyObject["geodata"] = lookupContinentAndRegion(historyObject["geodata"])
 	docID = app.db_user_history_collection.insert(historyObject)
 	
 	return 'Processed your URL dude - ' + historyObject["url"]
-
-def geoparseSingleText(text):
-	try:
-		params = {'text':text}
-		
-		r = requests.get(app.geoserver, params=params)
-		print r.url
-		print json.dumps(r.json(),sort_keys=True,indent=4, separators=(',', ': '))
-		
-		geodata = r.json()
-		if len(geodata["places"]) > 0:
-			return geodata
-			
-	except requests.exceptions.RequestException as e:
-		print "ERROR RequestException " + str(e)
-
-def extractSingleURL(url):
-	try:
-		extractor = Extractor(extractor='ArticleExtractor', url=url)
-		extractedText = extractor.getText()
-		print (extractor.getHTML())
-		if (len(extractedText) > 0):
-			# make sure to include title in the extracted text object so it
-			# gets geoparsed
-			title = extractor.getTitle()
-			
-			if title is not None:
-				extractedText = title + " " + extractedText
-			print 'EXTRACTED -' + url
-			return extractedText
-	except IOError, err:
-		print "IOError with url " + url
-		print str(err)
-	except (LookupError):
-		print "LookupError - Maybe not text or weird encoding " + url
-	except (UnicodeDecodeError, UnicodeEncodeError):
-		print "UnicodeDecodeError or UnicodeEncodeError- " + url
-	except Exception, err:
-		print "Unknown Exception: " + url
-		print str(err)
 
 if __name__ == '__main__':
 	app.debug = True

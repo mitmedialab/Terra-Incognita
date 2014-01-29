@@ -12,10 +12,10 @@
 });
 */
 var urlMap = [];
-//var SERVER_URL = "http://127.0.0.1:5000/";
-var SERVER_URL = "http://terra-incognita.co/";
-//var COOKIE_PATH ="http://127.0.0.1/login/";
-var COOKIE_PATH ="http://terra-incognita.co/login/";
+var SERVER_URL = "http://127.0.0.1:5000/";
+//var SERVER_URL = "http://terra-incognita.co/";
+var COOKIE_PATH ="http://127.0.0.1/login/";
+//var COOKIE_PATH ="http://terra-incognita.co/login/";
 
 var LOGIN_PAGE = "login/";
 var LOGIN_URL = SERVER_URL + LOGIN_PAGE;
