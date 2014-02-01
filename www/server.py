@@ -1,4 +1,4 @@
-from boilerpipe.extract import Extractor
+
 from bson.objectid import ObjectId
 from bson import BSON
 from bson import json_util
@@ -6,7 +6,7 @@ from flask import Flask, session, render_template, json, jsonify, request
 from flask.ext.browserid import BrowserID
 from flask.ext.login import LoginManager
 from pymongo import MongoClient
-from user import get_user_from_DB_row, create_new_user
+from user import *
 import ConfigParser
 import datetime
 import httplib
@@ -16,7 +16,7 @@ import pprint
 import pymongo
 import requests
 import requests.exceptions
-from mapreduce import *
+from database_queries import *
 from geoprocessing import *
 from content_extraction import *
 import logging
@@ -115,8 +115,16 @@ def hello():
 @app.route('/map/<user>')
 def map(user=None):
 	if (user is not None):
-		userHistory = {"countries":[], "states":[], "cities":[]}
+		userHistory = {"continents":[],"regions":[],"countries":[], "states":[], "cities":[]}
 		
+		#continents
+		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CONTINENT_COUNT_PIPELINE )
+		userHistory["continents"].append(q['result'])
+
+		#regions
+		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=REGION_COUNT_PIPELINE )
+		userHistory["regions"].append(q['result'])
+
 		#countries
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_PIPELINE )
 		userHistory["countries"].append(q['result'])
@@ -155,7 +163,7 @@ def processURL():
 	print "Receiving new URL"
 	historyObject = json.loads(request.form['logURL'])
 	historyObject["extractedText"] = extractSingleURL(historyObject["url"])
-	historyObject["geodata"] = geoparseSingleText(historyObject["extractedText"])
+	historyObject["geodata"] = geoparseSingleText(historyObject["extractedText"],app.geoserver)
 	historyObject["geodata"] = lookupContinentAndRegion(historyObject["geodata"])
 	docID = app.db_user_history_collection.insert(historyObject)
 	

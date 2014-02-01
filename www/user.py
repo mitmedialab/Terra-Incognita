@@ -2,7 +2,6 @@
 from flask.ext.login import UserMixin
 import datetime
 
-LEVELS = ["continent","region","nation","state","city"]
 
 class User(UserMixin):
 

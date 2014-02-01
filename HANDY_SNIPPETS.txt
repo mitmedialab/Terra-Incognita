@@ -6,19 +6,32 @@ MONGODB SHELL
 -----------------------------------------------------------
 Launch: /usr/local/bin/mongo
 
+over http: http://terra-incognita.co:28017/
+
+Drop DB:
+use <db name>
+db.dropDatabase()
+
 GITHUB HARD RESET
 -----------------------------------------------------------
 For resetting git working dir
 git fetch --all
 git reset --hard origin/master
 
-Change permissions to wsgigroup
-sudo chgrp wsgigroup Terra-Incognita -R
+Change permissions to www-data
+sudo chgrp www-data /var/www -R
 
 START STOP APACHE
 -----------------------------------------------------------
 sudo /etc/init.d/apache2 stop
 sudo /etc/init.d/apache2 start
+
+CELERY
+-----------------------------------------------------------
+use start.sh/stop.sh scripts
+call worker: extract.delay(INPUT)
+terra-incognita.co:5555/
+Celery flower -- consider how to secure (password, SSL, only on launch)
 
 QUERIES FOR MONGO HUB
 -----------------------------------------------------------
