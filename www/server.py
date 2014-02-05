@@ -6,7 +6,7 @@ from flask import Flask, session, render_template, json, jsonify, request
 from flask.ext.browserid import BrowserID
 from flask.ext.login import LoginManager
 from pymongo import MongoClient
-from user import get_user_from_DB_row, create_new_user
+from user import *
 import ConfigParser
 import datetime
 import httplib
