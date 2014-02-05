@@ -1,4 +1,4 @@
-
+from boilerpipe.extract import Extractor
 def extractSingleURL(url):
 	try:
 		extractor = Extractor(extractor='ArticleExtractor', url=url)

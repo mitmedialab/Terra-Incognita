@@ -21,10 +21,27 @@ chrome.runtime.onMessage.addListener(
 	  //$('#userJSON').html('<pre>' + JSON.stringify(request.userJSON, undefined, 2) + '</pre>');
 	  
 	  var tableRows = "";
+	  var continents = request.userJSON["continents"][0];
+	  var regions = request.userJSON["regions"][0];
 	  var countries = request.userJSON["countries"][0];
 	  var states = request.userJSON["states"][0];
 	  var cities = request.userJSON["cities"][0];
 	  console.log(request.userJSON)
+
+	  //continents
+	  $.each(continents, function(i, continent){
+			tableRows += "<tr><td>"+ continent._id.continent_name + "</td><td>" + continent.count + "</td></tr>";
+	   });
+	  $('#continentCounts tr:last').after(tableRows);
+	  tableRows ="";
+	  
+	  //regions
+	  $.each(regions, function(i, region){
+			tableRows += "<tr><td>"+ region._id.region_name + "</td><td>" + region.count + "</td></tr>";
+	   });
+	  
+	  $('#regionCounts tr:last').after(tableRows);
+	  tableRows ="";
 
 	  //countries
 	  $.each(countries, function(i, country){
