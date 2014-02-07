@@ -28,6 +28,23 @@ Through PIP or easy_install:
 
 - Flask Browser ID - https://pypi.python.org/pypi/Flask-BrowserID
 
+- Celery and RabbitMQ for queue management - http://www.celeryproject.org/
+
+- Enable RabbitMQ's management plugin - "rabbitmq-plugins enable rabbitmq_management" (May have to tweak PATH variable to get this to work)
+
+- Install Flower - http://docs.celeryproject.org/en/master/userguide/monitoring.html#flower-real-time-celery-web-monitor
+
+- Use Celery along with Eventlet because Boilerpipe will break with Celery's default multiprocessing pools: https://github.com/celery/celery/tree/master/examples/eventlet
+
+What needs to be running for Terra Incognita to do its work
+=====
+- Apache Server
+- Flask Server
+- MongoDB
+- RabbitMQ
+- Celery
+- Celery Flower
+- CLIFF CLAVIN (CLAVIN-Server) - accessed over http
 
 Usage
 =====

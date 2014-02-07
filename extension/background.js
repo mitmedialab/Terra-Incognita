@@ -44,23 +44,30 @@ chrome.runtime.onMessage.addListener(
 );
 /*
 	Stuff to do right when app is installed:
-	- Get 30 days of browser history & send to server
+	- Get 30 days of browser history, filter to see which URLs to keep & send to server
 	- mark the data as history i.e. "not using the extension"
 	- save metadata and URLs
-
+*/
 chrome.runtime.onInstalled.addListener(function(details) {
-	console.log("on installed");
+	console.log("on installed - Collecting and transmitting browser history");
 	var today = new Date();
-	var startCollecting = today.getTime() - daysHistory*24*60*60*1000;
+	var startCollecting = today.getTime() - DAYS_HISTORY*24*60*60*1000;
 	chrome.history.search({text: '', startTime:startCollecting, maxResults:1000000000}, function(results) 
 		{ 
-			console.log("logging " + daysHistory + " days browsing history"); 
+			filteredResults = [];
+			console.log("logging " + DAYS_HISTORY + " days browsing history"); 
 			console.log(results.length + " results");
-			postData('history/', 'history', results);
+			for (var i = 0;i<results.length;i++){
+				var result = results[i];
+				if (keepURL(result.url)){
+					filteredResults.push(result);
+				}
+			}
+			postData('history/', 'history', filteredResults);
 		});
 
 });
-*/
+
 
 /*
 	Experiment with downloading JSON data from server if there were map data ready
@@ -120,18 +127,15 @@ function keepURL(url){
 	//first check url against blacklist
 	for (var i=0;i<BLACKLIST.length;i++){
 		if (url.indexOf(BLACKLIST[i]) > -1){
-			console.log("url on blacklist, so ignore");
 			return false;
 		}
 	}
 	//then check url against whitelist
 	for (i=0;i<WHITELIST.length;i++){
 		if (url.indexOf(WHITELIST[i]) > -1){
-			console.log("url on whitelist, so keep!")
 			return true;
 		}
 	}
-	console.log("url not on whitelist or blacklist, so ignore")
 	return false;
 }
 function checkLoggedIn(callback){
@@ -25154,6 +25158,7 @@ var WHITELIST = ["0.cdn.echo.msk.ru",
 "thegrizzness.com",
 "thegrocer.co.uk",
 "thegrower.com",
+"theguardian.com",
 "thegunmag.com",
 "thehacktory.org",
 "thehadassahproject.org",

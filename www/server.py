@@ -17,8 +17,8 @@ import pymongo
 import requests
 import requests.exceptions
 from database_queries import *
-from geoprocessing import *
-from content_extraction import *
+from text_processing.geoprocessing import *
+from text_processing.tasks import start_text_processing_queue
 import logging
 
 # constants
@@ -115,19 +115,22 @@ def hello():
 @app.route('/map/<user>')
 def map(user=None):
 	if (user is not None):
-		userHistory = {"continents":[],"regions":[],"countries":[], "states":[], "cities":[]}
+		userHistory = {"continents":[],"continents_incognita":[],"regions":[],"regions_incognita":[],"countries":[],"countries_incognita":[], "states":[], "cities":[]}
 		
 		#continents
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CONTINENT_COUNT_PIPELINE )
 		userHistory["continents"].append(q['result'])
+		userHistory["continents_incognita"].append(invertGeodata(userHistory["continents"][0], "continent"))
 
 		#regions
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=REGION_COUNT_PIPELINE )
 		userHistory["regions"].append(q['result'])
+		userHistory["regions_incognita"].append(invertGeodata(userHistory["regions"][0], "region"))
 
 		#countries
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_PIPELINE )
 		userHistory["countries"].append(q['result'])
+		userHistory["countries_incognita"].append(invertGeodata(userHistory["countries"][0], "nation"))
 
 		#states
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=STATE_COUNT_PIPELINE )
@@ -145,11 +148,12 @@ def map(user=None):
 def processHistory():
 	print "Processing browser history"
 	historyItems = json.loads(request.form['history'])
-	#docIDs = db_collection.insert(historyItems)
+
+	for historyObject in historyItems:
+		historyObject["preinstallation"] = "true";
+		start_text_processing_queue.delay(historyObject, config)
 	
-	#batchExtractor = BatchExtractor(docIDs, db_collection)
-	#batchExtractor.run()
-	return 'Got your message dude - inserted and extracted' + str(len(docIDs)) + ' history items'
+	return 'Celery is processing ' + str(len(historyItems)) + ' history items'
 
 #Login/Logout page
 @app.route('/login/')
@@ -157,17 +161,13 @@ def loginpage():
 	return render_template('login.html')
 
 
-# Receives a single URL object from user, extracts, geoparses and stores in DB
+# Receives a single URL object from user and starts celery text processing queue
 @app.route('/monitor/', methods=['POST','GET'])
 def processURL():
 	print "Receiving new URL"
 	historyObject = json.loads(request.form['logURL'])
-	historyObject["extractedText"] = extractSingleURL(historyObject["url"])
-	historyObject["geodata"] = geoparseSingleText(historyObject["extractedText"],app.geoserver)
-	historyObject["geodata"] = lookupContinentAndRegion(historyObject["geodata"])
-	docID = app.db_user_history_collection.insert(historyObject)
-	
-	return 'Processed your URL dude - ' + historyObject["url"]
+	start_text_processing_queue.delay(historyObject, config)
+	return 'Celery is processing your URL dude - ' + historyObject["url"]
 
 if __name__ == '__main__':
 	app.debug = True

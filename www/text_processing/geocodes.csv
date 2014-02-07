@@ -53,7 +53,7 @@ un_country_code,country_name,country_code,region_code,region_name,continent_code
 384,Cote d'Ivoire,CI,11,Western Africa,AF,Africa
 191,Croatia,HR,39,Southern Europe,EU,Europe
 192,Cuba,CU,29,Caribbean,SA,South America
-531,Curaçao,CW,29,Caribbean,SA,South America
+531,Cura?ao,CW,29,Caribbean,SA,South America
 196,Cyprus,CY,145,Western Asia,AS,Asia
 203,Czech Republic,CZ,151,Eastern Europe,EU,Europe
 408,Democratic People's Republic of Korea,KP,30,Eastern Asia,AS,Asia
@@ -114,7 +114,7 @@ un_country_code,country_name,country_code,region_code,region_name,continent_code
 296,Kiribati,KI,57,Micronesia,OC,Oceania
 414,Kuwait,KW,145,Western Asia,AS,Asia
 417,Kyrgyzstan,KG,143,Central Asia,AS,Asia
-248,Åland Islands,AX,154,Northern Europe,EU,Europe
+248,?land Islands,AX,154,Northern Europe,EU,Europe
 418,Lao People's Democratic Republic,LA,35,South-Eastern Asia,AS,Asia
 428,Latvia,LV,154,Northern Europe,EU,Europe
 422,Lebanon,LB,145,Western Asia,AS,Asia

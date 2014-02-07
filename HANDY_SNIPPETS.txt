@@ -30,10 +30,24 @@ CELERY
 -----------------------------------------------------------
 use start.sh/stop.sh scripts
 call worker: extract.delay(INPUT)
-terra-incognita.co:5555/
+Celery Flower -- terra-incognita.co:5555/ OR http://127.0.0.1:5555/
 Celery flower -- consider how to secure (password, SSL, only on launch)
 
-QUERIES FOR MONGO HUB
+RABBIT MQ
+-----------------------------------------------------------
+Mgmt plugin: http://localhost:15672
+/usr/local/Cellar/rabbitmq/3.2.3
+To have launchd start rabbitmq at login:
+    ln -sfv /usr/local/opt/rabbitmq/*.plist ~/Library/LaunchAgents
+Then to load rabbitmq now:
+    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.rabbitmq.plist
+Or, if you don't want/need launchctl, you can just run:
+    rabbitmq-server
+
+Local logging: /usr/local/var/log/rabbitmq/rabbit@localhost.log
+Local config: /usr/local/etc/rabbitmq
+
+QUERIES FOR MONGO HUB/MONGO SHELL
 -----------------------------------------------------------
 
 Search MongoDB using MongoHub for regex
@@ -45,6 +59,11 @@ Search MongoDB with MongoHub for text length
 
 Remove field from Mongodb in MongoHub
 {"$unset": {"geodata":"1"}}
+
+Field value in array - MONGO SHELL
+db.user_history_items.find({"geodata.primaryCountries":{$in:["ES"]} })
+MONGOHUB -- {"geodata.primaryCountries":{"$in":["ES"]} }
+
 
 Delete db
 
@@ -99,3 +118,4 @@ Converting mediacloud csv to tld whitelist (possibly write scripte for this late
 14. Manually delete domains beginnig with xn
 15. Manually delete anything that contains http: because it's definitely bad data at this point
 16. Search for ':' and manually delete anything that looks like bad data
+17. add theguardian.com
