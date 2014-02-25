@@ -4,9 +4,14 @@ import json
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-COUNTRIES = csv.DictReader(open(os.path.join(BASE_DIR,"geocodes.csv"),'rU'))
-CONTINENTS = csv.DictReader(open(os.path.join(BASE_DIR,"continents.csv"),'rU'))
-REGIONS = csv.DictReader(open(os.path.join(BASE_DIR,"regions_to_continents.csv"),'rU'))
+reader = csv.DictReader(open(os.path.join(BASE_DIR,"geocodes.csv"),'rU'))
+COUNTRIES = [row for row in reader]
+reader = csv.DictReader(open(os.path.join(BASE_DIR,"continents.csv"),'rU'))
+CONTINENTS = [row for row in reader]
+reader = csv.DictReader(open(os.path.join(BASE_DIR,"regions_to_continents.csv"),'rU'))
+REGIONS = [row for row in reader]
+reader = csv.DictReader(open(os.path.join(BASE_DIR,"cities.csv"),'rU'))
+CITIES = [row for row in reader]
 GEO_LEVELS = ["continent","region","nation","state","city"]
 
 #pull out geodata for single text from CLIFF_CLAVIN
@@ -59,6 +64,7 @@ def lookupContinentAndRegion(geodata):
 #returns the inverse of the geodata for a particular level, i.e. which continents they HAVEN'T visited, etc
 def invertGeodata(geodata, currentLevel):
 	invertedResults = []
+
 	if currentLevel == "continent":
 		for continent in CONTINENTS:
 			invertedResults.append(continent)
@@ -67,7 +73,6 @@ def invertGeodata(geodata, currentLevel):
 			for idx, removeContinent in enumerate(invertedResults):
 				if removeContinent["continent_code"] == continent_code:
 					invertedResults.pop(idx)
-					print "removed " + continent_code
 		return invertedResults
 	if currentLevel == "nation":
 		for nation in COUNTRIES:
@@ -77,8 +82,6 @@ def invertGeodata(geodata, currentLevel):
 			for idx, removeCountry in enumerate(invertedResults):
 				if removeCountry["country_code"] == country_code:
 					invertedResults.pop(idx)
-					print "removed " + country_code
-		print invertedResults
 		return invertedResults
 	if currentLevel == "region":
 		for region in REGIONS:
@@ -88,8 +91,17 @@ def invertGeodata(geodata, currentLevel):
 			for idx, removeRegion in enumerate(invertedResults):
 				if removeRegion["region_code"] == region_code:
 					invertedResults.pop(idx)
-					print "removed " + region_code
-		print invertedResults
+		return invertedResults
+	if currentLevel == "city":
+		for row in CITIES:
+			if len(row["city1"]) > 0:
+				invertedResults.append(row)
+			
+		for visitedCity in geodata:
+			city = visitedCity["_id"]["name"]
+			for idx, removeCity in enumerate(invertedResults):
+				if removeCity["city1"] == city:
+					invertedResults.pop(idx)
 		return invertedResults
 
 	return 1

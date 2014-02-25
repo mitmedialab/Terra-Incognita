@@ -2,11 +2,12 @@
 from bson.objectid import ObjectId
 from bson import BSON
 from bson import json_util
-from flask import Flask, session, render_template, json, jsonify, request
+from flask import Flask, redirect, session, render_template, json, jsonify, request
 from flask.ext.browserid import BrowserID
 from flask.ext.login import LoginManager
 from pymongo import MongoClient
 from user import *
+from bitly_recommendations import *
 import ConfigParser
 import datetime
 import httplib
@@ -115,12 +116,13 @@ def hello():
 @app.route('/map/<user>')
 def map(user=None):
 	if (user is not None):
-		userHistory = {"continents":[],"continents_incognita":[],"regions":[],"regions_incognita":[],"countries":[],"countries_incognita":[], "states":[], "cities":[]}
+		userHistory = {"continents":[],"continents_incognita":[],"regions":[],"regions_incognita":[],"countries":[],"countries_incognita":[], "states":[], "cities":[],"cities_incognita":[]}
 		
 		#continents
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CONTINENT_COUNT_PIPELINE )
 		userHistory["continents"].append(q['result'])
-		userHistory["continents_incognita"].append(invertGeodata(userHistory["continents"][0], "continent"))
+		inverted = invertGeodata(userHistory["continents"][0], "continent")
+		userHistory["continents_incognita"].append(inverted)
 
 		#regions
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=REGION_COUNT_PIPELINE )
@@ -139,10 +141,18 @@ def map(user=None):
 		#cities
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CITY_COUNT_PIPELINE )
 		userHistory["cities"].append(q['result'])
+		userHistory["cities_incognita"].append(invertGeodata(userHistory["cities"][0], "city"))
 		
 		return json.dumps(userHistory, sort_keys=True, indent=4, default=json_util.default) 
 	else:
 		return jsonify(error='No user ID specified');
+
+#Send user to an exciting destination
+@app.route('/go/<place>')
+def go(place=None):
+	url = "http://globalvoicesonline.org"
+	url = get_recommended_url(place)
+	return redirect(url, code=302)
 
 @app.route('/history/', methods=['POST'])
 def processHistory():

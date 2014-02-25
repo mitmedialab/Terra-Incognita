@@ -2,6 +2,10 @@ SET PYTHON BREAKPOINT
 -----------------------------------------------------------
 import pdb; pdb.set_trace()
 
+MONGODB 
+-----------------------------------------------------------
+run: mongod
+
 MONGODB SHELL
 -----------------------------------------------------------
 Launch: /usr/local/bin/mongo
@@ -26,10 +30,15 @@ START STOP APACHE
 sudo /etc/init.d/apache2 stop
 sudo /etc/init.d/apache2 start
 
+START STOP CLIFF-CLAVIN GEOPARSING
+-----------------------------------------------------------
+mvn exec:java -Dexec.mainClass="edu.mit.civic.mediacloud.ParseServer" -Dexec.args="-Xmx2g"
+
 CELERY
 -----------------------------------------------------------
 use start.sh/stop.sh scripts
 call worker: extract.delay(INPUT)
+Start Celery Flower on 5555: celery flower
 Celery Flower -- terra-incognita.co:5555/ OR http://127.0.0.1:5555/
 Celery flower -- consider how to secure (password, SSL, only on launch)
 
@@ -99,6 +108,9 @@ Regex match livejournal accounts
 Match short domains for manual deleting if bad data
 ^.{1,6}\n
 
+Match things in parens
+\(([^\)]+)\)
+
 
 Converting mediacloud csv to tld whitelist (possibly write scripte for this later)
 1. delete other columns in spreadsheet program
@@ -119,3 +131,13 @@ Converting mediacloud csv to tld whitelist (possibly write scripte for this late
 15. Manually delete anything that contains http: because it's definitely bad data at this point
 16. Search for ':' and manually delete anything that looks like bad data
 17. add theguardian.com
+
+PYTHON PACKAGES INSTALL DIR ON MACOSX
+-----------------------------------------------------------
+/Library/Python/2.7/site-packages/
+
+ACCESS TOKEN FOR BITLY API
+-----------------------------------------------------------
+curl -u "username:pwd" -X POST "https://api-ssl.bitly.com/oauth/access_token"
+
+edit .profile or .bash-profile to set up BITLY_ACCESS_TOKEN=<YOUR TOKEN HERE>

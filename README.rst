@@ -36,6 +36,10 @@ Through PIP or easy_install:
 
 - Use Celery along with Eventlet because Boilerpipe will break with Celery's default multiprocessing pools: https://github.com/celery/celery/tree/master/examples/eventlet
 
+- Bitly Python API - https://github.com/bitly/bitly-api-python
+
+- Set your BITLY_ACCESS_TOKEN as an environment variable
+
 What needs to be running for Terra Incognita to do its work
 =====
 - Apache Server
@@ -45,6 +49,7 @@ What needs to be running for Terra Incognita to do its work
 - Celery
 - Celery Flower
 - CLIFF CLAVIN (CLAVIN-Server) - accessed over http
+- Topic Mapping service - accessed over http
 
 Usage
 =====

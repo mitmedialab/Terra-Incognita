@@ -23,9 +23,11 @@ var DAYS_HISTORY = 30;
 var USER_COOKIE = "terra-incognita-id";
 var USER_ID = null;
 var IS_LOGGED_IN = false;
-//gotta make this better but here it is for the moment
-
 var USER_JSON = null;
+
+// 	set to false when testing so it doesn't upload and process a month of 
+// browsing on every reload
+var COLLECT_BROWSER_HISTORY = false;
 /*
 	Listens for pages checking auth status & returns true or false
 */
@@ -35,8 +37,7 @@ chrome.runtime.onMessage.addListener(
 		if (request.msg == "checkLoggedIn")
 		{
 				checkLoggedIn( function(){
-					console.log("Running check for logged in. ");
-					sendResponse({isLoggedIn: IS_LOGGED_IN, loginURL : SERVER_URL + LOGIN_PAGE});
+					sendResponse({isLoggedIn: IS_LOGGED_IN, loginURL : SERVER_URL + LOGIN_PAGE, userID : USER_ID});
 				});
 				return true;
 		}
@@ -52,20 +53,21 @@ chrome.runtime.onInstalled.addListener(function(details) {
 	console.log("on installed - Collecting and transmitting browser history");
 	var today = new Date();
 	var startCollecting = today.getTime() - DAYS_HISTORY*24*60*60*1000;
-	chrome.history.search({text: '', startTime:startCollecting, maxResults:1000000000}, function(results) 
-		{ 
-			filteredResults = [];
-			console.log("logging " + DAYS_HISTORY + " days browsing history"); 
-			console.log(results.length + " results");
-			for (var i = 0;i<results.length;i++){
-				var result = results[i];
-				if (keepURL(result.url)){
-					filteredResults.push(result);
+	if (COLLECT_BROWSER_HISTORY){
+		chrome.history.search({text: '', startTime:startCollecting, maxResults:1000000000}, function(results) 
+			{ 
+				filteredResults = [];
+				console.log("logging " + DAYS_HISTORY + " days browsing history"); 
+				console.log(results.length + " results");
+				for (var i = 0;i<results.length;i++){
+					var result = results[i];
+					if (keepURL(result.url)){
+						filteredResults.push(result);
+					}
 				}
-			}
-			postData('history/', 'history', filteredResults);
-		});
-
+				postData('history/', 'history', filteredResults);
+			});
+	}
 });
 
 
@@ -84,15 +86,17 @@ chrome.tabs.onCreated.addListener(function(tab) {
 				// JSON.parse does not evaluate the attacker's scripts.
 				USER_JSON = JSON.parse(xhr.responseText);
 				console.log(USER_JSON);
+
+				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+				  chrome.tabs.sendMessage(tabs[0].id, {userJSON: USER_JSON}, function(response) {
+				    console.log(response.msg);
+				  });
+				});
 			}
 		}
 		xhr.send();
 	
-	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-	  chrome.tabs.sendMessage(tabs[0].id, {userJSON: USER_JSON}, function(response) {
-	    console.log(response.msg);
-	  });
-	});
+	
 });
 
 /*
