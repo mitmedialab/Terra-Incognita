@@ -7,7 +7,7 @@ THE1000CITIES = [row for row in reader]
 
 THE1000CITIES_IDS_ARRAY = []
 for row in THE1000CITIES:
-	if row["geonames_id"] and len(row["geonames_id"]) > 0:
+	if "geonames_id" in row.keys() and len(row["geonames_id"]) > 0:
 		THE1000CITIES_IDS_ARRAY.append(int(row["geonames_id"]))
 
 
