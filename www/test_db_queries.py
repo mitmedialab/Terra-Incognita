@@ -18,6 +18,7 @@ db_user_history_collection = db[config.get('db','user_history_item_collection')]
 db_user_collection = db[config.get('db','user_collection')]
 db_recommendation_collection = db[config.get('db','recommendation_item_collection')]
 
-q = db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CONTINENT_COUNT_PIPELINE )
-print q['result']
+import pdb; pdb.set_trace()
+#q = db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CONTINENT_COUNT_PIPELINE )
+#print q['result']
 

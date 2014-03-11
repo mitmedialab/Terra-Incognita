@@ -1,0 +1,76 @@
+.navbar-inverse {
+	background-color: #555;
+}
+.navbar-brand{
+	color:white;
+	font-family: 'Fondamento', cursive;
+	font-size: 40px;
+}
+a.navbar-brand {
+	color:#efefef !important;
+	text-shadow: 2px 2px 10px #555;
+}
+#city-zoomed{
+	position: absolute;
+	top: 45px;
+	left: 0;
+	background: rgba(255,255,255,0.5);
+	padding: 5px 20px;
+	border: 1px solid #ddd;
+}
+#city-zoomed h1{
+	color:#444;
+	font-family: 'Fondamento', cursive;
+	font-size: 40px;
+	text-shadow: 2px 2px 2px #999;
+}
+#what-others-read,#what-you-read{
+	width:375px;
+	position: absolute;
+	right: 0;
+	top: 52px;
+	padding-right: 20px;
+	background: rgba(255,255,255,0.5);
+	overflow: scroll;
+	max-height: 280px;
+}
+#what-you-read{
+	top:345px;
+}
+#go-now{
+	
+}
+th{
+	font-size:20px;
+	font-family: Times, serif;
+}
+
+/* D3 CLASSES  */
+
+
+.bar:hover {
+  fill: red;
+}
+svg{
+	position:absolute;
+	bottom:0;
+	left:0;
+	background-color:none;
+	border-top:1px solid #101010;
+}
+#svg-extra{
+	position:absolute;
+	top:0;
+	left:0;
+	background-color:none;
+	border-bottom:1px solid #101010;
+}
+#city-selector-tooltip {   
+  position: absolute;           
+  bottom:200px;
+  left:12px;
+  font-size: 11px;
+  font-weight: bold;
+
+}
+

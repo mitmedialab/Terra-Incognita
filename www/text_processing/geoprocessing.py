@@ -3,6 +3,7 @@ import requests
 import json
 import os
 
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 reader = csv.DictReader(open(os.path.join(BASE_DIR,"geocodes.csv"),'rU'))
 COUNTRIES = [row for row in reader]
@@ -13,6 +14,7 @@ REGIONS = [row for row in reader]
 reader = csv.DictReader(open(os.path.join(BASE_DIR,"cities.csv"),'rU'))
 CITIES = [row for row in reader]
 GEO_LEVELS = ["continent","region","nation","state","city"]
+
 
 #pull out geodata for single text from CLIFF_CLAVIN
 def geoparseSingleText(text,geoserver):

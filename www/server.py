@@ -112,6 +112,61 @@ browser_id.init_app(app)
 def hello():
 	return app.send_static_file('googleForm.html')
 
+#Index test 
+@app.route('/1000cities')
+@app.route('/1000cities.html')
+@app.route('/1000cities.htm')
+def cities():
+	return app.send_static_file('1000cities.html')
+
+
+#Send user their city data
+#consider storing 1000 cities data in localstorage for faster retrieval later
+@app.route('/user/<userID>')
+@app.route('/user/')
+def user(userID='52dbeee6bd028634678cd069'):
+	if (userID is not None):
+		
+		userData = {"userID":userID,"cities":[], "last10HistoryItems":[]}
+		cursor = app.db_user_history_collection.find({ "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY },"userID":userID }, {"typedCount":1,"title":1,"url":1,"lastVisitTime":1,"geodata.primaryCities":1,"visitCount":1}).sort([("lastVisitTime",-1)]).skip(0).limit(10)
+		last10HistoryItems = list( record for record in cursor)
+
+		cities = {}
+		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CITY_COUNT_PIPELINE ) 
+		for row in q["result"]:
+			geonames_id = row["_id"]["geonames_id"]
+			count = row["count"]
+			cities[geonames_id] = count
+
+		userData["cities"] = cities
+		userData["last10HistoryItems"] = last10HistoryItems
+
+		return json.dumps(userData, sort_keys=True, indent=4, default=json_util.default) 
+	else:
+		return jsonify(error='No user ID specified');
+
+@app.route('/readinglist/<userID>/<cityID>')
+@app.route('/readinglist/')
+def get_reading_list(userID='52dbeee6bd028634678cd069',cityID=703448):
+	print cityID
+	result = {"userHistoryItemCollection":[], "systemHistoryItemCollection":[]}
+	cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities": { "$elemMatch": { "id": int(cityID) } } }, {"url":1,"title":1}).sort([("lastVisitTime",-1)]).skip(0).limit(100)
+	print cursor.count()
+	# need to get rid of duplicates
+	# need to get rid of entries with empty titles
+	#distinctRead = list(record for record in cursor.distinct())
+	result["userHistoryItemCollection"] = list(record for record in cursor)
+	cursor = app.db_user_history_collection.find({"userID":{ "$ne": userID }, "geodata.primaryCities": { "$elemMatch": { "id": int(cityID) } } }, {"url":1,"title":1}).sort([("lastVisitTime",-1)]).skip(0).limit(100)
+	result["systemHistoryItemCollection"] = list(record for record in cursor)
+	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
+
+#Test Aggregation Pipeline db requests
+@app.route('/testdb/<userID>')
+@app.route('/testdb/')
+def testdb(userID='52dbeee6bd028634678cd069'):
+	q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CITY_COUNT_PIPELINE )
+	return json.dumps(q['result'], sort_keys=True, indent=4, default=json_util.default) 
+
 #Send user their map data
 @app.route('/map/<user>')
 def map(user=None):

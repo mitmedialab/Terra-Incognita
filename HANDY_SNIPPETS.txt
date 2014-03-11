@@ -34,6 +34,17 @@ START STOP CLIFF-CLAVIN GEOPARSING
 -----------------------------------------------------------
 mvn exec:java -Dexec.mainClass="edu.mit.civic.mediacloud.ParseServer" -Dexec.args="-Xmx2g"
 
+CLIFF SERVER STUFF
+-----------------------------------------------------------
+CLIFF on civicdev server runs as an upstart service which should start automatically on machine boot. 
+
+LOCATION: /usr/local/lib/cliff
+
+To start stop:
+
+sudo service cliff start
+sudo service cliff start
+
 CELERY
 -----------------------------------------------------------
 use start.sh/stop.sh scripts
@@ -56,7 +67,7 @@ Or, if you don't want/need launchctl, you can just run:
 Local logging: /usr/local/var/log/rabbitmq/rabbit@localhost.log
 Local config: /usr/local/etc/rabbitmq
 
-QUERIES FOR MONGO HUB/MONGO SHELL
+QUERIES FOR MONGO HUB/MONGO SHELL/PYTHON
 -----------------------------------------------------------
 
 Search MongoDB using MongoHub for regex
@@ -73,6 +84,13 @@ Field value in array - MONGO SHELL
 db.user_history_items.find({"geodata.primaryCountries":{$in:["ES"]} })
 MONGOHUB -- {"geodata.primaryCountries":{"$in":["ES"]} }
 
+Exists in MongoHub: { "geodata.primaryCities": { "$exists": true } }
+db.terra_incognita.user_history_items.find({ "geodata.primaryCities": { "$exists": true } }).sort({"lastVisitTime":-1}).skip(0).limit(10)
+
+Exists in PyMongo: app.db_user_history_collection.find({ "geodata.primaryCities": { "$exists": True } }).sort([("lastVisitTime",-1)]).skip(0).limit(10)
+
+Exists in Mongo Shell: Select user's last 10 history items that match to cities
+db.terra_incognita.user_history_items.find({ "geodata.primaryCities": { "$exists": true } }, {_id:1,typedCount:1,title:1,url:1,lastVisitTime:1,geodata.primaryCities:1,visitCount:1}).sort({"lastVisitTime":-1}).skip(0).limit(10)
 
 Delete db
 

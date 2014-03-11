@@ -31,3 +31,13 @@ www/static/eg_whitelist_map.html
 www/static/rb_map.html
 
 www/static/data/history-rb.txt
+
+*.pid
+
+extension/terraincognitaBAK.html
+
+extension/terraincognita_DOUBLESVG.html
+
+www/test/952Cities_NEW.csv
+
+www/test/952Cities_NEW_SMALL_REMOVED.csv

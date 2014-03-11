@@ -28,8 +28,32 @@ var USER_JSON = null;
 // 	set to false when testing so it doesn't upload and process a month of 
 // browsing on every reload
 var COLLECT_BROWSER_HISTORY = false;
+
+function checkLoggedIn(callback){
+	chrome.cookies.get({ url: COOKIE_PATH, name: USER_COOKIE },
+			function (cookie) {
+				if (cookie) {
+						console.log("user logged in");
+						IS_LOGGED_IN = true;
+						USER_ID = cookie.value;
+						
+				}else{
+					console.log("user not logged in");
+					IS_LOGGED_IN = false;
+					USER_ID = null;
+					
+				}
+				callback();
+		});
+	
+}
+function initBackground(){
+	checkLoggedIn(function(){console.log("initBackground::checkLoggedIn: " + IS_LOGGED_IN)});
+}
+initBackground();
+
 /*
-	Listens for pages checking auth status & returns true or false
+	Listens for pages sending stuff
 */
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse)
@@ -39,6 +63,23 @@ chrome.runtime.onMessage.addListener(
 				checkLoggedIn( function(){
 					sendResponse({isLoggedIn: IS_LOGGED_IN, loginURL : SERVER_URL + LOGIN_PAGE, userID : USER_ID});
 				});
+				return true;
+		}
+		else if (request.msg == "loadReadingLists")
+		{
+				var xhr = new XMLHttpRequest();
+				//TODO -- add CITY ID & USER ID WHEN CITIES ARE READY
+				xhr.open("GET",SERVER_URL + 'readinglist/' + USER_ID + '/' + request.city_id, true);
+				//xhr.open("GET",SERVER_URL + 'readinglist/', true);
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4) {
+						// JSON.parse does not evaluate the attacker's scripts.
+						readingListJSON = JSON.parse(xhr.responseText);
+						console.log(readingListJSON);
+						sendResponse({readingLists: readingListJSON});
+					}
+				}
+				xhr.send();
 				return true;
 		}
 	}
@@ -80,7 +121,7 @@ chrome.tabs.onCreated.addListener(function(tab) {
 	// determine when to get USER JSON from server, will need to download new periodically
 	//if (USER_JSON == null){
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET",SERVER_URL + 'map/' + USER_ID, true);
+		xhr.open("GET",SERVER_URL + 'user/' + USER_ID, true);
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4) {
 				// JSON.parse does not evaluate the attacker's scripts.
@@ -88,7 +129,7 @@ chrome.tabs.onCreated.addListener(function(tab) {
 				console.log(USER_JSON);
 
 				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-				  chrome.tabs.sendMessage(tabs[0].id, {userJSON: USER_JSON}, function(response) {
+				  chrome.tabs.sendMessage(tabs[0].id, {user: USER_JSON}, function(response) {
 				    console.log(response.msg);
 				  });
 				});
@@ -142,24 +183,7 @@ function keepURL(url){
 	}
 	return false;
 }
-function checkLoggedIn(callback){
-	chrome.cookies.get({ url: COOKIE_PATH, name: USER_COOKIE },
-			function (cookie) {
-				if (cookie) {
-						console.log("user logged in");
-						IS_LOGGED_IN = true;
-						USER_ID = cookie.value;
-						
-				}else{
-					console.log("user not logged in");
-					IS_LOGGED_IN = false;
-					USER_ID = null;
-					
-				}
-				callback();
-		});
-	
-}
+
 /*
 	Handles post requests to server
 */

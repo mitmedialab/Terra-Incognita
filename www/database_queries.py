@@ -1,3 +1,16 @@
+import csv
+import os 
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+reader = csv.DictReader(open(os.path.join(BASE_DIR,"static/data/1000cities.csv"),'rU'))
+THE1000CITIES = [row for row in reader]
+
+THE1000CITIES_IDS_ARRAY = []
+for row in THE1000CITIES:
+	if row["geonames_id"] and len(row["geonames_id"]) > 0:
+		THE1000CITIES_IDS_ARRAY.append(int(row["geonames_id"]))
+
+
 CONTINENT_COUNT_PIPELINE=[
 	{ "$project" : { "geodata.primaryContinents":1 }},
 	{ "$unwind" : "$geodata.primaryContinents" },
@@ -23,9 +36,22 @@ STATE_COUNT_PIPELINE=[
 	{ "$sort" : { "count" : -1 } }
 ]
 CITY_COUNT_PIPELINE = [
-	{ "$project" : { "geodata.primaryCities":1 }},
 	{ "$unwind" : "$geodata.primaryCities" },
-	{ "$group": {"_id": {"geonames_id":"$geodata.primaryCities.id", "name":"$geodata.primaryCities.name","state_code":"$geodata.primaryCities.stateCode","country_code":"$geodata.primaryCities.countryCode" }, "count": {"$sum": 1}}},
+	{ "$match" : { "geodata.primaryCities.id": {"$in": THE1000CITIES_IDS_ARRAY } }},
+	{ "$group": {"_id": {"geonames_id":"$geodata.primaryCities.id" }, "count": {"$sum": 1}}},
 	{ "$sort" : { "count" : -1 } }
+
+]
+#THIS DOES NOT WORK PROPERLY
+HISTORY_PATH_PIPELINE = [
+	{ "$sort" : { "lastVisitTime" : -1 } },
+	{ "$match": {"geodata.primaryCities.0":{"$exists": "true"}}},
+	{ "$project" : { "url": 1, "title":1,"lastVisitTime":1, "geodata.primaryCities":1 }},
+
+	{"$group" : { "_id" : "$url"}},
+	#{ "$group": {"_id": {"url": "$url", "title":"$title","lastVisitTime":"$lastVisitTime"} }},
+	#{ "$skip" : 0},
+	
+	{ "$limit" : 10}
 
 ]
