@@ -1,5 +1,5 @@
 .navbar-inverse {
-	background-color: #555;
+	background-color: transparent;
 }
 .navbar-brand{
 	color:white;
@@ -7,7 +7,7 @@
 	font-size: 40px;
 }
 a.navbar-brand {
-	color:#efefef !important;
+	color:#fff !important;
 	text-shadow: 2px 2px 10px #555;
 }
 #city-zoomed{

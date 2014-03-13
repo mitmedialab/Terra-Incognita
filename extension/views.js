@@ -17,7 +17,7 @@ App.MapView = Backbone.View.extend({
 		this.userModel = options.userModel;
 		this.userModel.on('change', this.render,this);
 		
-		this.map = L.mapbox.map('map', 'kanarinka.hcc1900i');//.setView([this.getRandomInRange(-90,90,3), this.getRandomInRange(-180,180,3)], 9);
+		this.map = L.mapbox.map('map', 'kanarinka.hcc1900i');//random spot -- .setView([this.getRandomInRange(-90,90,3), this.getRandomInRange(-180,180,3)], 9);
 		
 		App.map = this.map;
 		this.cityZoomedView = new App.CityZoomedView(
@@ -107,7 +107,7 @@ App.CityMarkerCollectionView = Backbone.View.extend({
 										'marker-size': 'medium',
 										'marker-symbol': 'embassy',
 										'modelId':city.cid,
-										"url": 'http://127.0.0.1:5000/go/' + city.get('city_name') + "," + city.get('country_name')
+										"url": 'http://127.0.0.1:5000/go/' + city.get('geonames_id') 
 									};
 				json["geometry"]={		"type": 'Point',
 										"coordinates": [parseFloat(city.get("lon")), parseFloat(city.get("lat"))]};				
@@ -226,7 +226,7 @@ App.CityZoomedView = Backbone.View.extend({
 		App.map.featureLayer.setFilter(function() { return false; });
 		
 		App.map.setView([this.model.get("lat"), this.model.get("lon")], 12);
-		var html = this.template({ city_name: this.model.get("city_name"), country_name:this.model.get("country_name"), userStories:this.model.get("userHistoryItemCollection"), systemStories:this.model.get("systemHistoryItemCollection") });
+		var html = this.template({ cityID : this.model.get("geonames_id"), city_name: this.model.get("city_name"), country_name:this.model.get("country_name"), userStories:this.model.get("userHistoryItemCollection"), systemStories:this.model.get("systemHistoryItemCollection") });
 		this.$el.html(html);
 		this.showing = true;
 		return this;
@@ -272,7 +272,7 @@ App.CitySelectorView = Backbone.View.extend({
 			.attr("width", width + margin.left + margin.right)
 			.attr("height", height + margin.top + margin.bottom)
 			.append("g")
-			.attr("transform", "scale(2,1),translate(-240,0)");
+			.attr("transform", "scale(2,1),translate(-254,0)");
 			
 		var data = this.rawCitiesData;
 
@@ -310,13 +310,16 @@ App.CitySelectorView = Backbone.View.extend({
 			.on("mouseover", function(d) {   
 				d3.select(this).attr('fill-opacity', 1.0);
 				$('#city-selector-tooltip').text(d.city_name + ", " + d.country_name);
-				$('#city-selector-tooltip').css({position:"absolute", left:d3.mouse(this)[0]-240,bottom:75});
+				$('#city-selector-tooltip').css({position:"absolute", left:d3.mouse(this)[0],bottom:height});
 				   
 			})                  
 			.on("mouseout", function(d) {       
 				d3.select(this).attr('fill-opacity', filler);
 				$('#city-selector-tooltip').text(""); 
 			});
+
+			//Once it's done, make a copy and paste it up on the top of the frame too
+			$('svg').clone().attr("id", "svg-extra").appendTo('body');
 	}
 });
 /**

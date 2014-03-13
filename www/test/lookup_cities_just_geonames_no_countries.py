@@ -6,11 +6,11 @@ import requests
 import requests.exceptions
 import json
 
-CITIES = list(csv.DictReader(open("952Cities_NEW_SMALL_REMOVED.csv",'rU')))
+CITIES = list(csv.DictReader(open("NOW1000CITIES.csv",'rU')))
+COUNTRIES = list(csv.DictReader(open("countries_temp.csv",'rU')))
 
-
-test_file = open('952Cities_NEW.csv','wb')
-fieldnames = ["geonames_id","city_name", "toponym_name", "lat", "lon", "population_rank", "pop", "country_name", "country_code", "un_country_code","region_code", "region_name", "continent_code", "continent_name","citation"]
+test_file = open('1000NEWCITIES.csv','wb')
+fieldnames = ["geonames_id","city_name", "toponym_name", "lat", "lon", "population_rank", "pop", "country_name", "country_code", "un_country_code","region_code", "region_name", "continent_code", "continent_name"]
 csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
 csvwriter.writeheader()
 
@@ -54,7 +54,7 @@ for row in CITIES:
 					new_row["country_name"] = row["country_name"]
 					new_row["population_rank"] = row["population_rank"]
 					new_row["lat"] = row["lat"]
-					new_row["lon"] = row["long"]
+					new_row["lon"] = row["lon"]
 					csvwriter.writerow(DictUnicodeProxy(new_row))
 					continue
 
@@ -69,11 +69,26 @@ for row in CITIES:
 			new_row["pop"] = resGeo["population"]
 			new_row["country_name"] = resGeo["countryName"]
 			new_row["country_code"] = resGeo["countryCode"]
-			csvwriter.writerow(DictUnicodeProxy(new_row))
+		
 			
 		except requests.exceptions.RequestException as e:
 			print "ERROR RequestException " + str(e)
+		
+		found = False
+		for row_inner in COUNTRIES:
+			if row_inner["country_code"] == resGeo["countryCode"]:
+				new_row["un_country_code"] = row_inner["un_country_code"]
+				new_row["region_code"] = row_inner["region_code"]
+				new_row["region_name"] = row_inner["region_name"]
+				new_row["continent_code"] = row_inner["continent_code"]
+				new_row["continent_name"] = row_inner["continent_name"]
+				csvwriter.writerow(DictUnicodeProxy(new_row))
+				found = True
+				break
 
+		if not found:
+			print "No country data match for " + row["city_name"] + ", " + row["country_name"]
+			csvwriter.writerow(DictUnicodeProxy(new_row))
 	
 
 

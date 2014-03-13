@@ -1,5 +1,6 @@
 import os
 import bitly_api
+from cities_array import *
 
 BITLY_ACCESS_TOKEN = "BITLY_ACCESS_TOKEN"
 TOPICS = ["advertising","agriculture","art","automotive","aviation","banking","business","celebrity","computer","disasters","drugs","economics","education","energy","entertainment","fashion","finance","food","games","health","hobbies","humor","intellectual property","labor","legal","lgbt","marriage","military","mobile devices","news","philosophy","politics","real estate","reference","science","sexuality","shopping","social media","sports","technology","travel","weapons","weather"]
@@ -7,8 +8,25 @@ TOPICS = ["advertising","agriculture","art","automotive","aviation","banking","b
 #until we really integrate topic mapping
 TMP_USER_TOPICS = ["news","politics","entertainment"]
 
-def get_recommended_url(place):
+def get_recommended_url(cityID):
 	bitly = get_bitly_connection()
+	placedata = {}
+	for row in THE1000CITIES:
+		if cityID == row["geonames_id"]:
+			placedata = row
+			print placedata
+			break
+	if not placedata:
+		print "No recommendation because ID not in Cities list"
+		return "http://www.wikipedia.org"
+
+	#adjust place text based on how big place is
+	if int(placedata["pop"]) > 15000 and int(placedata["pop"]) < 10000000:
+		place = placedata["city_name"] + " " + placedata["country_name"] 
+	elif int(placedata["pop"]) > 10000000:
+		place = placedata["city_name"]
+	else:
+		place = placedata["country_name"]
 
 	#try global voices
 	results = bitly.search(place, domain="globalvoicesonline.org")

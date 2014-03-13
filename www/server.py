@@ -20,6 +20,7 @@ import requests.exceptions
 from database_queries import *
 from text_processing.geoprocessing import *
 from text_processing.tasks import start_text_processing_queue
+from cities_array import *
 import logging
 
 # constants
@@ -148,10 +149,9 @@ def user(userID='52dbeee6bd028634678cd069'):
 @app.route('/readinglist/<userID>/<cityID>')
 @app.route('/readinglist/')
 def get_reading_list(userID='52dbeee6bd028634678cd069',cityID=703448):
-	print cityID
+	
 	result = {"userHistoryItemCollection":[], "systemHistoryItemCollection":[]}
 	cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities": { "$elemMatch": { "id": int(cityID) } } }, {"url":1,"title":1}).sort([("lastVisitTime",-1)]).skip(0).limit(100)
-	print cursor.count()
 	# need to get rid of duplicates
 	# need to get rid of entries with empty titles
 	#distinctRead = list(record for record in cursor.distinct())
@@ -203,10 +203,10 @@ def map(user=None):
 		return jsonify(error='No user ID specified');
 
 #Send user to an exciting destination
-@app.route('/go/<place>')
-def go(place=None):
+@app.route('/go/<cityID>')
+def go(cityID=None):
 	url = "http://globalvoicesonline.org"
-	url = get_recommended_url(place)
+	url = get_recommended_url(cityID)
 	return redirect(url, code=302)
 
 @app.route('/history/', methods=['POST'])
