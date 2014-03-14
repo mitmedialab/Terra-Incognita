@@ -226,11 +226,23 @@ App.CityZoomedView = Backbone.View.extend({
 		App.map.featureLayer.setFilter(function() { return false; });
 		
 		App.map.setView([this.model.get("lat"), this.model.get("lon")], 12);
-		var html = this.template({ cityID : this.model.get("geonames_id"), city_name: this.model.get("city_name"), country_name:this.model.get("country_name"), userStories:this.model.get("userHistoryItemCollection"), systemStories:this.model.get("systemHistoryItemCollection") });
+		var html = this.template({ population : this.addCommas(this.model.get("pop")), cityID : this.model.get("geonames_id"), city_name: this.model.get("city_name"), country_name:this.model.get("country_name"), userStories:this.model.get("userHistoryItemCollection"), systemStories:this.model.get("systemHistoryItemCollection") });
 		this.$el.html(html);
 		this.showing = true;
 		return this;
 	},
+	addCommas: function(nStr)
+    {
+      nStr += '';
+      x = nStr.split('.');
+      x1 = x[0];
+      x2 = x.length > 1 ? '.' + x[1] : '';
+      var rgx = /(\d+)(\d{3})/;
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+      }
+      return x1 + x2;
+    },
 });
 
 /*

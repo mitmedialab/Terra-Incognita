@@ -2,7 +2,10 @@
 <script type="text/javascript" src="../lib/underscore/underscore-1.5.2-min.js"></script>
 <script id="city-zoomed-reading-lists" type="text/template">  
         <div id="city-zoomed"><h1><%= city_name %>, <%= country_name %></h1>
-        <div style="font-size:12px;line-height:10px;margin-top:20px">
+        <% if (population != "0") { %>
+          <p id="city-zoomed-population" class="city-stats">pop. <%= population %></p>
+        <% } %>
+        <div class="city-stats">
           <p><strong>erhardt</strong>: First Reader</p>
           <p><strong>stempeck</strong>: First Recommender</p>
           
@@ -16,11 +19,13 @@
           <p><em>Recommend 1 more article to be the Top Recommender</em></p>
         </div>
         </div>
-        <div id="go-now" style="position: absolute; left: 50%; top:35%;">
+        <div id="go-now">
               <div style="position: relative; left: -50%;">
-                  <a href="http://localhost:5000/go/<%= cityID %>"><img src="img/gobutton.png" target="_blank"></a></th>
+                  <a href="http://localhost:5000/go/<%= cityID %>" role="button" class="btn btn-lg btn-danger btn-go">Read About <%= city_name %></a></th>
               </div>
         </div> 
+        <div id="what-people-read">
+        <% if (systemStories && systemStories.size() > 0) { %>
         <div id="what-others-read">
           <table class="table table-condensed">
             <thead>
@@ -37,6 +42,8 @@
               </tbody>
           </table> 
         </div> 
+        <% } %>
+        <% if (userStories && userStories.size() > 0) { %>
         <div id="what-you-read">
           <table class="table table-condensed">
             <thead>
@@ -52,6 +59,8 @@
                 } %>
               </tbody>
           </table>  
+        </div>
+        <% } %>
         </div>
 </script>
 <script type="text/javascript">

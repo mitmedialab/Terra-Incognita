@@ -15,7 +15,7 @@ a.navbar-brand {
 	top: 45px;
 	left: 0;
 	background: rgba(255,255,255,0.5);
-	padding: 5px 20px;
+	padding: 5px 10px;
 	border: 1px solid #ddd;
 }
 #city-zoomed h1{
@@ -23,31 +23,69 @@ a.navbar-brand {
 	font-family: 'Fondamento', cursive;
 	font-size: 40px;
 	text-shadow: 2px 2px 2px #999;
+	margin-left: 35px;
 }
-#what-others-read,#what-you-read{
+#what-people-read{
 	width:375px;
 	position: absolute;
 	right: 0;
 	top: 52px;
+}
+#what-others-read,#what-you-read{
+	
 	padding-right: 20px;
 	background: rgba(255,255,255,0.5);
 	overflow: scroll;
 	max-height: 280px;
 }
 #what-you-read{
-	top:345px;
+	margin-top:20px;
 }
 #go-now{
 	
 }
 th{
 	font-size:20px;
-	font-family: Times, serif;
+	font-family: Fondamento, serif;
+}
+tr{
+	font-size:12px;
+	line-height:1.2;
+}
+.city-stats{
+	font-size:12px;line-height:8px;margin-top:20px;
 }
 
+
+#city-selector-tooltip {   
+  position: absolute;           
+  bottom:200px;
+  left:12px;
+  font-size: 11px;
+  font-weight: bold;
+
+}
+#go-now{
+	position: absolute; left: 50%; top:65%;
+}
+.btn-go{
+	font-family: Fondamento, serif;
+}
+/* MAP CLASSES */
+.leaflet-control-zoom{
+	position:absolute;
+	top:55px;
+}
+.mapbox-control-info-right{
+	display: none !important;
+}
+/* END MAP CLASSES */
+/* BOOTSTRAP OVERRIDE */
+.btn-danger{
+	background-color: #d9534f;
+	border-color: #d9534f;
+}
 /* D3 CLASSES  */
-
-
 .bar:hover {
   fill: red;
 }
@@ -65,12 +103,5 @@ svg{
 	background-color:none;
 	border-bottom:1px solid #101010;
 }
-#city-selector-tooltip {   
-  position: absolute;           
-  bottom:200px;
-  left:12px;
-  font-size: 11px;
-  font-weight: bold;
-
-}
+/* END D3 CLASSES  */
 

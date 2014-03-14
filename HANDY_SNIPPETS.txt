@@ -1,5 +1,17 @@
 SET PYTHON BREAKPOINT
 -----------------------------------------------------------
+Run locally after restart - one in each terminal:
+mongod
+rabbitmq-server
+celery multi start 2 -A text_processing.tasks -l info -P eventlet
+celery flower
+
+python server.py (from application dir) 
+
+
+
+SET PYTHON BREAKPOINT
+-----------------------------------------------------------
 import pdb; pdb.set_trace()
 
 MONGODB 

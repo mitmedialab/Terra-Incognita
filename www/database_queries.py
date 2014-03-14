@@ -31,6 +31,7 @@ CITY_COUNT_PIPELINE = [
 	{ "$sort" : { "count" : -1 } }
 
 ]
+
 #THIS DOES NOT WORK PROPERLY
 HISTORY_PATH_PIPELINE = [
 	{ "$sort" : { "lastVisitTime" : -1 } },

@@ -149,22 +149,51 @@ def user(userID='52dbeee6bd028634678cd069'):
 @app.route('/readinglist/<userID>/<cityID>')
 @app.route('/readinglist/')
 def get_reading_list(userID='52dbeee6bd028634678cd069',cityID=703448):
-	
+	cityID = int(cityID)
 	result = {"userHistoryItemCollection":[], "systemHistoryItemCollection":[]}
-	cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities": { "$elemMatch": { "id": int(cityID) } } }, {"url":1,"title":1}).sort([("lastVisitTime",-1)]).skip(0).limit(100)
-	# need to get rid of duplicates
-	# need to get rid of entries with empty titles
-	#distinctRead = list(record for record in cursor.distinct())
-	result["userHistoryItemCollection"] = list(record for record in cursor)
-	cursor = app.db_user_history_collection.find({"userID":{ "$ne": userID }, "geodata.primaryCities": { "$elemMatch": { "id": int(cityID) } } }, {"url":1,"title":1}).sort([("lastVisitTime",-1)]).skip(0).limit(100)
-	result["systemHistoryItemCollection"] = list(record for record in cursor)
+	#cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities": { "$elemMatch": { "id": int(cityID) } } }, {"url":1,"title":1}).sort([("lastVisitTime",-1)]).skip(0).limit(100)
+	
+	USER_CITY_HISTORY_PIPELINE = [
+		
+		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": userID, "title":{"$ne":"" } }},
+		{ "$sort" : { "lastVisitTime" : 1 } },
+		{ "$group": {"_id": {"url":"$url", "title":"$title" }, "count": {"$sum": 1}}},
+		{ "$limit" : 50 },
+		
+	]
+	q = app.db_user_history_collection.aggregate(USER_CITY_HISTORY_PIPELINE)
+
+	result["userHistoryItemCollection"] = list(row["_id"] for row in q["result"])
+	
+	#cursor = app.db_user_history_collection.find({"userID":{ "$ne": userID }, "geodata.primaryCities": { "$elemMatch": { "id": int(cityID) } } }, {"url":1,"title":1}).sort([("lastVisitTime",-1)]).skip(0).limit(100)
+	
+	SYSTEM_CITY_HISTORY_PIPELINE = [
+		
+		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID}, "title":{"$ne":"" } }},
+		{ "$sort" : { "lastVisitTime" : 1 } },
+		{ "$group": {"_id": {"url":"$url", "title":"$title" }, "count": {"$sum": 1}}},
+		{ "$limit" : 50 },
+		
+	]
+	q = app.db_user_history_collection.aggregate(SYSTEM_CITY_HISTORY_PIPELINE)
+
+	result["systemHistoryItemCollection"] = list(row["_id"] for row in q["result"])
 	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
 
 #Test Aggregation Pipeline db requests
-@app.route('/testdb/<userID>')
+@app.route('/testdb/<userID>/<cityID>')
 @app.route('/testdb/')
-def testdb(userID='52dbeee6bd028634678cd069'):
-	q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CITY_COUNT_PIPELINE )
+def testdb(userID='52dbeee6bd028634678cd069',cityID=4930956):
+	USER_CITY_HISTORY_PIPELINE = [
+		
+		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": userID, "title":{"$ne":"" } }},
+		{ "$sort" : { "lastVisitTime" : 1 } },
+		{ "$group": {"_id": {"url":"$url", "title":"$title" }, "count": {"$sum": 1}}},
+		{ "$limit" : 20 },
+		
+	]
+	q = app.db_user_history_collection.aggregate(USER_CITY_HISTORY_PIPELINE)
+	#q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=USER_CITY_HISTORY_PIPELINE )
 	return json.dumps(q['result'], sort_keys=True, indent=4, default=json_util.default) 
 
 #Send user their map data
