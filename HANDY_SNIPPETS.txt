@@ -5,6 +5,7 @@ mongod
 rabbitmq-server
 celery multi start 2 -A text_processing.tasks -l info -P eventlet
 celery flower
+mvn exec:java -Dexec.mainClass="edu.mit.civic.mediacloud.ParseServer" -Dexec.args="-Xmx2g"
 
 python server.py (from application dir) 
 
@@ -112,6 +113,9 @@ db.collection-name.drop()
 
 Query for just countries, cities, etc
 db.terra_incognita.user_history_items.find({"userID":"52dbeee6bd028634678cd069"}, {geodata.primaryCountries:1,geodata.primary.States:1,geodata.primaryCities.name:1}).sort({ "_id": 1}).skip(0).limit(30)
+
+Add username field in MongoHub
+db.terra_incognita.users.update({"_id": { "$oid" : "52dbeee6bd028634678cd069" } }, {"$set":{"username":"kanarinka"}}, false, false)
 
 INTEGRATING WITH FLASK-LOGIN & PERSONA
 -----------------------------------------------------------

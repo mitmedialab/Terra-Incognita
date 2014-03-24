@@ -63,6 +63,7 @@ tr{
   left:12px;
   font-size: 11px;
   font-weight: bold;
+  z-index:1000;
 
 }
 #go-now{

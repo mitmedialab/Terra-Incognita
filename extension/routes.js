@@ -11,7 +11,7 @@ App.Router = Backbone.Router.extend({
 		this.mapView = new App.MapView({
 			userModel: this.userModel,
 			cityCollection: this.cityCollection
-		})
+		});
 		
 		this.listenForUserData();
 	},

@@ -88,6 +88,7 @@ def create_browserid_user(kwargs):
 	
 	if kwargs['status'] == 'okay':
 		user = create_new_user(kwargs["email"])
+		
 		user_id = app.db_user_collection.insert(user.__dict__)
 		user._id = user_id
 		return user

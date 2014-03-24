@@ -25,9 +25,11 @@ App.UserModel = Backbone.Model.extend({
 		if (isLoggedIn){
 			App.debug("user is logged in");
 			this.set({"authenticated": true, "loginURL":loginURL, "userID":userID});
+			
 		}
 		else{
-			App.debug("User is not logged in. Redirecting to login page.");
+			App.debug("User is not logged in.");
+			App.debug("LoginURL is: " + loginURL);
 			this.set({"authenticated": false, "loginURL":loginURL, "userID":userID});
 		}
 	},

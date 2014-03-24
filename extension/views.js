@@ -15,8 +15,7 @@ App.MapView = Backbone.View.extend({
 		// Create models
 		this.cityCollection = options.cityCollection;
 		this.userModel = options.userModel;
-		this.userModel.on('change', this.render,this);
-		
+		this.userModel.on('change:loginURL', this.renderLogin,this);
 		this.map = L.mapbox.map('map', 'kanarinka.hcc1900i');//random spot -- .setView([this.getRandomInRange(-90,90,3), this.getRandomInRange(-180,180,3)], 9);
 		
 		App.map = this.map;
@@ -31,23 +30,26 @@ App.MapView = Backbone.View.extend({
 	
 	render: function () {
 		App.debug('App.MapView.render()')
-
-		this.loginView = new App.LoginView({ model: this.userModel });
 		
 		if (this.userModel.get('authenticated')) {
-			this.$el.find("#hello").append('Hello, ' + this.userModel.get('userID'))
-		} else {
-			this.$el.find("#hello").append(this.loginView.el);
-		}
-		if (this.userModel.get('userHistoryPath') && this.userModel.get('userHistoryPath').length > 0 && !this.userHistoryPathView) {
-			this.userHistoryPathView = new App.HistoryItemMarkerCollectionView({collection:this.userModel.get('userHistoryPath')})
-		}
-		if (this.userModel.get('userCities') && this.userModel.get('userCities').length > 0 && !this.userCitiesView) {
-			this.userCitiesView = new App.CityMarkerCollectionView({collection:this.userModel.get('userCities')})
-		}
+			this.$el.find("#hello").append('Hello, ' + this.userModel.get('userID'));
+			/* THIS WAS FROM GLOBAL MAP VIEWS - not using at the moment
+				
+			if (this.userModel.get('userHistoryPath') && this.userModel.get('userHistoryPath').length > 0 && !this.userHistoryPathView) {
+				this.userHistoryPathView = new App.HistoryItemMarkerCollectionView({collection:this.userModel.get('userHistoryPath')})
+			}
+			if (this.userModel.get('userCities') && this.userModel.get('userCities').length > 0 && !this.userCitiesView) {
+				this.userCitiesView = new App.CityMarkerCollectionView({collection:this.userModel.get('userCities')})
+			}*/
+		} 
+		
 		return this;
 	},
-	
+
+	renderLogin: function(){
+		if (this.userModel.get('loginURL') != '')
+			this.loginView = new App.LoginView({ model: this.userModel });
+	},
 	unloadCityZoomView: function(){
 		App.debug('App.MapView.unloadCityZoomView()')
 		if (this.cityZoomedView)
@@ -252,8 +254,6 @@ App.CityZoomedView = Backbone.View.extend({
 App.CitySelectorView = Backbone.View.extend({
 	initialize: function (options) {
 		App.debug('App.CitySelectorView.initialize()');
-		console.log(options)
-		console.log("OPTIONS")
 		this.options = options || {};
 		this.userModel = options.userModel;
 		this.rawCitiesData = options.cityCollection.rawCitiesData;
@@ -321,8 +321,9 @@ App.CitySelectorView = Backbone.View.extend({
 			})
 			.on("mouseover", function(d) {   
 				d3.select(this).attr('fill-opacity', 1.0);
+
 				$('#city-selector-tooltip').text(d.city_name + ", " + d.country_name);
-				$('#city-selector-tooltip').css({position:"absolute", left:d3.mouse(this)[0],bottom:height});
+				$('#city-selector-tooltip').css({left:d3.mouse(this)[0],bottom:height});
 				   
 			})                  
 			.on("mouseout", function(d) {       
@@ -338,7 +339,8 @@ App.CitySelectorView = Backbone.View.extend({
  * Login form.
  */
 App.LoginView = Backbone.View.extend({
-	
+	el: $("#login-view"),
+	template: TEMPLATES['login-modal-template'],
 	initialize: function (options) {
 		App.debug('App.LoginView.initialize()');
 		this.options = options || {};
@@ -352,16 +354,23 @@ App.LoginView = Backbone.View.extend({
 	events: {
 		'click button': 'login'
 	},
-	
 	render: function () {
 		App.debug('App.LoginView.render()');
-		this.$el=$("#loggedIn");
+		console.log(this.model.get("loginURL"))
+		var html = this.template({ loginURL : this.model.get("loginURL") });
+		this.$el.html(html);
+		
+		//call window into being
+		this.$el.find('#login-modal').modal();
+		
+		/*this.$el=$("#loggedIn");
 		
 		if (this.model.get("authenticated") == true)
 			this.$el.html("You are logged in to Terra Incognita. <a href='"+this.model.get("loginURL")+"'>Logout</a>");
 		else
 			this.$el.html("You are not logged into Terra Incognita. <a href='"+this.model.get("loginURL")+"'>Login now</a>");
 			//window.location.href=this.model.get("loginURL");
+		*/
 		return this;
 	},
 	

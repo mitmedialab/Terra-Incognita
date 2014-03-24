@@ -6,16 +6,22 @@
         <script type="text/javascript">{{ auth_script|safe }}</script>
     </head>
     <body>
-        <h1>Terra Incognita Login</h1>
-        <h2>On this page you can login and logout of the Terra Incognita system.</h2>
+        
+        
         {% if current_user.is_authenticated() %}
-        <h3>You are currently logged in.</h3>
-        <h3>To access your Terra Incognita, open a new tab in your browser.</h3>
+        <h1>You are currently logged in to Terra Incognita with the email address {{ current_user.email }}.</h1>
+         <button id="browserid-logout">Logout</button>
         <script>
             docCookies.setItem('terra-incognita-id', '{{ current_user.get_id() }}', 60*60*24*365);
             
         </script>
-            <button id="browserid-logout">Logout</button>
+            
+            <h2>Your current username is {{ current_user.username }}.</h2>
+            <h2>Change your username to: </h2>
+                <form>
+                    <input type="text" placeholder="Enter new username">
+                </form>
+
         {% else %}
             <h3>You are currently not logged in.</h3>
             <script>

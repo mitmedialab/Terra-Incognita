@@ -1,5 +1,24 @@
 <script type="text/javascript" src="../lib/jquery/js/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="../lib/underscore/underscore-1.5.2-min.js"></script>
+<script id="login-modal-template" type="text/template">
+  <div id="login-modal" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">One-time Login</h4>
+        </div>
+        <div class="modal-body">
+          <p>You are not logged in to Terra Incognita. Please click below to login once and youll be set for awhile after that.</p>
+        </div>
+        <div class="modal-footer">
+          
+          <a role="button" class="btn btn-primary" href="<%= loginURL %>">Login Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
 <script id="city-zoomed-reading-lists" type="text/template">  
         <div id="city-zoomed"><h1><%= city_name %>, <%= country_name %></h1>
         <% if (population != "0") { %>
@@ -17,6 +36,13 @@
           <br/>
           <p><em>Read 4 more articles to be the Top Scholar</em></p>
           <p><em>Recommend 1 more article to be the Top Recommender</em></p>
+          <h5 style="margin-top:20px">Submit a recommendation about <%= city_name %></h5>
+          <form class="form-inline" role="form">
+            <div class="form-group">
+              <input type="email" class="form-control" id="url_recommendation" placeholder="http://www.yoururlgoeshere.com">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+          </form>
         </div>
         </div>
         <div id="go-now">

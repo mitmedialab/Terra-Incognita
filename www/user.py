@@ -11,7 +11,8 @@ class User(UserMixin):
 			self._id = kwargs.get("_id")
 		self.firstLoginDate = kwargs.get("firstLoginDate")
 		self.lastLoginDate = kwargs.get("lastLoginDate")
-		self.currentLevel = kwargs.get("currentLevel")
+		self.username = kwargs.get("username")
+		
 		
 	def __repr__(self):
 		return '<User %r>' % self.email
@@ -25,7 +26,10 @@ def get_user_from_DB_row(row):
 					_id=row["_id"],
 					firstLoginDate=row["firstLoginDate"],
 					lastLoginDate=row["lastLoginDate"],
-					currentLevel=row["currentLevel"])
+					username=row["username"])
+					
 
 def create_new_user(email):
-	return User(email, firstLoginDate=datetime.datetime.utcnow(), lastLoginDate=datetime.datetime.utcnow(),currentLevel=LEVELS[0])
+	t = email.split('@')
+	herUsername = t[0]
+	return User(email, firstLoginDate=datetime.datetime.utcnow(), lastLoginDate=datetime.datetime.utcnow(), username=herUsername)
