@@ -1,3 +1,6 @@
+[app]
+secret_key:
+
 [db]
 host: 
 user: 

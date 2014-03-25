@@ -5,61 +5,75 @@ from map_topics import *
 from geoprocessing import *
 import httplib
 from pymongo import MongoClient
+from cities_array import *
 
 
 ## Celery text processing queue
-## Right now this is saving to DB on each task in case fails
-
 app = Celery('text_processing.tasks', backend ="amqp", broker='amqp://guest@localhost//')
 logger = get_task_logger(__name__)
 
 @app.task()
 def start_text_processing_queue(doc, config):
-  db_client = MongoClient()
+	logger.info("starting text processing queue")
+	
+	isRecommendation = config.isRecommendation
 
-  app.db = db_client[config.get('db','name')]
-  app.db_user_history_collection = app.db[config.get('db','user_history_item_collection')]
+	db_client = MongoClient()
+	app.db = db_client[config.get('db','name')]
+	if isRecommendation:
+		app.db_collection = app.db[config.get('db','recommendation_item_collection')]
+	else:
+		app.db_collection = app.db[config.get('db','user_history_item_collection')]
+		
+	# Content Extraction & add Web page title
+	doc = extractSingleURL(doc)
+	
+	if (doc and any(doc["extractedText"])):
+		# Geoparsing
+		doc["geodata"] = geoparseSingleText(doc["extractedText"], config.get('geoparser','geoserver_url'))
+		if any(doc["geodata"]):
+			doc["geodata"] = lookupContinentAndRegion(doc["geodata"])
+			# if there is country data but not city data then make the primary city the country's capital city
+			if any(doc["geodata"]["primaryCountries"]) and not (any(doc["geodata"]["primaryCities"])):
+				doc["geodata"] = lookupCountryCapitalCity(doc["geodata"])
 
-  logger.info("starting text processing queue")
 
-  # Content Extraction  
-  doc["extractedText"] = extractSingleURL(doc["url"])
-  
-  # Geoparsing
-  doc["geodata"] = geoparseSingleText(doc["extractedText"], config.get('geoparser','geoserver_url'))
-  if any(doc["geodata"]):  
-    doc["geodata"] = lookupContinentAndRegion(doc["geodata"])
+		# Topic Mapping
+		doc["topics"] = map_topics(doc["extractedText"])
 
-  # Topic Mapping
-  doc["topics"] = map_topics(doc["extractedText"])
-
-  # Save to MongoDB
-  app.db_user_history_collection.save(doc)
-  logger.info("done with text processing queue")
+		# Should Save to DB only if primarycities IDs are in our list, otherwise discard data
+		if any(doc["geodata"]) and any(doc["geodata"]["primaryCities"]):
+			for city in doc["geodata"]["primaryCities"]:
+				if int(city["id"]) in THE1000CITIES_IDS_ARRAY:
+					print "SAVING BECAUSE A MATCH ON " + city["name"]
+					app.db_collection.save(doc)
+					break
+	
+	logger.info("done with text processing queue")
 
 '''@app.task()
 def geoparse(doc):
-  logger.info("geoparsing task")
-  doc["geodata"] = geoparseSingleText(doc["extractedText"], CONFIG.get('geoparser','geoserver_url'))
-  doc["geodata"] = lookupContinentAndRegion(doc["extractedText"])
-  doc = saveThatDoc(doc)
-  map_topics.delay(doc)
+	logger.info("geoparsing task")
+	doc["geodata"] = geoparseSingleText(doc["extractedText"], CONFIG.get('geoparser','geoserver_url'))
+	doc["geodata"] = lookupContinentAndRegion(doc["extractedText"])
+	doc = saveThatDoc(doc)
+	map_topics.delay(doc)
 
 @app.task()
 def map_topics(doc):
-  logger.info("mapping topics")
-  
-  doc["topics"] = map_topics(doc["extractedText"])
-  doc = saveThatDoc(doc)
-  
-  logger.info("Done with text processing queue for URL " + doc["url"])
+	logger.info("mapping topics")
+	
+	doc["topics"] = map_topics(doc["extractedText"])
+	doc = saveThatDoc(doc)
+	
+	logger.info("Done with text processing queue for URL " + doc["url"])
 
 def saveThatDoc(doc):
-  logger.info("saving doc to DB")
-  logger.info(app.db_user_history_collection)
-  docID = app.db_user_history_collection.save(doc)
-  logger.info("returned from save - docID s ")
-  logger.info(docID)
-  doc = app.db_user_history_collection.find_one({ '_id': docID })
-  return doc
+	logger.info("saving doc to DB")
+	logger.info(app.db_user_history_collection)
+	docID = app.db_user_history_collection.save(doc)
+	logger.info("returned from save - docID s ")
+	logger.info(docID)
+	doc = app.db_user_history_collection.find_one({ '_id': docID })
+	return doc
 '''

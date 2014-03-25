@@ -7,7 +7,7 @@ from flask.ext.browserid import BrowserID
 from flask.ext.login import LoginManager
 from pymongo import MongoClient
 from user import *
-from bitly_recommendations import *
+from recommendations_bitly import *
 import ConfigParser
 import datetime
 import httplib
@@ -17,7 +17,6 @@ import pprint
 import pymongo
 import requests
 import requests.exceptions
-from database_queries import *
 from text_processing.geoprocessing import *
 from text_processing.tasks import start_text_processing_queue
 from cities_array import *

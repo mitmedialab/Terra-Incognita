@@ -22,18 +22,39 @@ def geoparseSingleText(text,geoserver):
 		params = {'text':text}
 		
 		r = requests.get(geoserver, params=params)
-		print "geoparsed " + r.url
 		
 		geodata = r.json()
 
 		if "places" in geodata.keys() and any(geodata["places"]):
-			print "RETURNING geodata JSON"
 			return geodata
 		else: 
 			return {}	
 
 	except requests.exceptions.RequestException as e:
 		print "ERROR RequestException " + str(e)
+
+# If item doesn't have primary cities but DOES have primary Country then
+# map it to capital city of that country
+def lookupCountryCapitalCity(geodata):
+	primaryCities = []
+	for country in geodata["primaryCountries"]:
+		print "Primary country is " + country
+		for cityrow in CITIES:
+			
+			if cityrow["country_code"] == country and cityrow["capital"] == "1":
+				print "Found capital city for " + country + " and it's " + cityrow["city_name"]
+				primaryCities.append({
+					"id" : cityrow["geonames_id"],
+					"lat" : cityrow["lat"],
+					"lon" : cityrow["lon"],
+					"name" : cityrow["city_name"],
+					"countryCode" : cityrow["country_code"],
+					"population" : cityrow["pop"]
+				})
+				break
+	if any(primaryCities):
+		geodata["primaryCities"] = primaryCities
+	return geodata
 
 # append continent and region data to the geodata from CLIFF-CLAVIN
 # be careful not to modify geodata object while iterating it bc it 
@@ -96,7 +117,7 @@ def invertGeodata(geodata, currentLevel):
 		return invertedResults
 	if currentLevel == "city":
 		for row in CITIES:
-			if len(row["city1"]) > 0:
+			if len(row["city_name"]) > 0:
 				invertedResults.append(row)
 			
 		for visitedCity in geodata:

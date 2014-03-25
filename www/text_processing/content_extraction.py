@@ -1,5 +1,7 @@
 from boilerpipe.extract import Extractor
-def extractSingleURL(url):
+def extractSingleURL(doc):
+	url = doc["url"]
+	print doc
 	try:
 		extractor = Extractor(extractor='ArticleExtractor', url=url)
 		extractedText = extractor.getText()
@@ -11,8 +13,10 @@ def extractSingleURL(url):
 			
 			if title is not None:
 				extractedText = title + " " + extractedText
+				doc["title"] = title
 			print 'EXTRACTED -' + url
-			return extractedText
+			doc["extractedText"] = extractedText
+			return doc
 	except IOError, err:
 		print "IOError with url " + url
 		print str(err)
