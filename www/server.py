@@ -185,17 +185,43 @@ def get_reading_list(userID='52dbeee6bd028634678cd069',cityID=703448):
 @app.route('/testdb/<userID>/<cityID>')
 @app.route('/testdb/')
 def testdb(userID='52dbeee6bd028634678cd069',cityID=4930956):
-	USER_CITY_HISTORY_PIPELINE = [
-		
-		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": userID, "title":{"$ne":"" } }},
-		{ "$sort" : { "lastVisitTime" : 1 } },
-		{ "$group": {"_id": {"url":"$url", "title":"$title" }, "count": {"$sum": 1}}},
-		{ "$limit" : 20 },
-		
+	result = {"firstVisitUserID":[], "mostReadUserID":[], "firstRecommendationUserID":[], "mostRecommendationUserID":[]}
+
+	#first person to visit city
+	firstVisitUserID = ''
+	cursor = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID}, {userID:1}).sort([("lastVisitTime",1)]).skip(0).limit(1)
+	if cursor.count() != 0:
+		firstVisitUserID = str(cursor[0]["_id"])
+	result["firstVisitUserID"] = firstVisitUserID
+
+	#person with most articles read about city
+	USER_WITH_MOST_READ_PIPELINE = [
+		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"} }},		
+		{ "$group": {"_id": "$userID", "count": {"$sum": 1}}},
+		{ "$sort" : {"count" : -1} },
+		{ "$limit" : 1 },
 	]
-	q = app.db_user_history_collection.aggregate(USER_CITY_HISTORY_PIPELINE)
-	#q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=USER_CITY_HISTORY_PIPELINE )
-	return json.dumps(q['result'], sort_keys=True, indent=4, default=json_util.default) 
+	q = app.db_user_history_collection.aggregate(USER_WITH_MOST_READ_PIPELINE)
+	result["mostReadUserID"] = list(row for row in q["result"])
+
+	#first person to recommend article from city
+	firstRecommendationUserID = ''
+	cursor = app.db_recommendation_collection.find({"cityIDS.id" : cityID}, {userID:1}).sort([("dateEntered",1)]).skip(0).limit(1)
+	if cursor.count() != 0:
+		firstRecommendationUserID = str(cursor[0]["userID"])
+	result["firstRecommendationUserID"] = firstRecommendationUserID
+
+	#person with most recommendations from city
+	USER_WITH_MOST_RECOMMENDED_PIPELINE = [
+		{ "$match" : { "cityIDS.id": cityID, "userID": {"$exists":"true"} }},		
+		{ "$group": {"_id": "$userID", "count": {"$sum": 1}}},
+		{ "$sort" : {"count" : -1} },
+		{ "$limit" : 1 },
+	]
+	q = app.db_recommendation_collection.aggregate(USER_WITH_MOST_RECOMMENDED_PIPELINE)
+	result["mostRecommendationUserID"] = list(row for row in q["result"])
+
+	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
 
 #Send user their map data
 @app.route('/map/<user>')

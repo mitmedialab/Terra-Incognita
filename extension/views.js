@@ -47,7 +47,7 @@ App.MapView = Backbone.View.extend({
 	},
 
 	renderLogin: function(){
-		if (this.userModel.get('loginURL') != '')
+		if (this.userModel.get('loginURL') != '' && !this.userModel.get('authenticated'))
 			this.loginView = new App.LoginView({ model: this.userModel });
 	},
 	unloadCityZoomView: function(){
