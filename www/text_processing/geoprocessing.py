@@ -38,11 +38,9 @@ def geoparseSingleText(text,geoserver):
 def lookupCountryCapitalCity(geodata):
 	primaryCities = []
 	for country in geodata["primaryCountries"]:
-		print "Primary country is " + country
 		for cityrow in CITIES:
 			
 			if cityrow["country_code"] == country and cityrow["capital"] == "1":
-				print "Found capital city for " + country + " and it's " + cityrow["city_name"]
 				primaryCities.append({
 					"id" : cityrow["geonames_id"],
 					"lat" : cityrow["lat"],

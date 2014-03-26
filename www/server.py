@@ -21,6 +21,7 @@ from text_processing.geoprocessing import *
 from text_processing.tasks import start_text_processing_queue
 from cities_array import *
 import logging
+from random import shuffle,randint
 
 # constants
 CONFIG_FILENAME = 'app.config'
@@ -126,6 +127,12 @@ def cities():
 @app.route('/user/<userID>')
 @app.route('/user/')
 def user(userID='52dbeee6bd028634678cd069'):
+	CITY_COUNT_PIPELINE = [
+		{ "$unwind" : "$geodata.primaryCities" },
+		{ "$match" : { "geodata.primaryCities.id": {"$in": THE1000CITIES_IDS_ARRAY } }},
+		{ "$group": {"_id": {"geonames_id":"$geodata.primaryCities.id" }, "count": {"$sum": 1}}},
+		{ "$sort" : { "count" : -1 } }
+	]
 	if (userID is not None):
 		
 		userData = {"userID":userID,"cities":[], "last10HistoryItems":[]}
@@ -165,8 +172,6 @@ def get_reading_list(userID='52dbeee6bd028634678cd069',cityID=703448):
 
 	result["userHistoryItemCollection"] = list(row["_id"] for row in q["result"])
 	
-	#cursor = app.db_user_history_collection.find({"userID":{ "$ne": userID }, "geodata.primaryCities": { "$elemMatch": { "id": int(cityID) } } }, {"url":1,"title":1}).sort([("lastVisitTime",-1)]).skip(0).limit(100)
-	
 	SYSTEM_CITY_HISTORY_PIPELINE = [
 		
 		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID}, "title":{"$ne":"" } }},
@@ -176,8 +181,22 @@ def get_reading_list(userID='52dbeee6bd028634678cd069',cityID=703448):
 		
 	]
 	q = app.db_user_history_collection.aggregate(SYSTEM_CITY_HISTORY_PIPELINE)
+	systemHistoryItemCollection = list(row["_id"] for row in q["result"])
 
-	result["systemHistoryItemCollection"] = list(row["_id"] for row in q["result"])
+	# If not much in the way of system history, then grab recommendations from the recs DB
+	# Todo: randomize access so doesn't always show the top 20
+	if len(systemHistoryItemCollection) < 10:
+		RECOMMENDATION_PIPELINE = [
+			{ "$match" : { "geodata.primaryCities.id": cityID, "title":{"$ne":"" } }},
+			{ "$sort" : { "_id" : 1 } },
+			{ "$group": {"_id": {"url":"$url", "title":"$title" }, "count": {"$sum": 1}}},
+			{ "$limit" : 20 },
+		]
+		q = app.db_recommendation_collection.aggregate(RECOMMENDATION_PIPELINE)
+
+		systemHistoryItemCollection.extend(list(row["_id"] for row in q["result"]))
+		shuffle(systemHistoryItemCollection)
+	result["systemHistoryItemCollection"] = systemHistoryItemCollection
 	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
 
 #Test Aggregation Pipeline db requests
@@ -257,11 +276,39 @@ def map(user=None):
 	else:
 		return jsonify(error='No user ID specified');
 
-#Send user to an exciting destination
+# Send user to an exciting destination
+# 1/3 the time it gets a recommendation from bitly
+# 1/3 the time it gets a recommendatino from the recommendation collection
+# 1/3 the time it gets a recommendation from another user
+
+# if the latter two methods don't work then fall back on bitly
+@app.route('/go/')
 @app.route('/go/<cityID>')
-def go(cityID=None):
-	url = "http://globalvoicesonline.org"
-	url = get_recommended_url(cityID)
+@app.route('/go/<userID>/<cityID>')
+def go(userID='52dbeee6bd028634678cd069',cityID=703448):
+	cityID = int(cityID)
+	url = ''
+	random = randint(0,2)
+	if random == 0:
+		print "Recommendation from Bitly"
+		url = get_recommended_bitly_url(cityID)
+	elif random == 1:
+		print "Recommendation from recommendation collection"
+		count = app.db_recommendation_collection.find({ "geodata.primaryCities.id": cityID }, {url:1}).count()
+		if count:
+			doc = app.db_recommendation_collection.find({ "geodata.primaryCities.id": cityID }).skip(randint(1, count - 1)).limit(1).next()
+			url = doc["url"]
+	elif random == 2:
+		print "Recommendation from user history collection"
+		count = app.db_user_history_collection.find({ "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID} }, {url:1}).count()
+		if count:
+			doc = app.db_user_history_collection.find({ "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID} }).skip(randint(1, count - 1)).limit(1).next()
+			url = doc["url"]
+
+	if not url:
+		print "Fallback recommendation from Bitly"
+		url = get_recommended_bitly_url(cityID)
+
 	return redirect(url, code=302)
 
 @app.route('/history/', methods=['POST'])

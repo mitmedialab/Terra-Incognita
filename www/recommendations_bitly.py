@@ -8,19 +8,18 @@ TOPICS = ["advertising","agriculture","art","automotive","aviation","banking","b
 #until we really integrate topic mapping
 TMP_USER_TOPICS = ["news","politics","entertainment"]
 
-def get_recommended_url(cityID):
+def get_recommended_bitly_url(cityID):
 	bitly = get_bitly_connection()
 	placedata = {}
 	for row in THE1000CITIES:
-		if cityID == row["geonames_id"]:
+		if cityID == int(row["geonames_id"]):
 			placedata = row
-			print placedata
 			break
 	if not placedata:
 		print "No recommendation because ID not in Cities list"
-		return "http://www.wikipedia.org"
+		return "http://globalvoicesonline.org"
 
-	#adjust place text based on how big place is
+	#adjust place text that search for based on how big place is
 	if int(placedata["pop"]) > 15000 and int(placedata["pop"]) < 10000000:
 		place = placedata["city_name"] + " " + placedata["country_name"] 
 	elif int(placedata["pop"]) > 10000000:
@@ -28,8 +27,9 @@ def get_recommended_url(cityID):
 	else:
 		place = placedata["country_name"]
 
-	#try global voices
-	results = bitly.search(place, domain="globalvoicesonline.org")
+	#try global voices but only with city name since their
+	#articles tend to mention long lists of countries
+	results = bitly.search(placedata["city_name"], domain="globalvoicesonline.org")
 	if len(results) > 0:
 		print "Global Voices Recommendation"
 		result = pick_longest_result(results)
@@ -58,7 +58,6 @@ def pick_longest_result(results):
 	longest_length = 0
 	for site in results:
 		if len(site["content"]) > longest_length:
-			print "resetting result to the longer"
 			longest_length = len(site["content"])
 			result = site
 	return result
