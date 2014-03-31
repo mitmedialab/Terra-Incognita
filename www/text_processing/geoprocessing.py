@@ -2,6 +2,7 @@ import csv
 import requests
 import json
 import os
+from cities_array import *
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -15,7 +16,25 @@ reader = csv.DictReader(open(os.path.join(BASE_DIR,"cities.csv"),'rU'))
 CITIES = [row for row in reader]
 GEO_LEVELS = ["continent","region","nation","state","city"]
 
+def addCityGeoDataToDoc(doc):
+	for cityToAdd in doc["geodata"]["primaryCities"]:
+		for city in THE1000CITIES:
+			if int(city["geonames_id"]) == int(cityToAdd["id"]):
+				cityToAdd["lat"] = city["lat"]
+				cityToAdd["lon"] = city["lon"]
+				cityToAdd["population"] = city["pop"]
+				cityToAdd["countryCode"] = city["country_code"]
+				cityToAdd["countryName"] = city["country_name"]
+				cityToAdd["capital"] = city["capital"]
+				cityToAdd["global_north"] = city["global_north"]
+				cityToAdd["global_south"] = city["global_south"]
+				cityToAdd["east"] = city["east"]
+				cityToAdd["west"] = city["west"]
+				cityToAdd["name"] = city["city_name"]
+				break
+	return doc
 
+			
 #pull out geodata for single text from CLIFF_CLAVIN
 def geoparseSingleText(text,geoserver):
 	try:

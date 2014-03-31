@@ -3,14 +3,12 @@
  */
 App.MapView = Backbone.View.extend({
 	el: $("html"),
-	events: {
-		"click #user-history-path": "toggleUserHistoryPath"
-	},
+	
 	initialize: function (options) {
 		App.debug('App.MapView.initialize()');
 		this.options = options || {};
 		
-		_.bindAll(this, 'render','toggleUserHistoryPath');
+		_.bindAll(this, 'render');
 		
 		// Create models
 		this.cityCollection = options.cityCollection;
@@ -19,11 +17,17 @@ App.MapView = Backbone.View.extend({
 		this.map = L.mapbox.map('map', 'kanarinka.hcc1900i');//random spot -- .setView([this.getRandomInRange(-90,90,3), this.getRandomInRange(-180,180,3)], 9);
 		
 		App.map = this.map;
-		this.cityZoomedView = new App.CityZoomedView(
-		{
-			model: this.cityCollection.getRandomCityModel()
-		});
-
+		this.citySelectorView = new App.CitySelectorView({cityCollection: this.cityCollection, model: this.userModel});
+		
+		var that = this;
+		this.userModel.on("change:userCityVisits", function() {
+			console.log("BLARGAG")
+			console.log(that.userModel.getUnvisitedCityID())
+		    that.cityZoomedView = new App.CityZoomedView(
+				{
+					model: that.cityCollection.getCityModel(that.userModel.getUnvisitedCityID())
+				});
+		    })
 		// Create sub-views
 		this.render();
 	},
@@ -33,14 +37,6 @@ App.MapView = Backbone.View.extend({
 		
 		if (this.userModel.get('authenticated')) {
 			this.$el.find("#hello").append('Hello, ' + this.userModel.get('userID'));
-			/* THIS WAS FROM GLOBAL MAP VIEWS - not using at the moment
-				
-			if (this.userModel.get('userHistoryPath') && this.userModel.get('userHistoryPath').length > 0 && !this.userHistoryPathView) {
-				this.userHistoryPathView = new App.HistoryItemMarkerCollectionView({collection:this.userModel.get('userHistoryPath')})
-			}
-			if (this.userModel.get('userCities') && this.userModel.get('userCities').length > 0 && !this.userCitiesView) {
-				this.userCitiesView = new App.CityMarkerCollectionView({collection:this.userModel.get('userCities')})
-			}*/
 		} 
 		
 		return this;
@@ -49,35 +45,9 @@ App.MapView = Backbone.View.extend({
 	renderLogin: function(){
 		if (this.userModel.get('loginURL') != '' && !this.userModel.get('authenticated'))
 			this.loginView = new App.LoginView({ model: this.userModel });
-	},
-	unloadCityZoomView: function(){
-		App.debug('App.MapView.unloadCityZoomView()')
-		if (this.cityZoomedView)
-			this.cityZoomedView.clearAll();
-	},
-	toggleUserHistoryPath: function(){
-		App.debug('App.MapView.toggleUserHistoryPath()')
-		if (this.userHistoryPathView){
-			if (this.userHistoryPathView.showing){
-				this.userHistoryPathView.clearAll();
-				this.userCitiesView.render();
-			}
-			else{
-				this.unloadCityZoomView();
-				this.userHistoryPathView.render();
-			}
-		} 
-	},
-	toggleCities: function(){
-		App.debug('App.MapView.toggleCities()')
-		if (this.userCitiesView){
-			if (this.userCitiesView.showing){
-				this.userCitiesView.clearAll();
-			}
-			else{
-				this.userCitiesView.render();
-			}
-		} 
+		else if (this.userModel.get('loginURL') != ''){
+			$("#loginURL, #changeUsernameURL").attr("href", this.userModel.get('loginURL'));
+		}
 	},
 	/*
 		Fun! getting random lat longs
@@ -89,137 +59,46 @@ App.MapView = Backbone.View.extend({
 	}
 
 });
-App.CityMarkerCollectionView = Backbone.View.extend({
-	
-	initialize: function (options) {
-		App.debug('App.CityMarkerCollectionView.initialize()');
-		this.options = options || {};
-		this.showing = false;
-		this.geojson = {};
-		this.geojson["type"]="FeatureCollection";
-		this.geojson["features"] = [];
-		that = this;
-		this.collection.each(function(city) {
-			
-			if (city.get("lon")){
-				var json = {};
-				json["type"]="Feature";
-				json["properties"]={	 
-										"marker-color":"#f0f",
-										'marker-size': 'medium',
-										'marker-symbol': 'embassy',
-										'modelId':city.cid,
-										"url": 'http://127.0.0.1:5000/go/' + city.get('geonames_id') 
-									};
-				json["geometry"]={		"type": 'Point',
-										"coordinates": [parseFloat(city.get("lon")), parseFloat(city.get("lat"))]};				
-				that.geojson["features"].push(json);
-			}
-		});
 
-		
-	},
-	clearAll: function(){
-		App.debug('App.CityMarkerCollectionView.clearAll()');
-		App.map.featureLayer.clearLayers();
-		App.map.featureLayer.clearAllEventListeners();
-		this.showing = false;
-	},
-	render: function () {
-		App.debug('App.CityMarkerCollectionView.render()');
-		
-		//turn on marker layer
-		App.map.featureLayer.setFilter(function() { return true; });
-		App.map.featureLayer.setGeoJSON(this.geojson);
-		var that = this;
-		App.map.featureLayer.on('click', function(e) {
-			e.layer.unbindPopup();
-			App.router.mapView.cityZoomedView = new App.CityZoomedView(
-														{
-															model: that.collection.get(e.layer.feature.properties.modelId)
-														});
-		});
-		App.map.fitBounds(App.map.featureLayer.getBounds());
-		this.showing = true;
-		
-		return this;
-	}
-});
-App.HistoryItemMarkerCollectionView = Backbone.View.extend({
-	
-	initialize: function (options) {
-		App.debug('App.HistoryItemMarkerCollectionView.initialize()');
-		this.options = options || {};
-		this.polyline = L.polyline([],{color:'white',weight:1.5,opacity:0.8});
-		this.geojson = {};
-		this.geojson["type"]="FeatureCollection";
-		this.geojson["features"] = [];
-		that = this;
-		this.collection.each(function(historyItem) {
-			
-			var primaryCities = historyItem.get('geodata')["primaryCities"];
-			if (primaryCities.length > 0){
-				var city = primaryCities[0];
-				var json = {};
-				json["type"]="Feature";
-				json["properties"]={	
-										"marker-color":"#f00",
-										'marker-size': 'small',
-										'marker-symbol': 'harbor',
-
-										"url": historyItem.get('url')
-									};
-				json["geometry"]={		"type": 'Point',
-										"coordinates": [city.lon, city.lat]};				
-				that.geojson["features"].push(json);
-				that.polyline.addLatLng(L.latLng(city.lat,city.lon));
-				
-			}
-
-		});
-		this.showing = false;
-	},
-	clearAll: function(){
-		App.debug('App.HistoryItemMarkerCollectionView.clearAll()');
-		App.map.featureLayer.clearLayers();
-		App.map.removeLayer(this.polyline);
-		App.map.featureLayer.clearAllEventListeners();
-		this.showing = false;
-	},
-	render: function () {
-		App.debug('App.HistoryItemMarkerCollectionView.render()');
-
-		//turn on marker layer
-		App.map.featureLayer.setFilter(function() { return true; });
-
-		//this.polyline.addTo(App.map);
-		App.map.featureLayer.setGeoJSON(this.geojson);
-		App.map.featureLayer.on('click', function(e) {
-			e.layer.unbindPopup();
-			window.open(e.layer.feature.properties.url);
-		});
-		//App.map.setView([App.router.mapView.getRandomInRange(-90,90,3), App.router.mapView.getRandomInRange(-180,180,3)], 9);
-		App.map.fitBounds(App.map.featureLayer.getBounds());
-		
-		this.showing = true;
-		return this;
-	}
-});
 App.CityZoomedView = Backbone.View.extend({
 	el: $("#city-zoomed-view"),
 	template: TEMPLATES['city-zoomed-reading-lists'],
+	events : {
+		"submit" : "submitRecommendation"
+	},
 	initialize: function (options) {
 		App.debug('App.CityZoomedView.initialize()');
+		
 		this.options = options || {};
 		_.bindAll(this, 'render');
+		_.bindAll(this, 'clearAll');
+		_.bindAll(this, 'submitRecommendation');
 		this.model.on('change',this.render,this);
 		this.model.fetchReadingLists();
+		this.model.fetchCityStats();
+		this.randomWords = ["fun", "weird", "local","different","interesting","what","alternative","whoa", "notwar"];
 		this.render();
 	},
+	submitRecommendation : function( event) {
+            event.preventDefault();
+            //send to server. Upon return, update city stats to show user that their work paid off
+            var that = this;
+			
+            chrome.runtime.sendMessage({msg: "submitRecommendation", "city_id": this.model.get("geonames_id"), "url" : $("#url_recommendation").val()}, function(response) {
+			  
+			  if (response.result["response"] =="ok")
+				  	that.model.fetchCityStats();
+			});
+			$(".submit-recommendation").text("Got it, thanks! Care to enter another?");
+			$("#url_recommendation").attr("placeholder","");
+            $("#url_recommendation").val("");
+            return false;
+    },
+	
 	clearAll: function(){
 		App.debug('App.CityZoomedView.clearAll()');
-		this.showing = false;
-		this.$el.empty();
+		this.undelegateEvents();
+  		$(this.el).empty();
 	},
 	render: function () {
 		App.debug('App.CityZoomedView.render()');
@@ -228,7 +107,17 @@ App.CityZoomedView = Backbone.View.extend({
 		App.map.featureLayer.setFilter(function() { return false; });
 		
 		App.map.setView([this.model.get("lat"), this.model.get("lon")], 12);
-		var html = this.template({ population : this.addCommas(this.model.get("pop")), cityID : this.model.get("geonames_id"), city_name: this.model.get("city_name"), country_name:this.model.get("country_name"), userStories:this.model.get("userHistoryItemCollection"), systemStories:this.model.get("systemHistoryItemCollection") });
+		
+		var html = this.template({ 	randomWord: this.randomWords[Math.floor(Math.random() * this.randomWords.length)], 
+									population : this.addCommas(this.model.get("pop")), 
+									cityID : this.model.get("geonames_id"), 
+									city_name: this.model.get("city_name"), 
+									country_name:this.model.get("country_name"), 
+									userStories:this.model.get("userHistoryItemCollection"), 
+									systemStories:this.model.get("systemHistoryItemCollection"), 
+									cityStats : this.model.get("cityStats"),
+									userID : App.user.get("userID")
+								});
 		this.$el.html(html);
 		this.showing = true;
 		return this;
@@ -254,10 +143,17 @@ App.CityZoomedView = Backbone.View.extend({
 App.CitySelectorView = Backbone.View.extend({
 	initialize: function (options) {
 		App.debug('App.CitySelectorView.initialize()');
+		_.bindAll(this, 'render');
 		this.options = options || {};
-		this.userModel = options.userModel;
+		
 		this.rawCitiesData = options.cityCollection.rawCitiesData;
-		this.render();
+		var that = this;
+		this.model.on("change:userCityVisits", function() {
+	      that.render();
+	    })
+		
+	    if(this.model.get("userCityVisits") && this.model.get("userCityVisits").length != 0)	
+			this.render();
 	},
 	render: function () {
 		App.debug('App.CitySelectorView.render()');
@@ -291,7 +187,7 @@ App.CitySelectorView = Backbone.View.extend({
 		x.domain(data.map(function(d) { return d.city_name; }));
 		var that = this;
 		y.domain([0, d3.max(data, function(d) { 
-			d.cityVisitCount = that.userModel.getCityVisitCount(d.geonames_id);
+			d.cityVisitCount = that.model.getCityVisitCount(d.geonames_id);
 			return d.cityVisitCount; 
 		})]);
 
@@ -314,10 +210,14 @@ App.CitySelectorView = Backbone.View.extend({
 			.on("click", function(d, i){
 				
 				var cityModel = App.router.cityCollection.getCityModel(d.geonames_id);
+				if (App.router.mapView.cityZoomedView){
+					App.router.mapView.cityZoomedView.clearAll();
+				}
 				App.router.mapView.cityZoomedView = new App.CityZoomedView(
 					{
 						model: cityModel
 					});
+				
 			})
 			.on("mouseover", function(d) {   
 				d3.select(this).attr('fill-opacity', 1.0);

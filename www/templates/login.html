@@ -9,17 +9,26 @@
         
         
         {% if current_user.is_authenticated() %}
-        <h1>You are currently logged in to Terra Incognita with the email address {{ current_user.email }}.</h1>
+        <h1>Terra Incognita Dashboard</h1>
+        <h2>Login/Logout</h2>
+        <p><strong>You are currently logged in to Terra Incognita with the email address {{ current_user.email }}.</strong></p>
          <button id="browserid-logout">Logout</button>
         <script>
             docCookies.setItem('terra-incognita-id', '{{ current_user.get_id() }}', 60*60*24*365);
             
         </script>
             
-            <h2>Your current username is {{ current_user.username }}.</h2>
+            <h2>About Usernames</h2>
+            <p><strong>Your current username is {{ current_user.username }}.</strong></p>
+            <p>In Terra Incognita, your username is associated with how many articles you have read and recommended about a particular city <a href="/images/usernames.jpg">like this</a>. Your username is displayed on city leaderboards with a count. Your username is not associated with any individual urls, i.e. users cannot see the individual news articles you have read about a place, only the number of articles you have read about a place. You can change your username at any time.</p>
+            {% if error %}
+                <h2 style="color:red">{{ error }}</h2>
+            {% endif %}
             <h2>Change your username to: </h2>
-                <form>
-                    <input type="text" placeholder="Enter new username">
+                <form action="/login/" method="POST">
+                    <input type="hidden" name="userID" value="{{ current_user.get_id() }}">
+                    <input type="text" name="newusername" value="{{ current_user.username }}" >
+                    <input type="hidden" name="oldusername" value="{{ current_user.username }}" >
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
 

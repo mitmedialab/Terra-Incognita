@@ -22,6 +22,7 @@ from text_processing.tasks import start_text_processing_queue
 from cities_array import *
 import logging
 from random import shuffle,randint
+from text_processing.content_extraction import *
 
 # constants
 CONFIG_FILENAME = 'app.config'
@@ -199,18 +200,60 @@ def get_reading_list(userID='52dbeee6bd028634678cd069',cityID=703448):
 	result["systemHistoryItemCollection"] = systemHistoryItemCollection
 	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
 
-#Test Aggregation Pipeline db requests
-@app.route('/testdb/<userID>/<cityID>')
-@app.route('/testdb/')
-def testdb(userID='52dbeee6bd028634678cd069',cityID=4930956):
-	result = {"firstVisitUserID":[], "mostReadUserID":[], "firstRecommendationUserID":[], "mostRecommendationUserID":[]}
+@app.route('/recommend/<userID>/<cityID>/', methods=['GET'])
+@app.route('/recommend/', methods=['GET'])
+def recommend(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
+	cityID = int(cityID)
+	url=request.args.get('url')
+	
+	if len(url) < 1:
+		return json.dumps({"error":"no url"}, sort_keys=True, indent=4, default=json_util.default)
+	
+	if not url.startswith('http'):
+		url = "http://" + url
+	doc = {}
+	doc["url"] = url
+	newDoc = extractSingleURL(doc)
+	if newDoc:
+		doc = newDoc
+	else:
+		doc["title"] = url
 
+	
+	doc["source"] = "user"
+	doc["userID"] = userID
+	doc["geodata"] = {}
+	doc["geodata"]["primaryCities"] = []
+	doc["geodata"]["primaryCities"].append({"id" : cityID})
+	
+	doc = addCityGeoDataToDoc(doc)
+	
+	app.db_recommendation_collection.insert(doc)
+	return json.dumps({"response":"ok"}, sort_keys=True, indent=4, default=json_util.default) 
+
+@app.route('/citystats/<userID>/<cityID>')
+@app.route('/citystats/')
+def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
+	cityID = int(cityID)
+	result = {	"firstVisitUsername":"", 
+				"mostRead":{}, 
+				"firstRecommendationUsername":"", 
+				"mostRecommendations":{},
+				"currentUserStoryCount":"",
+				"currentUserRecommendationCount":""
+			}
+	currentUsername = getUsername(userID)
+	#current user counts
+	result["currentUserStoryCount"] = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "userID" : userID }).skip(0).count()
+	result["currentUserRecommendationCount"] = app.db_recommendation_collection.find({"geodata.primaryCities.id" : cityID, "userID" : userID }).skip(0).count()
+	
 	#first person to visit city
 	firstVisitUserID = ''
-	cursor = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID}, {userID:1}).sort([("lastVisitTime",1)]).skip(0).limit(1)
+	cursor = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "userID" : {"$exists" : "true"}}, {"userID" :1}).sort([("lastVisitTime",1)]).skip(0).limit(1)
 	if cursor.count() != 0:
-		firstVisitUserID = str(cursor[0]["_id"])
-	result["firstVisitUserID"] = firstVisitUserID
+		doc = cursor.next()
+		firstVisitUserID = doc["userID"]
+		result["firstVisitUsername"] = getUsername(firstVisitUserID)
 
 	#person with most articles read about city
 	USER_WITH_MOST_READ_PIPELINE = [
@@ -220,26 +263,49 @@ def testdb(userID='52dbeee6bd028634678cd069',cityID=4930956):
 		{ "$limit" : 1 },
 	]
 	q = app.db_user_history_collection.aggregate(USER_WITH_MOST_READ_PIPELINE)
-	result["mostReadUserID"] = list(row for row in q["result"])
+	if q["result"]:
+		mostReadUsername = getUsername(q["result"][0]["_id"])
+		result["mostRead"] = { 	"count" : q["result"][0]["count"], 
+								"username" : mostReadUsername,
+								"isCurrentUser" : "true" if mostReadUsername == currentUsername else "false"	
+							}
 
 	#first person to recommend article from city
-	firstRecommendationUserID = ''
-	cursor = app.db_recommendation_collection.find({"cityIDS.id" : cityID}, {userID:1}).sort([("dateEntered",1)]).skip(0).limit(1)
+	firstRecommendationUsername = ''
+	cursor = app.db_recommendation_collection.find({"geodata.primaryCities.id" : cityID, "userID" : {"$exists" : "true"}}, {"userID" :1}).sort([("dateEntered",1)]).skip(0).limit(1)
 	if cursor.count() != 0:
-		firstRecommendationUserID = str(cursor[0]["userID"])
-	result["firstRecommendationUserID"] = firstRecommendationUserID
+		doc = cursor.next()
+		firstRecommendationUserID = doc["userID"]
+		firstRecommendationUsername = getUsername(firstRecommendationUserID)
+	result["firstRecommendationUsername"] = firstRecommendationUsername
 
 	#person with most recommendations from city
 	USER_WITH_MOST_RECOMMENDED_PIPELINE = [
-		{ "$match" : { "cityIDS.id": cityID, "userID": {"$exists":"true"} }},		
+		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"} }},		
 		{ "$group": {"_id": "$userID", "count": {"$sum": 1}}},
 		{ "$sort" : {"count" : -1} },
 		{ "$limit" : 1 },
 	]
 	q = app.db_recommendation_collection.aggregate(USER_WITH_MOST_RECOMMENDED_PIPELINE)
-	result["mostRecommendationUserID"] = list(row for row in q["result"])
+	if q["result"]:
+		mostRecommendationsUsername = getUsername(q["result"][0]["_id"])
+		result["mostRecommendations"] = { 	"count" : q["result"][0]["count"], 
+											"username" : mostRecommendationsUsername,
+											"isCurrentUser" : "true" if mostRecommendationsUsername == currentUsername else "false"
+
+										}
 
 	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
+
+#Test Aggregation Pipeline db requests
+@app.route('/testdb/<userID>/<cityID>')
+@app.route('/testdb/')
+def testdb(userID='52dbeee6bd028634678cd069',cityID=4930956):
+	return "hi"
+
+def getUsername(userID):
+	doc = app.db_user_collection.find({"_id": ObjectId(userID)}, {"username":1}).skip(0).limit(1).next()
+	return doc["username"]
 
 #Send user their map data
 @app.route('/map/<user>')
@@ -322,10 +388,23 @@ def processHistory():
 	
 	return 'Celery is processing ' + str(len(historyItems)) + ' history items'
 
-#Login/Logout page
-@app.route('/login/')
+#Login/Logout page AND change username
+@app.route('/login/', methods=['GET', 'POST'])
 def loginpage():
-	return render_template('login.html')
+	error = ""
+	if request.method == 'POST':
+		oldusername = request.form['oldusername']
+		newusername = request.form['newusername']
+		userID = request.form['userID']
+		
+		if newusername == oldusername:
+			error="Your new username is the same as your old username"
+		elif app.db_user_collection.find({ "username": newusername }).count():
+			error = "That username already exists"
+		else:
+			r = app.db_user_collection.update({ "_id": ObjectId(userID)}, { "$set" : {"username":newusername}})
+			
+	return render_template('login.html', error=error)
 
 
 # Receives a single URL object from user and starts celery text processing queue

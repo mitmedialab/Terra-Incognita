@@ -6,6 +6,7 @@
     "activeTab",
     "tabs",
     "cookies",
+    "storage",
     "webNavigation",
     "history",
     "http://*/*", 

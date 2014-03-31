@@ -4,12 +4,21 @@ App.UserModel = Backbone.Model.extend({
 	defaults: {
 		authenticated: false,
 		loginURL:'',
-		userID:''
+		userID:'',
+		userCityVisits:[]
 	},
 	initialize: function () {
 		App.debug('App.UserModel.initialize()')
 		_.bindAll(this, 'checkUserStatus');
 		_.bindAll(this, 'logUserStatus');
+		
+		var that = this;
+		//User's city visits are cached in localstorage
+		chrome.storage.local.get("userCityVisits", 
+										function(result){
+											that.set({"userCityVisits" : result["userCityVisits"]});
+										});
+		
 		this.checkUserStatus();
 
 	},
@@ -23,7 +32,7 @@ App.UserModel = Backbone.Model.extend({
 	logUserStatus: function(isLoggedIn, loginURL, userID){
 		App.debug('App.UserModel.logUserStatus()');
 		if (isLoggedIn){
-			App.debug("user is logged in");
+			App.debug("User is logged in");
 			this.set({"authenticated": true, "loginURL":loginURL, "userID":userID});
 			
 		}
@@ -41,18 +50,39 @@ App.UserModel = Backbone.Model.extend({
 		}
 		return count;
 	},
+	getUnvisitedCityID: function(){
+		App.debug('App.UserModel.getUnvisitedCityID()');
+		var userCityVisits = this.get("userCityVisits");
+		var keys = Object.keys(userCityVisits);
+		var r = Math.round( Math.random() * keys.length-1 );
+		console.log(r)
+		for (var i=r;i<keys.length;i++){
+			
+			var count = userCityVisits[keys[i]]; 
+			if (count > 0)
+				return keys[i];
+		}
+		for (var i=0;i<r;i++){
+			var count = userCityVisits[keys[i]]; 
+			if (count > 0)
+				return keys[i];
+		}
+		return userCityVisits[keys[r]]; 
+	},
+	// Save user city visits to local storage for next time - but don't reload user object
 	loadUser: function(json){
 		App.debug('App.UserModel.loadUser()');
-		
+		chrome.storage.local.set({'userCityVisits': json.cities}, function() {
+          App.debug('Updated userCityVisits saved to local storage');
+        });
+		/*
+	
 		this.set({	
 					'userCityVisits' : json.cities,
 					'userHistoryPath':new App.HistoryItemCollection(json.last10HistoryItems)
 				 });
 		console.log(this.get("userCityVisits"))
-		console.log("userCItyVisits loadUser")
-
-		
-		//TODO create compass model
+		*/
 		
 	}
 });
@@ -77,6 +107,7 @@ App.UserModel = Backbone.Model.extend({
 
 	userHistoryItemCollection(HistoryItemModel)
 	systemHistoryItemCollection(HistoryItemModel)
+	cityStats (CityStatsModel)
 */
 App.CityModel = Backbone.Model.extend({
 	idAttribute : 'geonames_id',
@@ -100,6 +131,20 @@ App.CityModel = Backbone.Model.extend({
 		this.set({
 					'userHistoryItemCollection': new App.HistoryItemCollection(readingLists["userHistoryItemCollection"]),
 					'systemHistoryItemCollection': new App.HistoryItemCollection(readingLists["systemHistoryItemCollection"])
+				});
+	},
+	fetchCityStats: function(){
+		App.debug('App.CityModel.fetchCityStats()');
+		var that = this;
+		
+		chrome.runtime.sendMessage({msg: "loadCityStats", "city_id": this.get("geonames_id")}, function(response) {
+		  that.loadCityStats(response.cityStats);
+		});
+	},
+	loadCityStats: function(cityStats){
+		App.debug('App.CityModel.loadCityStats()');
+		this.set({
+					'cityStats': new App.CityStatsModel(cityStats),
 				});
 	}
 
@@ -144,7 +189,13 @@ App.CityCollection = Backbone.Collection.extend({
 	},
 	
 });
-
+App.CityStatsModel = Backbone.Model.extend({
+	defaults: {},
+	
+	initialize: function () {
+		App.debug('App.CityStatsModel.initialize()');
+	}
+});
 /*
 	App.HistoryItemModel - One story/url that user has read
 		url

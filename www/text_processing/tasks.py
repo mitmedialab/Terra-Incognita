@@ -12,11 +12,12 @@ from cities_array import *
 app = Celery('text_processing.tasks', backend ="amqp", broker='amqp://guest@localhost//')
 logger = get_task_logger(__name__)
 
+#TODO - KAWRGS ARGS BLARGS! So we can pass in whether it's a recommendation or not...
 @app.task()
 def start_text_processing_queue(doc, config):
 	logger.info("starting text processing queue")
 	
-	isRecommendation = config.isRecommendation
+	isRecommendation = True
 
 	db_client = MongoClient()
 	app.db = db_client[config.get('db','name')]
@@ -42,13 +43,15 @@ def start_text_processing_queue(doc, config):
 		doc["topics"] = map_topics(doc["extractedText"])
 
 		# Should Save to DB only if primarycities IDs are in our list, otherwise discard data
+		# TODO - Map things that have country data to country capital city
 		if any(doc["geodata"]) and any(doc["geodata"]["primaryCities"]):
 			for city in doc["geodata"]["primaryCities"]:
 				if int(city["id"]) in THE1000CITIES_IDS_ARRAY:
 					print "SAVING BECAUSE A MATCH ON " + city["name"]
 					app.db_collection.save(doc)
 					break
-	
+		else:
+			print "Discarding because no geodata: " + doc["url"]
 	logger.info("done with text processing queue")
 
 '''@app.task()

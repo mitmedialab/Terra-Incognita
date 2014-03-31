@@ -65,18 +65,53 @@ chrome.runtime.onMessage.addListener(
 				});
 				return true;
 		}
+		
 		else if (request.msg == "loadReadingLists")
 		{
 				var xhr = new XMLHttpRequest();
-				//TODO -- add CITY ID & USER ID WHEN CITIES ARE READY
+				
 				xhr.open("GET",SERVER_URL + 'readinglist/' + USER_ID + '/' + request.city_id, true);
-				//xhr.open("GET",SERVER_URL + 'readinglist/', true);
+				
 				xhr.onreadystatechange = function() {
 					if (xhr.readyState == 4) {
 						// JSON.parse does not evaluate the attacker's scripts.
 						readingListJSON = JSON.parse(xhr.responseText);
 						console.log(readingListJSON);
 						sendResponse({readingLists: readingListJSON});
+					}
+				}
+				xhr.send();
+				return true;
+		}
+		else if (request.msg == "loadCityStats")
+		{
+				var xhr = new XMLHttpRequest();
+				
+				xhr.open("GET",SERVER_URL + 'citystats/' + USER_ID + '/' + request.city_id, true);
+				
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4) {
+						// JSON.parse does not evaluate the attacker's scripts.
+						cityStatsJSON = JSON.parse(xhr.responseText);
+						console.log(cityStatsJSON);
+						sendResponse({cityStats: cityStatsJSON});
+					}
+				}
+				xhr.send();
+				return true;
+		}
+		else if (request.msg == "submitRecommendation")
+		{
+				var xhr = new XMLHttpRequest();
+				
+				xhr.open("GET",SERVER_URL + 'recommend/' + USER_ID + '/' + request.city_id +'?url=' + request.url, true);
+				
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4) {
+						// JSON.parse does not evaluate the attacker's scripts.
+						resultJSON = JSON.parse(xhr.responseText);
+						console.log(resultJSON);
+						sendResponse({result: resultJSON});
 					}
 				}
 				xhr.send();

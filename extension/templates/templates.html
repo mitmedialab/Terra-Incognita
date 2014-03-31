@@ -24,30 +24,74 @@
         <% if (population != "0") { %>
           <p id="city-zoomed-population" class="city-stats">pop. <%= population %></p>
         <% } %>
-        <div class="city-stats">
-          <p><strong>erhardt</strong>: First Reader</p>
-          <p><strong>stempeck</strong>: First Recommender</p>
-          
-          <p><strong>kanarinka</strong>: Top Scholar of <%= city_name %></p>
-          
+        
+          <div class="city-stats">
 
-          <p><strong>ethanz</strong>: Top Recommender of <%= city_name %></p>
-          <br/>
-          <br/>
-          <p><em>Read 4 more articles to be the Top Scholar</em></p>
-          <p><em>Recommend 1 more article to be the Top Recommender</em></p>
-          <h5 style="margin-top:20px">Submit a recommendation about <%= city_name %></h5>
-          <form class="form-inline" role="form">
-            <div class="form-group">
-              <input type="email" class="form-control" id="url_recommendation" placeholder="http://www.yoururlgoeshere.com">
-            </div>
-            <button type="submit" class="btn btn-default">Submit</button>
-          </form>
-        </div>
+
+            <% if (cityStats) { %>
+                <img src="../img/hr.png" style="margin-bottom:10px">
+                <% if (cityStats.get("firstVisitUsername").length ==0) { %>
+                    <p><strong>First Reader:</strong> Nobody! You could be the first.</p>
+                <%} else {%>
+                    <p> <strong>First Reader:</strong> <%= cityStats.get("firstVisitUsername") %></p>
+                <% } %>
+
+                <% if (!_.isEmpty(cityStats.get("mostRead")) ) { %>
+                  <p><strong>Top Reader of <%= city_name %>:</strong> <%= cityStats.get("mostRead")["username"] %> 
+                  <% if (cityStats.get("mostRead")["isCurrentUser"] == "true"){%> - YOU! <% } %>(<%= cityStats.get("mostRead")["count"] %>)
+                  </p>
+                <% } %>
+
+                <% if (cityStats.get("firstVisitUsername").length !=0 
+                        && !_.isEmpty(cityStats.get("mostRead")) 
+                        && cityStats.get("mostRead")["isCurrentUser"] != "true" ) 
+                  { %>
+                  <p><em>Read <%= cityStats.get("mostRead")["count"] - cityStats.get("currentUserStoryCount") + 1 %> more articles to be the Top Reader.</em> </p>
+                  <% } %>
+
+                <img src="../img/hr.png" style="margin-bottom:10px">
+
+                <% if (cityStats.get("firstRecommendationUsername").length ==0) { %>
+                  <p><strong>First Recommender:</strong> Nobody! You could be the first.</p>
+                <%} else {%>
+                  <p><strong>First Recommender:</strong> <%= cityStats.get("firstRecommendationUsername") %></p>
+                <% } %>
+
+                
+
+                <% if (!_.isEmpty(cityStats.get("mostRecommendations")) ) { %>
+                  <p> <strong>Top Recommender of <%= city_name %> : </strong><%= cityStats.get("mostRecommendations")["username"] %> 
+                  <% if (cityStats.get("mostRecommendations")["isCurrentUser"] == "true"){%> - YOU!<% } %></p> (<%= cityStats.get("mostRecommendations")["count"]%>)
+                <% } %>
+                
+                  
+                  <% if (cityStats.get("firstRecommendationUsername").length !=0 
+                        && !_.isEmpty(cityStats.get("mostRecommendations")) 
+                        && cityStats.get("mostRecommendations")["isCurrentUser"] != "true" ) { %>
+                      
+                      <p><em>Recommend <%= cityStats.get("mostRecommendations")["count"] - cityStats.get("currentUserRecommendationCount") + 1 %> more articles to be the Top Recommender.</em></p>
+                     
+                  <% } %>
+                </p>
+            <% } %>
+
+
+            <img src="../img/hr.png">
+            <h4 class="submit-recommendation">Submit a recommendation about <%= city_name %></h4>
+            <form class="form-inline" role="form" style="margin-bottom:20px">
+              <div class="form-group">
+                <input style="min-width:200px" type="url" class="form-control" id="url_recommendation" placeholder="http://www.<%= randomWord %>.com">
+              </div>
+              <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+          </div>
+        
+
+
         </div>
         <div id="go-now">
               <div style="position: relative; left: -50%;">
-                  <a href="http://localhost:5000/go/<%= cityID %>" role="button" class="btn btn-lg btn-danger btn-go">Read About <%= city_name %></a></th>
+                  <a href="http://localhost:5000/go/<%= userID %>/<%= cityID %>" role="button" class="btn btn-lg btn-danger btn-go">Read About <%= city_name %></a></th>
               </div>
         </div> 
         <div id="what-people-read">

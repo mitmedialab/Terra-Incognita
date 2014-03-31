@@ -7,6 +7,7 @@ App.Router = Backbone.Router.extend({
 	initialize: function (options) {
 		App.debug('App.Router.initialize()');
 		this.userModel = new App.UserModel();
+		App.user = this.userModel;
 		this.cityCollection = new App.CityCollection([],{"rawCitiesData":CITIES_RAW_DATA["cities"]});
 		this.mapView = new App.MapView({
 			userModel: this.userModel,
@@ -18,7 +19,6 @@ App.Router = Backbone.Router.extend({
 	
 	home: function () {
 		App.debug('Route: home');
-		//$('#hello').html(this.mapView.el);
 		
 	},
 	defaultRoute: function (routeId) {
@@ -39,7 +39,7 @@ App.Router = Backbone.Router.extend({
 					App.debug('Received User Data');
 					console.log(request.user)
 					that.userModel.loadUser(request.user);
-					that.citySelectorView = new App.CitySelectorView({cityCollection: that.cityCollection, userModel: that.userModel});
+					
 				}
 			});
 	},

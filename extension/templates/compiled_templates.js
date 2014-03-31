@@ -21,13 +21,78 @@ __p+='\n          <p id="city-zoomed-population" class="city-stats">pop. '+
 ((__t=( population ))==null?'':__t)+
 '</p>\n        ';
  } 
-__p+='\n        <div class="city-stats">\n          <p><strong>erhardt</strong>: First Reader</p>\n          <p><strong>stempeck</strong>: First Recommender</p>\n          \n          <p><strong>kanarinka</strong>: Top Scholar of '+
+__p+='\n        \n          <div class="city-stats">\n\n\n            ';
+ if (cityStats) { 
+__p+='\n                <img src="../img/hr.png" style="margin-bottom:10px">\n                ';
+ if (cityStats.get("firstVisitUsername").length ==0) { 
+__p+='\n                    <p><strong>First Reader:</strong> Nobody! You could be the first.</p>\n                ';
+} else {
+__p+='\n                    <p> <strong>First Reader:</strong> '+
+((__t=( cityStats.get("firstVisitUsername") ))==null?'':__t)+
+'</p>\n                ';
+ } 
+__p+='\n\n                ';
+ if (!_.isEmpty(cityStats.get("mostRead")) ) { 
+__p+='\n                  <p><strong>Top Reader of '+
 ((__t=( city_name ))==null?'':__t)+
-'</p>\n          \n\n          <p><strong>ethanz</strong>: Top Recommender of '+
+':</strong> '+
+((__t=( cityStats.get("mostRead")["username"] ))==null?'':__t)+
+' \n                  ';
+ if (cityStats.get("mostRead")["isCurrentUser"] == "true"){
+__p+=' - YOU! ';
+ } 
+__p+='('+
+((__t=( cityStats.get("mostRead")["count"] ))==null?'':__t)+
+')\n                  </p>\n                ';
+ } 
+__p+='\n\n                ';
+ if (cityStats.get("firstVisitUsername").length !=0 
+                        && !_.isEmpty(cityStats.get("mostRead")) 
+                        && cityStats.get("mostRead")["isCurrentUser"] != "true" ) 
+                  { 
+__p+='\n                  <p><em>Read '+
+((__t=( cityStats.get("mostRead")["count"] - cityStats.get("currentUserStoryCount") + 1 ))==null?'':__t)+
+' more articles to be the Top Reader.</em> </p>\n                  ';
+ } 
+__p+='\n\n                <img src="../img/hr.png" style="margin-bottom:10px">\n\n                ';
+ if (cityStats.get("firstRecommendationUsername").length ==0) { 
+__p+='\n                  <p><strong>First Recommender:</strong> Nobody! You could be the first.</p>\n                ';
+} else {
+__p+='\n                  <p><strong>First Recommender:</strong> '+
+((__t=( cityStats.get("firstRecommendationUsername") ))==null?'':__t)+
+'</p>\n                ';
+ } 
+__p+='\n\n                \n\n                ';
+ if (!_.isEmpty(cityStats.get("mostRecommendations")) ) { 
+__p+='\n                  <p> <strong>Top Recommender of '+
 ((__t=( city_name ))==null?'':__t)+
-'</p>\n          <br/>\n          <br/>\n          <p><em>Read 4 more articles to be the Top Scholar</em></p>\n          <p><em>Recommend 1 more article to be the Top Recommender</em></p>\n          <h5 style="margin-top:20px">Submit a recommendation about '+
+' : </strong>'+
+((__t=( cityStats.get("mostRecommendations")["username"] ))==null?'':__t)+
+' \n                  ';
+ if (cityStats.get("mostRecommendations")["isCurrentUser"] == "true"){
+__p+=' - YOU!';
+ } 
+__p+='</p> ('+
+((__t=( cityStats.get("mostRecommendations")["count"]))==null?'':__t)+
+')\n                ';
+ } 
+__p+='\n                \n                  \n                  ';
+ if (cityStats.get("firstRecommendationUsername").length !=0 
+                        && !_.isEmpty(cityStats.get("mostRecommendations")) 
+                        && cityStats.get("mostRecommendations")["isCurrentUser"] != "true" ) { 
+__p+='\n                      \n                      <p><em>Recommend '+
+((__t=( cityStats.get("mostRecommendations")["count"] - cityStats.get("currentUserRecommendationCount") + 1 ))==null?'':__t)+
+' more articles to be the Top Recommender.</em></p>\n                     \n                  ';
+ } 
+__p+='\n                </p>\n            ';
+ } 
+__p+='\n\n\n            <img src="../img/hr.png">\n            <h4 class="submit-recommendation">Submit a recommendation about '+
 ((__t=( city_name ))==null?'':__t)+
-'</h5>\n          <form class="form-inline" role="form">\n            <div class="form-group">\n              <input type="email" class="form-control" id="url_recommendation" placeholder="http://www.yoururlgoeshere.com">\n            </div>\n            <button type="submit" class="btn btn-default">Submit</button>\n          </form>\n        </div>\n        </div>\n        <div id="go-now">\n              <div style="position: relative; left: -50%;">\n                  <a href="http://localhost:5000/go/'+
+'</h4>\n            <form class="form-inline" role="form" style="margin-bottom:20px">\n              <div class="form-group">\n                <input style="min-width:200px" type="url" class="form-control" id="url_recommendation" placeholder="http://www.'+
+((__t=( randomWord ))==null?'':__t)+
+'.com">\n              </div>\n              <button type="submit" class="btn btn-default">Submit</button>\n            </form>\n          </div>\n        \n\n\n        </div>\n        <div id="go-now">\n              <div style="position: relative; left: -50%;">\n                  <a href="http://localhost:5000/go/'+
+((__t=( userID ))==null?'':__t)+
+'/'+
 ((__t=( cityID ))==null?'':__t)+
 '" role="button" class="btn btn-lg btn-danger btn-go">Read About '+
 ((__t=( city_name ))==null?'':__t)+
