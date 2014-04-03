@@ -130,16 +130,19 @@ def cities():
 def user(userID='52dbeee6bd028634678cd069'):
 	CITY_COUNT_PIPELINE = [
 		{ "$unwind" : "$geodata.primaryCities" },
-		{ "$match" : { "geodata.primaryCities.id": {"$in": THE1000CITIES_IDS_ARRAY } }},
+		{ "$match" : { "userID":userID, "geodata.primaryCities.id": {"$in": THE1000CITIES_IDS_ARRAY } }},
 		{ "$group": {"_id": {"geonames_id":"$geodata.primaryCities.id" }, "count": {"$sum": 1}}},
 		{ "$sort" : { "count" : -1 } }
 	]
 	if (userID is not None):
 		
 		userData = {"userID":userID,"cities":[], "last10HistoryItems":[]}
-		cursor = app.db_user_history_collection.find({ "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY },"userID":userID }, {"typedCount":1,"title":1,"url":1,"lastVisitTime":1,"geodata.primaryCities":1,"visitCount":1}).sort([("lastVisitTime",-1)]).skip(0).limit(10)
-		last10HistoryItems = list( record for record in cursor)
-
+		
+		# removing last 10 history items for the moment
+		#cursor = app.db_user_history_collection.find({ "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY },"userID":userID }, {"typedCount":1,"title":1,"url":1,"lastVisitTime":1,"geodata.primaryCities":1,"visitCount":1}).sort([("lastVisitTime",-1)]).skip(0).limit(10)
+		#last10HistoryItems = list( record for record in cursor)
+		#userData["last10HistoryItems"] = last10HistoryItems
+		
 		cities = {}
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CITY_COUNT_PIPELINE ) 
 		for row in q["result"]:
@@ -148,7 +151,7 @@ def user(userID='52dbeee6bd028634678cd069'):
 			cities[geonames_id] = count
 
 		userData["cities"] = cities
-		userData["last10HistoryItems"] = last10HistoryItems
+		
 
 		return json.dumps(userData, sort_keys=True, indent=4, default=json_util.default) 
 	else:
@@ -156,27 +159,28 @@ def user(userID='52dbeee6bd028634678cd069'):
 
 @app.route('/readinglist/<userID>/<cityID>')
 @app.route('/readinglist/')
-def get_reading_list(userID='52dbeee6bd028634678cd069',cityID=703448):
+def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 	cityID = int(cityID)
 	result = {"userHistoryItemCollection":[], "systemHistoryItemCollection":[]}
 	#cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities": { "$elemMatch": { "id": int(cityID) } } }, {"url":1,"title":1}).sort([("lastVisitTime",-1)]).skip(0).limit(100)
 	
 	USER_CITY_HISTORY_PIPELINE = [
-		
-		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": userID, "title":{"$ne":"" } }},
-		{ "$sort" : { "lastVisitTime" : 1 } },
-		{ "$group": {"_id": {"url":"$url", "title":"$title" }, "count": {"$sum": 1}}},
+		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": userID }},
+		{ "$unwind" : "$geodata.primaryCities" },
+		{ "$sort" : { "lastVisitTime" : 1, "geodata.primaryCities.recommended" : -1 } },
+		{ "$group": {"_id": {"url":"$url", "title":"$title"}, "recommended": { "$first" : "$geodata.primaryCities.recommended" }, "count": {"$sum": 1}}},
 		{ "$limit" : 50 },
 		
 	]
 	q = app.db_user_history_collection.aggregate(USER_CITY_HISTORY_PIPELINE)
-
-	result["userHistoryItemCollection"] = list(row["_id"] for row in q["result"])
+	for row in q["result"]:
+		result["userHistoryItemCollection"].append({ "title": row["_id"]["title"], "url":row["_id"]["url"], "recommended":row["recommended"]})
+	#result["userHistoryItemCollection"] = list(row for row in q["result"])
 	
 	SYSTEM_CITY_HISTORY_PIPELINE = [
 		
-		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID}, "title":{"$ne":"" } }},
-		{ "$sort" : { "lastVisitTime" : 1 } },
+		{ "$match" : { "geodata.primaryCities.id": cityID, "geodata.primaryCities.recommended": {"$ne" : 0}, "userID": {"$ne" : userID}, "title":{"$ne":"" } }},
+		{ "$sort" : { "geodata.primaryCities.recommended":1, "lastVisitTime" : 1 } },
 		{ "$group": {"_id": {"url":"$url", "title":"$title" }, "count": {"$sum": 1}}},
 		{ "$limit" : 50 },
 		
@@ -231,6 +235,36 @@ def recommend(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
 	app.db_recommendation_collection.insert(doc)
 	return json.dumps({"response":"ok"}, sort_keys=True, indent=4, default=json_util.default) 
 
+@app.route('/like/<userID>/<cityID>/', methods=['GET'])
+@app.route('/like/', methods=['GET'])
+def like(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
+	cityID = int(cityID)
+	
+	url=request.args.get('url')
+
+	isThumbsUp=request.args.get('isThumbsUp')
+	if isThumbsUp == "true":
+		isThumbsUp=1
+	else:
+		isThumbsUp=0
+	
+	if len(url) < 1:
+		return json.dumps({"error":"no url"}, sort_keys=True, indent=4, default=json_util.default)
+
+	# update docs associated with this user and this url and particular city
+	# set recommended/not recommended property on geodata.primaryCities.city item
+	# because what they are giving feedback on is relevance of that article for that particular city
+	# article could still be good/bad rec related to a different geo
+	 
+	app.db_user_history_collection.update({	"userID":userID,
+												"url":url,
+												"geodata.primaryCities": { "$elemMatch": { "id": cityID } } },
+												{ "$set" : {"geodata.primaryCities.$.recommended": isThumbsUp } },
+												upsert=False,
+												multi=True)
+	result = app.db.command({"getLastError" : 1})
+	return json.dumps({"response": "ok", "count" : result["n"]}, sort_keys=True, indent=4, default=json_util.default) 
+
 @app.route('/citystats/<userID>/<cityID>')
 @app.route('/citystats/')
 def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
@@ -243,9 +277,14 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 				"currentUserRecommendationCount":""
 			}
 	currentUsername = getUsername(userID)
+	
 	#current user counts
 	result["currentUserStoryCount"] = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "userID" : userID }).skip(0).count()
-	result["currentUserRecommendationCount"] = app.db_recommendation_collection.find({"geodata.primaryCities.id" : cityID, "userID" : userID }).skip(0).count()
+	
+	#recommendations come from two different collections and get added together
+	userRecs = app.db_recommendation_collection.find({"geodata.primaryCities.id" : cityID, "userID" : userID }).skip(0).count();
+	userHistoryRecs = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "geodata.primaryCities.recommended" : {"$exists" : 1}, "userID" : userID }).skip(0).count();
+	result["currentUserRecommendationCount"] = userRecs + userHistoryRecs;
 	
 	#first person to visit city
 	firstVisitUserID = ''
@@ -270,26 +309,55 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 								"isCurrentUser" : "true" if mostReadUsername == currentUsername else "false"	
 							}
 
-	#first person to recommend article from city
+	# first person to recommend article from city
+	# compare from recommendations and from user history table
 	firstRecommendationUsername = ''
-	cursor = app.db_recommendation_collection.find({"geodata.primaryCities.id" : cityID, "userID" : {"$exists" : "true"}}, {"userID" :1}).sort([("dateEntered",1)]).skip(0).limit(1)
-	if cursor.count() != 0:
-		doc = cursor.next()
+	doc = ''
+	userRecs = app.db_recommendation_collection.find({"geodata.primaryCities.id" : cityID, "userID" : {"$exists" : "true"}}, {"userID" :1,"dateEntered":1}).sort([("dateEntered",1)]).skip(0).limit(1)
+	userHistoryRecs = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "userID" : {"$exists" : "true"}, "geodata.primaryCities.recommended": {"$exists":"true"}}, {"userID" :1,"lastVisitTime":1}).sort([("lastVisitTime",1)]).skip(0).limit(1)
+	if userRecs.count() != 0 and userHistoryRecs.count() != 0:
+		userRecDoc = userRecs.next()
+		userHistoryRecDoc = userHistoryRecs.next()
+		doc = userHistoryRecDoc
+		if userRecDoc["dateEntered"] < userHistoryRecDoc["lastVisitTime"]:
+			doc = userRecDoc
+	elif userRecs.count() != 0:
+		doc = userRecs.next()
+	elif userHistoryRecs.count() != 0:
+		doc = userHistoryRecs.next()
+	if doc:
 		firstRecommendationUserID = doc["userID"]
 		firstRecommendationUsername = getUsername(firstRecommendationUserID)
 	result["firstRecommendationUsername"] = firstRecommendationUsername
 
-	#person with most recommendations from city
+	# person with most recommendations from city
+	# do two queries because recommendations can be either new urls or "likes"
 	USER_WITH_MOST_RECOMMENDED_PIPELINE = [
 		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"} }},		
 		{ "$group": {"_id": "$userID", "count": {"$sum": 1}}},
 		{ "$sort" : {"count" : -1} },
 		{ "$limit" : 1 },
 	]
+	USER_WITH_MOST_HISTORY_RECOMMENDED_PIPELINE = [
+		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"}, "geodata.primaryCities.recommended": {"$exists":"true"} }},		
+		{ "$group": {"_id": "$userID", "count": {"$sum": 1}}},
+		{ "$sort" : {"count" : -1} },
+		{ "$limit" : 1 },
+	]
 	q = app.db_recommendation_collection.aggregate(USER_WITH_MOST_RECOMMENDED_PIPELINE)
-	if q["result"]:
-		mostRecommendationsUsername = getUsername(q["result"][0]["_id"])
-		result["mostRecommendations"] = { 	"count" : q["result"][0]["count"], 
+	q2 = app.db_user_history_collection.aggregate(USER_WITH_MOST_HISTORY_RECOMMENDED_PIPELINE)
+	qResult = False
+	if q["result"] and q2["result"]:
+		qResult = q["result"][0]
+		if q["result"][0]["count"] < q2["result"][0]["count"]:
+			qResult = q2["result"][0]
+	elif q["result"]:
+		qResult = q["result"][0]
+	elif q2["result"]:
+		qResult = q2["result"][0]
+	if qResult:
+		mostRecommendationsUsername = getUsername(qResult["_id"])
+		result["mostRecommendations"] = { 	"count" : qResult["count"], 
 											"username" : mostRecommendationsUsername,
 											"isCurrentUser" : "true" if mostRecommendationsUsername == currentUsername else "false"
 
@@ -308,6 +376,7 @@ def getUsername(userID):
 	return doc["username"]
 
 #Send user their map data
+#This is outdated and not currently used
 @app.route('/map/<user>')
 def map(user=None):
 	if (user is not None):

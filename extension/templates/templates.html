@@ -1,5 +1,8 @@
 <script type="text/javascript" src="../lib/jquery/js/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="../lib/underscore/underscore-1.5.2-min.js"></script>
+<script id="city-selector-template" type="text/template">
+  You have read about <%= visitedCityCount %>/1000 cities
+</script>
 <script id="login-modal-template" type="text/template">
   <div id="login-modal" class="modal fade">
     <div class="modal-dialog">
@@ -106,7 +109,7 @@
               <tbody>
                 <% if (systemStories) { 
                   systemStories.each(function(story){ %>
-                  <tr><td><a href="<%=story.get('url')%>"><%=story.get('title')%></a></td></tr>
+                  <tr><td><a href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
               <% });
                 } %>
               </tbody>
@@ -123,8 +126,21 @@
                 </thead>
               <tbody>
                  <% if (userStories) { 
-                  userStories.each(function(story){ %>
-                  <tr><td><a href="<%=story.get('url')%>"><%=story.get('title')%></a></td></tr>
+                  userStories.each(function(story){ 
+                      rec = story.get('recommended');
+                      console.log("user story rec")
+                      console.log(rec)
+                      hasBeenReviewed = (rec != null);
+                      console.log(hasBeenReviewed)
+                      if (hasBeenReviewed){
+                        if (rec == 1){
+                          isThumbsUp = true;
+                        } else{
+                          isThumbsUp = false;
+                        }
+                      }
+                    %>
+                  <tr><td><a href="<%=story.get('url')%>" title="I recommend this!"><span class="glyphicon glyphicon-thumbs-up <%= hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-chosen' : 'glyphicon-unchosen') : '' %>"></span></a> <a href="<%=story.get('url')%>" title="I do not recommend this!"><span class="glyphicon glyphicon-thumbs-down <%= hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-unchosen' : 'glyphicon-chosen') : '' %> " style="padding-right:10px"></span></a> <a href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
               <% }); 
                 } %>
               </tbody>

@@ -1,4 +1,13 @@
 TEMPLATES=[];
+TEMPLATES['city-selector-template']=function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='\n  You have read about '+
+((__t=( visitedCityCount ))==null?'':__t)+
+'/1000 cities\n';
+}
+return __p;
+}
 TEMPLATES['login-modal-template']=function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
@@ -106,7 +115,7 @@ __p+='\n        <div id="what-others-read">\n          <table class="table table
 __p+='\n                  <tr><td><a href="'+
 ((__t=(story.get('url')))==null?'':__t)+
 '">'+
-((__t=(story.get('title')))==null?'':__t)+
+((__t=(story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') ))==null?'':__t)+
 '</a></td></tr>\n              ';
  });
                 } 
@@ -119,10 +128,31 @@ __p+='\n        <div id="what-you-read">\n          <table class="table table-co
 '</th>\n                  </tr>\n                </thead>\n              <tbody>\n                 ';
  if (userStories) { 
                   userStories.each(function(story){ 
+                      rec = story.get('recommended');
+                      console.log("user story rec")
+                      console.log(rec)
+                      hasBeenReviewed = (rec != null);
+                      console.log(hasBeenReviewed)
+                      if (hasBeenReviewed){
+                        if (rec == 1){
+                          isThumbsUp = true;
+                        } else{
+                          isThumbsUp = false;
+                        }
+                      }
+                    
 __p+='\n                  <tr><td><a href="'+
 ((__t=(story.get('url')))==null?'':__t)+
+'" title="I recommend this!"><span class="glyphicon glyphicon-thumbs-up '+
+((__t=( hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-chosen' : 'glyphicon-unchosen') : '' ))==null?'':__t)+
+'"></span></a> <a href="'+
+((__t=(story.get('url')))==null?'':__t)+
+'" title="I do not recommend this!"><span class="glyphicon glyphicon-thumbs-down '+
+((__t=( hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-unchosen' : 'glyphicon-chosen') : '' ))==null?'':__t)+
+' " style="padding-right:10px"></span></a> <a href="'+
+((__t=(story.get('url')))==null?'':__t)+
 '">'+
-((__t=(story.get('title')))==null?'':__t)+
+((__t=(story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') ))==null?'':__t)+
 '</a></td></tr>\n              ';
  }); 
                 } 

@@ -17,7 +17,7 @@ logger = get_task_logger(__name__)
 def start_text_processing_queue(doc, config):
 	logger.info("starting text processing queue")
 	
-	isRecommendation = True
+	isRecommendation = False
 
 	db_client = MongoClient()
 	app.db = db_client[config.get('db','name')]

@@ -13,6 +13,7 @@ App.MapView = Backbone.View.extend({
 		// Create models
 		this.cityCollection = options.cityCollection;
 		this.userModel = options.userModel;
+		this.userModel.on('change', this.render,this);
 		this.userModel.on('change:loginURL', this.renderLogin,this);
 		this.map = L.mapbox.map('map', 'kanarinka.hcc1900i');//random spot -- .setView([this.getRandomInRange(-90,90,3), this.getRandomInRange(-180,180,3)], 9);
 		
@@ -21,8 +22,6 @@ App.MapView = Backbone.View.extend({
 		
 		var that = this;
 		this.userModel.on("change:userCityVisits", function() {
-			console.log("BLARGAG")
-			console.log(that.userModel.getUnvisitedCityID())
 		    that.cityZoomedView = new App.CityZoomedView(
 				{
 					model: that.cityCollection.getCityModel(that.userModel.getUnvisitedCityID())
@@ -34,9 +33,8 @@ App.MapView = Backbone.View.extend({
 	
 	render: function () {
 		App.debug('App.MapView.render()')
-		
-		if (this.userModel.get('authenticated')) {
-			this.$el.find("#hello").append('Hello, ' + this.userModel.get('userID'));
+		if (this.userModel.get('authenticated')) {	
+			$("#hello").html('Hello, ' + this.userModel.get('userID'));
 		} 
 		
 		return this;
@@ -64,7 +62,8 @@ App.CityZoomedView = Backbone.View.extend({
 	el: $("#city-zoomed-view"),
 	template: TEMPLATES['city-zoomed-reading-lists'],
 	events : {
-		"submit" : "submitRecommendation"
+		"submit" : "submitRecommendation",
+		"click .glyphicon-thumbs-up,.glyphicon-thumbs-down": "submitHistoryItemRecommendation"
 	},
 	initialize: function (options) {
 		App.debug('App.CityZoomedView.initialize()');
@@ -73,6 +72,7 @@ App.CityZoomedView = Backbone.View.extend({
 		_.bindAll(this, 'render');
 		_.bindAll(this, 'clearAll');
 		_.bindAll(this, 'submitRecommendation');
+		_.bindAll(this, 'submitHistoryItemRecommendation');
 		this.model.on('change',this.render,this);
 		this.model.fetchReadingLists();
 		this.model.fetchCityStats();
@@ -94,6 +94,25 @@ App.CityZoomedView = Backbone.View.extend({
             $("#url_recommendation").val("");
             return false;
     },
+    submitHistoryItemRecommendation : function(event) {
+            event.preventDefault();
+            var isThumbsUp = $(event.target).attr("class").indexOf("up") != -1;
+            var url = $(event.target).parent().attr("href");
+            var that = this;
+            chrome.runtime.sendMessage({msg: "submitHistoryItemRecommendation", "city_id" : this.model.get("geonames_id"), "url": url, "isThumbsUp" : isThumbsUp}, function(response) {
+			  App.debug(response)
+			  if (response.result["response"] =="ok")
+				  	
+				  	//$(event.target).addClass("glyphicon-chosen");
+				  	//$(event.target).parent().siblings().find(".glyphicon").addClass("glyphicon-unchosen");
+				  	//TODO: AWFUL! Must break up this view into subviews.
+				  	//This is reloading everything from server to update the screen.
+				  	//Sorry for bad behavior to anyone who looks at this...
+				  	that.model.fetchReadingLists();
+				  	that.model.fetchCityStats();
+			});
+            return false;
+    },
 	
 	clearAll: function(){
 		App.debug('App.CityZoomedView.clearAll()');
@@ -102,9 +121,6 @@ App.CityZoomedView = Backbone.View.extend({
 	},
 	render: function () {
 		App.debug('App.CityZoomedView.render()');
-		
-		//turn off marker layer
-		App.map.featureLayer.setFilter(function() { return false; });
 		
 		App.map.setView([this.model.get("lat"), this.model.get("lon")], 12);
 		
@@ -119,7 +135,6 @@ App.CityZoomedView = Backbone.View.extend({
 									userID : App.user.get("userID")
 								});
 		this.$el.html(html);
-		this.showing = true;
 		return this;
 	},
 	addCommas: function(nStr)
@@ -141,6 +156,8 @@ App.CityZoomedView = Backbone.View.extend({
 	and also use to select cities
 */
 App.CitySelectorView = Backbone.View.extend({
+	id: "city-selector-tooltip",
+	template: TEMPLATES['city-selector-template'],
 	initialize: function (options) {
 		App.debug('App.CitySelectorView.initialize()');
 		_.bindAll(this, 'render');
@@ -152,11 +169,20 @@ App.CitySelectorView = Backbone.View.extend({
 	      that.render();
 	    })
 		
-	    if(this.model.get("userCityVisits") && this.model.get("userCityVisits").length != 0)	
+
+	    if(this.model.get("userCityVisits") && Object.keys(this.model.get("userCityVisits")).length != 0)	
 			this.render();
+		
 	},
 	render: function () {
 		App.debug('App.CitySelectorView.render()');
+
+		var html = this.template({ visitedCityCount : Object.keys(this.model.get("userCityVisits")).length });
+
+		this.$el.html(html);
+		
+		this.$el.appendTo('body');
+
 		var margin = {top: 0, right: 0, bottom: 0, left: 0},
 			width = $(window).width(),
 			height = 50;
@@ -222,13 +248,15 @@ App.CitySelectorView = Backbone.View.extend({
 			.on("mouseover", function(d) {   
 				d3.select(this).attr('fill-opacity', 1.0);
 
-				$('#city-selector-tooltip').text(d.city_name + ", " + d.country_name);
-				$('#city-selector-tooltip').css({left:d3.mouse(this)[0],bottom:height});
+
+				that.$el.text(d.city_name + ", " + d.country_name);
+				that.$el.css({left:d3.mouse(this)[0],bottom:height+1});
 				   
 			})                  
 			.on("mouseout", function(d) {       
 				d3.select(this).attr('fill-opacity', filler);
-				$('#city-selector-tooltip').text(""); 
+				that.$el.html(html); 
+				that.$el.css({left:0,bottom:height+1});
 			});
 
 			//Once it's done, make a copy and paste it up on the top of the frame too

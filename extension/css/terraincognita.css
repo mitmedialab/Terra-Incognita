@@ -57,15 +57,30 @@ tr{
 .city-stats{
 	font-size:12px;line-height:12px;margin-top:20px;
 }
-
-
+.glyphicon-thumbs-up,.glyphicon-thumbs-down{
+	padding-right:3px;
+	color:#333;
+}
+.glyphicon-unchosen{
+	color:#ccc;
+}
+.glyphicon-chosen{
+	color:#d9534f;
+}
 #city-selector-tooltip {   
-  position: absolute;           
-  bottom:200px;
-  left:12px;
-  font-size: 11px;
-  font-weight: bold;
-  z-index:1000;
+border-left: 1px solid #080808;
+border-right: 1px solid #080808;
+border-top: 1px solid #080808;
+-webkit-border-radius: 10px 10px 0 0;
+border-radius: 10px 10px 0 0;
+color: #efefef;
+padding: 5px 17px;
+background: #555;
+position: absolute;
+bottom: 51px;
+left: 0;
+font-size: 14px;
+z-index: 1000;
 
 }
 #go-now{

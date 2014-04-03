@@ -25,9 +25,12 @@ urls = [line.strip() for line in open(FILE_TO_IMPORT)]
 for url in urls:
 	doc ={}
 	doc["url"] = "http://"+url
-	doc["source"]="Instapaper"
+	
+
 	#check for url already in recommendations DB
 	if db_recommendation_collection.find({"url": doc["url"]}).skip(0).limit(1).count() == 0: 
+		doc["source"]="Instapaper"
+		doc["dateEntered"] = time.time() * 1000
 		
 		#start text processing queue to add it
 		start_text_processing_queue(doc, config)
