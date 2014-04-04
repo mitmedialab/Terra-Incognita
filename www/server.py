@@ -88,6 +88,8 @@ def get_user_for_browserid(kwargs):
 #	Takes browserid response and creates a user.
 def create_browserid_user(kwargs):
 	log.info("server.py >> create_browserid_user")
+	log.info("server.py >> create_browserid_user >> kwargs")
+	log.info(kwargs)
 	if kwargs['status'] == 'okay':
 		user = create_new_user(kwargs["email"])
 		log.info("server.py >> create_browserid_user >> Created new user")
