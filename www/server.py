@@ -6,7 +6,7 @@ from flask import Flask, redirect, session, render_template, json, jsonify, requ
 from flask.ext.browserid import BrowserID
 from flask.ext.login import LoginManager
 from pymongo import MongoClient
-from user import *
+from terra_incognita_user import *
 from recommendations_bitly import *
 import ConfigParser
 import datetime
@@ -91,7 +91,8 @@ def create_browserid_user(kwargs):
 	log.debug("server.py >> create_browserid_user >> kwargs")
 	log.debug(kwargs)
 	if kwargs['status'] == 'okay':
-		user = create_new_user(kwargs["email"])
+		log.info("server.py >> create_browserid_user >> Status is ok")
+		user = create_new_user(kwargs["email"], log)
 		log.info("server.py >> create_browserid_user >> Created new user")
 		user_id = app.db_user_collection.insert(user.__dict__)
 		user._id = user_id

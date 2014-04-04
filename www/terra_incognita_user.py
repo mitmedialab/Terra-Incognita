@@ -3,10 +3,10 @@ from flask.ext.login import UserMixin
 import datetime
 
 
-class User(UserMixin):
+class TIUser(UserMixin):
 
 	def __init__(self, email, **kwargs):
-		log.debug("user.py >> __init__")
+		
 		self.email = email
 		if (kwargs.get("_id") is not None):
 			self._id = kwargs.get("_id")
@@ -23,14 +23,14 @@ class User(UserMixin):
 
 
 def get_user_from_DB_row(row):
-	return User(	row['email'],
+	return TIUser(	row['email'],
 					_id=row["_id"],
 					firstLoginDate=row["firstLoginDate"],
 					lastLoginDate=row["lastLoginDate"],
 					username=row["username"])
 					
 
-def create_new_user(email):
+def create_new_user(email, log):
 	log.debug("user.py >> create_new_user")
 	t = email.split('@')
 	herUsername = t[0]
@@ -38,4 +38,4 @@ def create_new_user(email):
 	lastLoginDate = datetime.datetime.utcnow()
 	log.debug("user.py >> create_new_user >> username is" + herUsername)
 	log.debug("user.py >> create_new_user >> lastLogin is" + str(lastLoginDate))
-	return User(email, firstLoginDate=firstLoginDate, lastLoginDate=lastLoginDate, username=herUsername)
+	return TIUser(email, firstLoginDate=firstLoginDate, lastLoginDate=lastLoginDate, username=herUsername)
