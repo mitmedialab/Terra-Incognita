@@ -12,9 +12,9 @@
 });
 */
 var urlMap = [];
-var SERVER_URL = "http://127.0.0.1:5000/";
+var SERVER_URL = "https://terra-incognita.co/";
 //var SERVER_URL = "http://terra-incognita.co/";
-var COOKIE_PATH ="http://127.0.0.1/login/";
+var COOKIE_PATH ="https://terra-incognita.co/login/";
 //var COOKIE_PATH ="http://terra-incognita.co/login/";
 
 var LOGIN_PAGE = "login/";
@@ -27,7 +27,7 @@ var USER_JSON = null;
 
 // 	set to false when testing so it doesn't upload and process a month of 
 // browsing on every reload
-var COLLECT_BROWSER_HISTORY = false;
+var COLLECT_BROWSER_HISTORY = true;
 
 function checkLoggedIn(callback){
 	chrome.cookies.get({ url: COOKIE_PATH, name: USER_COOKIE },
@@ -165,7 +165,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
 
 
 /*
-	Experiment with downloading JSON data from server if there were map data ready
+	Launch app on new tab
 */
 chrome.tabs.onCreated.addListener(function(tab) {
 	console.log('New tab created');

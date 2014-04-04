@@ -9,6 +9,9 @@ mvn exec:java -Dexec.mainClass="edu.mit.civic.mediacloud.ParseServer" -Dexec.arg
 
 python server.py (from application dir) 
 
+UPDATE BERYL WITH NEW CODE
+-----------------------------------------------------------
+git fetch in /var/www/terra-incognita.co/Terra-Incognita
 
 
 SET PYTHON BREAKPOINT
@@ -19,11 +22,14 @@ MONGODB
 -----------------------------------------------------------
 run: mongod
 
+check if running on beryl:
+service mongodb status
+
 MONGODB SHELL
 -----------------------------------------------------------
 Launch: /usr/local/bin/mongo
 
-over http: http://terra-incognita.co:28017/
+over http://terra-incognita.co:28017/
 
 Drop DB:
 use <db name>
@@ -57,6 +63,14 @@ To start stop:
 
 sudo service cliff start
 sudo service cliff start
+
+UPDATING FROM GIT:
+Go to /usr/local/lib/cliff
+sudo service cliff stop
+git fetch
+sudo mvn compile
+sudo service cliff start
+
 
 CELERY
 -----------------------------------------------------------

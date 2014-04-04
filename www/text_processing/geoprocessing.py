@@ -42,25 +42,28 @@ def geoparseSingleText(text,geoserver):
 		
 		r = requests.get(geoserver, params=params)
 		
-		geodata = r.json()
+		result = r.json()
 
-		if "places" in geodata.keys() and any(geodata["places"]):
-			return geodata
+		if "where" in result.keys() and any(result["where"]):
+			print "There's geodata in this text"
+			return result["where"]
 		else: 
 			return {}	
 
 	except requests.exceptions.RequestException as e:
 		print "ERROR RequestException " + str(e)
 
-# If item doesn't have primary cities but DOES have primary Country then
-# map it to capital city of that country
+# function to match primaryCountry capitals as primaryCities
 def lookupCountryCapitalCity(geodata):
-	primaryCities = []
+	newPrimaryCities = []
+	existingPrimaryCities = geodata["primaryCities"]
 	for country in geodata["primaryCountries"]:
+		print "COUNTRY IS " + country
 		for cityrow in CITIES:
 			
 			if cityrow["country_code"] == country and cityrow["capital"] == "1":
-				primaryCities.append({
+				print "CAPITAL IS " + cityrow["city_name"]
+				newPrimaryCities.append({
 					"id" : cityrow["geonames_id"],
 					"lat" : cityrow["lat"],
 					"lon" : cityrow["lon"],
@@ -69,8 +72,20 @@ def lookupCountryCapitalCity(geodata):
 					"population" : cityrow["pop"]
 				})
 				break
-	if any(primaryCities):
-		geodata["primaryCities"] = primaryCities
+
+	
+	for newcity in newPrimaryCities:
+		for existingcity in existingPrimaryCities:
+			if newcity["id"] == existingcity["id"]:
+				newcity["remove"] = True
+				break
+	
+	newPrimaryCities = [city for city in newPrimaryCities if not "remove" in newcity]
+
+	print "NEW PRIMARY CITIES IS "
+	print newPrimaryCities
+	geodata["primaryCities"].extend(newPrimaryCities)
+		
 	return geodata
 
 # append continent and region data to the geodata from CLIFF-CLAVIN

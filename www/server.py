@@ -453,11 +453,13 @@ def processHistory():
 
 	for historyObject in historyItems:
 		historyObject["preinstallation"] = "true";
-		start_text_processing_queue.delay(historyObject, config)
+		args = (historyObject, config, False);
+		start_text_processing_queue.delay(*args)
 	
 	return 'Celery is processing ' + str(len(historyItems)) + ' history items'
 
 #Login/Logout page AND change username
+@app.route('/api/login/', methods=['GET', 'POST'])
 @app.route('/login/', methods=['GET', 'POST'])
 def loginpage():
 	error = ""
@@ -481,7 +483,9 @@ def loginpage():
 def processURL():
 	print "Receiving new URL"
 	historyObject = json.loads(request.form['logURL'])
-	start_text_processing_queue.delay(historyObject, config)
+	args = (historyObject, config, False);
+
+	start_text_processing_queue.delay(*args)
 	return 'Celery is processing your URL dude - ' + historyObject["url"]
 
 if __name__ == '__main__':
