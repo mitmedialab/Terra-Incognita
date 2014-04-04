@@ -30,12 +30,9 @@ def get_user_from_DB_row(row):
 					username=row["username"])
 					
 
-def create_new_user(email, log):
-	log.debug("user.py >> create_new_user")
+def create_new_user(email):
 	t = email.split('@')
 	herUsername = t[0]
 	firstLoginDate = datetime.datetime.utcnow()
 	lastLoginDate = datetime.datetime.utcnow()
-	log.debug("user.py >> create_new_user >> username is" + herUsername)
-	log.debug("user.py >> create_new_user >> lastLogin is" + str(lastLoginDate))
 	return TIUser(email, firstLoginDate=firstLoginDate, lastLoginDate=lastLoginDate, username=herUsername)

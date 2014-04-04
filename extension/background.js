@@ -151,7 +151,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
 			{ 
 				filteredResults = [];
 				console.log("logging " + DAYS_HISTORY + " days browsing history"); 
-				console.log(results.length + " results");
+				console.log(results.length + " results before filtering");
 				for (var i = 0;i<results.length;i++){
 					var result = results[i];
 					if (keepURL(result.url)){

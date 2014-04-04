@@ -35,6 +35,8 @@ def start_text_processing_queue(*args,**kwargs):
 	
 	if (doc and any(doc["extractedText"])):
 		# Geoparsing
+		print "geoserver url is "
+		print config.get('geoparser','geoserver_url')
 		doc["geodata"] = geoparseSingleText(doc["extractedText"], config.get('geoparser','geoserver_url'))
 		
 		# Chance that the geodata might come from the recommendation database instead of geoparser
@@ -42,7 +44,8 @@ def start_text_processing_queue(*args,**kwargs):
 		# try that as a second shot at geodata
 		# Currently taking the most recently submitted recommendation's geodata, maybe in the future merge all
 		# matching recommendations' geodata?
-		if not any(doc["geodata"]):
+		if "geodata" not in doc:
+			print "NO GEO DATA FOUND FOR URL - WHUT?"
 			recommendationCollection = app.db[config.get('db','recommendation_item_collection')]
 			recDocMatches = recommendationCollection.find({'url':doc["url"], "geodata.primaryCities.id" : {"$exists":"true"}}).sort([("lastVisitTime",1)]).limit(1)
 			if recDocMatches.count() > 0:
@@ -50,7 +53,7 @@ def start_text_processing_queue(*args,**kwargs):
 				doc["geodata"] = match["geodata"]
 
 		# Add Continent and Region info to geodata
-		if any(doc["geodata"]):
+		if "geodata" in doc:
 			doc["geodata"] = lookupContinentAndRegion(doc["geodata"])
 			# if there is country data but not city data then make the primary city the country's capital city
 			if any(doc["geodata"]["primaryCountries"]):

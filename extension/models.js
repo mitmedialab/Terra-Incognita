@@ -54,20 +54,11 @@ App.UserModel = Backbone.Model.extend({
 		App.debug('App.UserModel.getUnvisitedCityID()');
 		var userCityVisits = this.get("userCityVisits");
 		var keys = Object.keys(userCityVisits);
-		var r = Math.round( Math.random() * keys.length-1 );
-		console.log(r)
-		for (var i=r;i<keys.length;i++){
-			
-			var count = userCityVisits[keys[i]]; 
-			if (count > 0)
-				return keys[i];
+		var randomCity = App.router.cityCollection.getRandomCityModel();
+		while (_.contains(keys, randomCity.get("geonames_id"))){
+			randomCity = App.router.cityCollection.getRandomCityModel();
 		}
-		for (var i=0;i<r;i++){
-			var count = userCityVisits[keys[i]]; 
-			if (count > 0)
-				return keys[i];
-		}
-		return userCityVisits[keys[r]]; 
+		return randomCity.get("geonames_id");
 	},
 	// Save user city visits to local storage for next time - but don't reload user object
 	loadUser: function(json){

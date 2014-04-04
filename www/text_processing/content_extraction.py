@@ -14,7 +14,7 @@ def extractSingleURL(doc):
 			if title is not None:
 				extractedText = title + " " + extractedText
 				doc["title"] = title
-			print 'EXTRACTED -' + url
+			print 'EXTRACTED - ' + url
 			doc["extractedText"] = extractedText
 			return doc
 	except IOError, err:

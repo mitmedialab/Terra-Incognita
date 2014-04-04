@@ -91,9 +91,7 @@ def create_browserid_user(kwargs):
 	log.debug("server.py >> create_browserid_user >> kwargs")
 	log.debug(kwargs)
 	if kwargs['status'] == 'okay':
-		log.info("server.py >> create_browserid_user >> Status is ok")
-		user = create_new_user(kwargs["email"], log)
-		log.info("server.py >> create_browserid_user >> Created new user")
+		user = create_new_user(kwargs["email"])
 		user_id = app.db_user_collection.insert(user.__dict__)
 		user._id = user_id
 		return user
@@ -193,7 +191,7 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 	systemHistoryItemCollection = list(row["_id"] for row in q["result"])
 
 	# If not much in the way of system history, then grab recommendations from the recs DB
-	# Todo: randomize access so doesn't always show the top 20
+	# randomize access so doesn't always show the top 20
 	if len(systemHistoryItemCollection) < 10:
 		RECOMMENDATION_PIPELINE = [
 			{ "$match" : { "geodata.primaryCities.id": cityID, "title":{"$ne":"" } }},
