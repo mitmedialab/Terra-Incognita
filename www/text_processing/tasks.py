@@ -68,7 +68,7 @@ def start_text_processing_queue(*args,**kwargs):
 		# because we want to be able to compare user browsing with and without geo
 		# If it's a recommendation and no geodata then just discard it because it's not useful to us
 
-		if "geodata" in doc["geodata"] and "primaryCities" in doc["geodata"]):
+		if "geodata" in doc and "primaryCities" in doc["geodata"]:
 			app.db_collection.save(doc)
 		elif "userID" in doc and not isRecommendation:
 			print "No geodata, but deleting extracted text and saving to DB for user metrics"
