@@ -188,7 +188,7 @@ App.CitySelectorView = Backbone.View.extend({
 			height = 50;
 
 		var x = d3.scale.ordinal();
-		x.rangeRoundBands([0, width], 0,0);
+		x.rangeBands([0, width], 0,0);
 
 		var y = d3.scale.linear()
 			.range([height, 0]);
@@ -206,7 +206,7 @@ App.CitySelectorView = Backbone.View.extend({
 			.attr("width", width + margin.left + margin.right)
 			.attr("height", height + margin.top + margin.bottom)
 			.append("g")
-			.attr("transform", "scale(2,1),translate(-254,0)");
+			//.attr("transform", "scale(2,1),translate(-254,0)");
 			
 		var data = this.rawCitiesData;
 
@@ -222,9 +222,9 @@ App.CitySelectorView = Backbone.View.extend({
 		  .enter().append("rect")
 			.attr("class", "bar")
 			.attr("x", function(d) { 
-			  return x(d.city_name); 
+			  return Math.round(x(d.city_name)); 
 			})
-			.attr("width", x.rangeBand())
+			.attr("width", function(d) { return Math.round(x.rangeBand() + x(d.city_name)) - Math.round( x(d.city_name) ); })
 			.attr("y", function(d) { return 0; })
 			//.attr("y", function(d) { return y(d.cityVisitCount); })
 			//.attr("height", function(d) { return height - y(d.cityVisitCount); })

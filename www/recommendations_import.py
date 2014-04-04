@@ -2,6 +2,7 @@ import ConfigParser
 import os
 from text_processing.tasks import start_text_processing_queue
 from pymongo import MongoClient
+import time
 
 #IMPORT FILE
 FILE_TO_IMPORT = '/Users/kanarinka/Sites/Terra Incognita/www/static/import/instapaper-no-nytimes2.txt'
@@ -33,6 +34,6 @@ for url in urls:
 		doc["dateEntered"] = time.time() * 1000
 		
 		#start text processing queue to add it
-		start_text_processing_queue(doc, config)
+		start_text_processing_queue(doc, config, True)
 	else:
 		print "Skipping " + doc["url"]

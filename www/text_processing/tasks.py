@@ -14,10 +14,10 @@ logger = get_task_logger(__name__)
 
 #TODO - KAWRGS ARGS BLARGS! So we can pass in whether it's a recommendation or not...
 @app.task()
-def start_text_processing_queue(doc, config):
+def start_text_processing_queue(doc, config, isRecommendation):
 	logger.info("starting text processing queue")
 	
-	isRecommendation = False
+	
 
 	db_client = MongoClient()
 	app.db = db_client[config.get('db','name')]
