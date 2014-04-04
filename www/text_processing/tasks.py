@@ -32,8 +32,9 @@ def start_text_processing_queue(*args,**kwargs):
 		
 	# Content Extraction & add Web page title
 	doc = extractSingleURL(doc)
+
 	
-	if doc and "extractedText" in doc["extractedText"]:
+	if doc is not None and "extractedText" in doc:
 		# Geoparsing
 		print "geoserver url is "
 		print config.get('geoparser','geoserver_url')
@@ -69,6 +70,7 @@ def start_text_processing_queue(*args,**kwargs):
 		# If it's a recommendation and no geodata then just discard it because it's not useful to us
 
 		if "geodata" in doc and "primaryCities" in doc["geodata"]:
+			print "Saved doc"
 			app.db_collection.save(doc)
 		elif "userID" in doc and not isRecommendation:
 			print "No geodata, but deleting extracted text and saving to DB for user metrics"

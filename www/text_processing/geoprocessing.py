@@ -58,11 +58,11 @@ def lookupCountryCapitalCity(geodata):
 	newPrimaryCities = []
 	existingPrimaryCities = geodata["primaryCities"]
 	for country in geodata["primaryCountries"]:
-		print "COUNTRY IS " + country
+		
 		for cityrow in CITIES:
 			
 			if cityrow["country_code"] == country and cityrow["capital"] == "1":
-				print "CAPITAL IS " + cityrow["city_name"]
+		
 				newPrimaryCities.append({
 					"id" : cityrow["geonames_id"],
 					"lat" : cityrow["lat"],
@@ -81,9 +81,6 @@ def lookupCountryCapitalCity(geodata):
 				break
 	
 	newPrimaryCities = [city for city in newPrimaryCities if not "remove" in newcity]
-
-	print "NEW PRIMARY CITIES IS "
-	print newPrimaryCities
 	geodata["primaryCities"].extend(newPrimaryCities)
 		
 	return geodata
@@ -94,7 +91,7 @@ def lookupCountryCapitalCity(geodata):
 def lookupContinentAndRegion(geodata):
 	if not "primaryCountries" in geodata:
 		return geodata
-		
+
 	primaryRegions = []
 	primaryContinents = []
 
