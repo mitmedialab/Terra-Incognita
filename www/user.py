@@ -34,4 +34,8 @@ def create_new_user(email):
 	log.debug("user.py >> create_new_user")
 	t = email.split('@')
 	herUsername = t[0]
-	return User(email, firstLoginDate=datetime.datetime.utcnow(), lastLoginDate=datetime.datetime.utcnow(), username=herUsername)
+	firstLoginDate = datetime.datetime.utcnow()
+	lastLoginDate = datetime.datetime.utcnow()
+	log.debug("user.py >> create_new_user >> username is" + herUsername)
+	log.debug("user.py >> create_new_user >> lastLogin is" + str(lastLoginDate))
+	return User(email, firstLoginDate=firstLoginDate, lastLoginDate=lastLoginDate, username=herUsername)
