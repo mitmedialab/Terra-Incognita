@@ -92,6 +92,9 @@ def lookupCountryCapitalCity(geodata):
 # be careful not to modify geodata object while iterating it bc it 
 # produces weird behavior
 def lookupContinentAndRegion(geodata):
+	if not "primaryCountries" in geodata:
+		return geodata
+		
 	primaryRegions = []
 	primaryContinents = []
 
