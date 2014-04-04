@@ -132,7 +132,7 @@ def cities():
 def user(userID='52dbeee6bd028634678cd069'):
 	CITY_COUNT_PIPELINE = [
 		{ "$unwind" : "$geodata.primaryCities" },
-		{ "$match" : { "userID":userID, "geodata.primaryCities.id": {"$in": THE1000CITIES_IDS_ARRAY } }},
+		{ "$match" : { "userID":userID }},
 		{ "$group": {"_id": {"geonames_id":"$geodata.primaryCities.id" }, "count": {"$sum": 1}}},
 		{ "$sort" : { "count" : -1 } }
 	]
@@ -147,6 +147,7 @@ def user(userID='52dbeee6bd028634678cd069'):
 		
 		cities = {}
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CITY_COUNT_PIPELINE ) 
+		print q["result"]
 		for row in q["result"]:
 			geonames_id = row["_id"]["geonames_id"]
 			count = row["count"]
