@@ -459,7 +459,6 @@ def processHistory():
 	return 'Celery is processing ' + str(len(historyItems)) + ' history items'
 
 #Login/Logout page AND change username
-@app.route('/api/login/', methods=['GET', 'POST'])
 @app.route('/login/', methods=['GET', 'POST'])
 def loginpage():
 	error = ""
