@@ -6,6 +6,7 @@ import datetime
 class User(UserMixin):
 
 	def __init__(self, email, **kwargs):
+		log.debug("user.py >> __init__")
 		self.email = email
 		if (kwargs.get("_id") is not None):
 			self._id = kwargs.get("_id")
@@ -30,6 +31,7 @@ def get_user_from_DB_row(row):
 					
 
 def create_new_user(email):
+	log.debug("user.py >> create_new_user")
 	t = email.split('@')
 	herUsername = t[0]
 	return User(email, firstLoginDate=datetime.datetime.utcnow(), lastLoginDate=datetime.datetime.utcnow(), username=herUsername)

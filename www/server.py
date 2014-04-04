@@ -59,7 +59,7 @@ log.info("----------------------------------------------------------------------
 # It should return None (not raise an exception) if the ID is not valid.
 # (In that case, the ID will manually be removed from the session and processing will continue.)
 def get_user_by_id(id):
-	log.info("server.py >> get_user_by_id")
+	log.debug("server.py >> get_user_by_id")
 	user = None
 	for row in app.db_user_collection.find({ '_id': ObjectId(id) }):
 		user = get_user_from_DB_row(row)
@@ -74,7 +74,7 @@ def get_user_by_id(id):
 #	If a user can neither be found nor created, returns None.
 #	NOTE THAT ID must be converted to STRING from MongoDB
 def get_user_for_browserid(kwargs):
-	log.info("server.py >> get_user_for_browserid")
+	log.debug("server.py >> get_user_for_browserid")
 	for row in app.db_user_collection.find({ 'email': kwargs.get('email') }):
 		if row is not None:
 			return get_user_from_DB_row(row)
@@ -87,9 +87,9 @@ def get_user_for_browserid(kwargs):
 
 #	Takes browserid response and creates a user.
 def create_browserid_user(kwargs):
-	log.info("server.py >> create_browserid_user")
-	log.info("server.py >> create_browserid_user >> kwargs")
-	log.info(kwargs)
+	log.debug("server.py >> create_browserid_user")
+	log.debug("server.py >> create_browserid_user >> kwargs")
+	log.debug(kwargs)
 	if kwargs['status'] == 'okay':
 		user = create_new_user(kwargs["email"])
 		log.info("server.py >> create_browserid_user >> Created new user")
