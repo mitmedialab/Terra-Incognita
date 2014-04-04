@@ -448,12 +448,13 @@ def go(userID='52dbeee6bd028634678cd069',cityID=703448):
 
 	return redirect(url, code=302)
 
-@app.route('/history/', methods=['POST'])
+@app.route('/history/<userID>', methods=['POST'])
 def processHistory():
 	print "Processing browser history"
 	historyItems = json.loads(request.form['history'])
 
 	for historyObject in historyItems:
+		historyObject["userID"] = userID;
 		historyObject["preinstallation"] = "true";
 		args = (historyObject, config, False);
 		start_text_processing_queue.delay(*args)

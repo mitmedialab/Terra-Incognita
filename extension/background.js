@@ -28,7 +28,7 @@ var USER_JSON = null;
 
 // 	set to false when testing so it doesn't upload and process a month of 
 // browsing on every reload
-var COLLECT_BROWSER_HISTORY = true;
+var COLLECT_BROWSER_HISTORY = false;
 
 function checkLoggedIn(callback){
 	chrome.cookies.get({ url: COOKIE_PATH, name: USER_COOKIE },
