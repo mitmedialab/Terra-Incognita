@@ -33,7 +33,7 @@ def start_text_processing_queue(*args,**kwargs):
 	# Content Extraction & add Web page title
 	doc = extractSingleURL(doc)
 	
-	if (doc and any(doc["extractedText"])):
+	if doc and "extractedText" in doc["extractedText"]:
 		# Geoparsing
 		print "geoserver url is "
 		print config.get('geoparser','geoserver_url')
@@ -68,9 +68,9 @@ def start_text_processing_queue(*args,**kwargs):
 		# because we want to be able to compare user browsing with and without geo
 		# If it's a recommendation and no geodata then just discard it because it's not useful to us
 
-		if any(doc["geodata"]) and any(doc["geodata"]["primaryCities"]):
+		if "geodata" in doc["geodata"] and "primaryCities" in doc["geodata"]):
 			app.db_collection.save(doc)
-		elif any(doc["userID"]) and not isRecommendation:
+		elif "userID" in doc and not isRecommendation:
 			print "No geodata, but deleting extracted text and saving to DB for user metrics"
 			doc["extractedText"] = ""
 			app.db_collection.save(doc)
