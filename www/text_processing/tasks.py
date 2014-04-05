@@ -54,7 +54,7 @@ def start_text_processing_queue(*args,**kwargs):
 				doc["geodata"] = match["geodata"]
 
 		# Add Continent and Region info to geodata
-		if "geodata" in doc:
+		if "geodata" in doc and doc["geodata"] is not None:
 			doc["geodata"] = lookupContinentAndRegion(doc["geodata"])
 			# if there is country data but not city data then make the primary city the country's capital city
 			if "primaryCountries" in doc["geodata"]:
