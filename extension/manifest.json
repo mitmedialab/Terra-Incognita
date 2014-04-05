@@ -1,6 +1,6 @@
 {
-  "name": "Terra Incognita",
-  "description": "Monitors and maps your Internet browsing",
+  "name": "Terra Incognita: 1000 Cities of the World",
+  "description": "A global news game and recommendation system",
   "version": "2.0",
   "permissions": [
     "activeTab",
@@ -10,9 +10,7 @@
     "webNavigation",
     "history",
     "http://*/*", 
-    "https://*/*",
-    "webRequest",
-    "webRequestBlocking"
+    "https://*/*"
 
   ],
   "background": {

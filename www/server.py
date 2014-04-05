@@ -133,7 +133,7 @@ def cities():
 def user(userID='52dbeee6bd028634678cd069'):
 	CITY_COUNT_PIPELINE = [
 		{ "$unwind" : "$geodata.primaryCities" },
-		{ "$match" : { "userID":userID }},
+		{ "$match" : { "userID":userID, "preinstallation":{"$exists":0} }},
 		{ "$group": {"_id": {"geonames_id":"$geodata.primaryCities.id" }, "count": {"$sum": 1}}},
 		{ "$sort" : { "count" : -1 } }
 	]
@@ -148,7 +148,6 @@ def user(userID='52dbeee6bd028634678cd069'):
 		
 		cities = {}
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CITY_COUNT_PIPELINE ) 
-		print q["result"]
 		for row in q["result"]:
 			geonames_id = row["_id"]["geonames_id"]
 			count = row["count"]
@@ -169,7 +168,7 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 	#cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities": { "$elemMatch": { "id": int(cityID) } } }, {"url":1,"title":1}).sort([("lastVisitTime",-1)]).skip(0).limit(100)
 	
 	USER_CITY_HISTORY_PIPELINE = [
-		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": userID }},
+		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": userID, "preinstallation":{"$exists":0} }},
 		{ "$unwind" : "$geodata.primaryCities" },
 		{ "$sort" : { "lastVisitTime" : 1, "geodata.primaryCities.recommended" : -1 } },
 		{ "$group": {"_id": {"url":"$url", "title":"$title"}, "recommended": { "$first" : "$geodata.primaryCities.recommended" }, "count": {"$sum": 1}}},
@@ -193,7 +192,7 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 	systemHistoryItemCollection = list(row["_id"] for row in q["result"])
 
 	# If not much in the way of system history, then grab recommendations from the recs DB
-	# randomize access so doesn't always show the top 20
+	# then shuffle it -- randomize access so doesn't always show the top 20
 	if len(systemHistoryItemCollection) < 10:
 		RECOMMENDATION_PIPELINE = [
 			{ "$match" : { "geodata.primaryCities.id": cityID, "title":{"$ne":"" } }},
@@ -280,10 +279,15 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 				"currentUserStoryCount":"",
 				"currentUserRecommendationCount":""
 			}
+	print cityID
+	print type(userID)
+	if userID is None or cityID is None or str(userID) == "null" or str(cityID) =="null":
+		return json.dumps({"result":"error - null user or null city"}, sort_keys=True, indent=4, default=json_util.default) 
+
 	currentUsername = getUsername(userID)
 	
 	#current user counts
-	result["currentUserStoryCount"] = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "userID" : userID }).skip(0).count()
+	result["currentUserStoryCount"] = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "userID" : userID, "preinstallation":{"$exists":0} }).skip(0).count()
 	
 	#recommendations come from two different collections and get added together
 	userRecs = app.db_recommendation_collection.find({"geodata.primaryCities.id" : cityID, "userID" : userID }).skip(0).count();
@@ -292,7 +296,7 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 	
 	#first person to visit city
 	firstVisitUserID = ''
-	cursor = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "userID" : {"$exists" : "true"}}, {"userID" :1}).sort([("lastVisitTime",1)]).skip(0).limit(1)
+	cursor = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "userID" : {"$exists" : "true"}, "preinstallation":{"$exists":0}}, {"userID" :1}).sort([("lastVisitTime",1)]).skip(0).limit(1)
 	if cursor.count() != 0:
 		doc = cursor.next()
 		firstVisitUserID = doc["userID"]
@@ -300,7 +304,7 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 
 	#person with most articles read about city
 	USER_WITH_MOST_READ_PIPELINE = [
-		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"} }},		
+		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"}, "preinstallation":{"$exists":0} }},	
 		{ "$group": {"_id": "$userID", "count": {"$sum": 1}}},
 		{ "$sort" : {"count" : -1} },
 		{ "$limit" : 1 },
@@ -318,7 +322,7 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 	firstRecommendationUsername = ''
 	doc = ''
 	userRecs = app.db_recommendation_collection.find({"geodata.primaryCities.id" : cityID, "userID" : {"$exists" : "true"}}, {"userID" :1,"dateEntered":1}).sort([("dateEntered",1)]).skip(0).limit(1)
-	userHistoryRecs = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "userID" : {"$exists" : "true"}, "geodata.primaryCities.recommended": {"$exists":"true"}}, {"userID" :1,"lastVisitTime":1}).sort([("lastVisitTime",1)]).skip(0).limit(1)
+	userHistoryRecs = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "userID" : {"$exists" : "true"}, "preinstallation":{"$exists":0}, "geodata.primaryCities.recommended": {"$exists":"true"}}, {"userID" :1,"lastVisitTime":1}).sort([("lastVisitTime",1)]).skip(0).limit(1)
 	if userRecs.count() != 0 and userHistoryRecs.count() != 0:
 		userRecDoc = userRecs.next()
 		userHistoryRecDoc = userHistoryRecs.next()
@@ -343,7 +347,7 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 		{ "$limit" : 1 },
 	]
 	USER_WITH_MOST_HISTORY_RECOMMENDED_PIPELINE = [
-		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"}, "geodata.primaryCities.recommended": {"$exists":"true"} }},		
+		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"}, "preinstallation":{"$exists":0}, "geodata.primaryCities.recommended": {"$exists":"true"} }},		
 		{ "$group": {"_id": "$userID", "count": {"$sum": 1}}},
 		{ "$sort" : {"count" : -1} },
 		{ "$limit" : 1 },
@@ -379,42 +383,6 @@ def getUsername(userID):
 	doc = app.db_user_collection.find({"_id": ObjectId(userID)}, {"username":1}).skip(0).limit(1).next()
 	return doc["username"]
 
-#Send user their map data
-#This is outdated and not currently used
-@app.route('/map/<user>')
-def map(user=None):
-	if (user is not None):
-		userHistory = {"continents":[],"continents_incognita":[],"regions":[],"regions_incognita":[],"countries":[],"countries_incognita":[], "states":[], "cities":[],"cities_incognita":[]}
-		
-		#continents
-		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CONTINENT_COUNT_PIPELINE )
-		userHistory["continents"].append(q['result'])
-		inverted = invertGeodata(userHistory["continents"][0], "continent")
-		userHistory["continents_incognita"].append(inverted)
-
-		#regions
-		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=REGION_COUNT_PIPELINE )
-		userHistory["regions"].append(q['result'])
-		userHistory["regions_incognita"].append(invertGeodata(userHistory["regions"][0], "region"))
-
-		#countries
-		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_PIPELINE )
-		userHistory["countries"].append(q['result'])
-		userHistory["countries_incognita"].append(invertGeodata(userHistory["countries"][0], "nation"))
-
-		#states
-		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=STATE_COUNT_PIPELINE )
-		userHistory["states"].append(q['result'])
-
-		#cities
-		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CITY_COUNT_PIPELINE )
-		userHistory["cities"].append(q['result'])
-		userHistory["cities_incognita"].append(invertGeodata(userHistory["cities"][0], "city"))
-		
-		return json.dumps(userHistory, sort_keys=True, indent=4, default=json_util.default) 
-	else:
-		return jsonify(error='No user ID specified');
-
 # Send user to an exciting destination
 # 1/3 the time it gets a recommendation from bitly
 # 1/3 the time it gets a recommendatino from the recommendation collection
@@ -429,35 +397,39 @@ def go(userID='52dbeee6bd028634678cd069',cityID=703448):
 	url = ''
 	random = randint(0,2)
 	if random == 0:
-		print "Recommendation from Bitly"
+		log.debug("Recommendation from Bitly")
 		url = get_recommended_bitly_url(cityID)
 	elif random == 1:
-		print "Recommendation from recommendation collection"
+		log.debug("Recommendation from recommendation collection")
 		count = app.db_recommendation_collection.find({ "geodata.primaryCities.id": cityID }, {url:1}).count()
 		if count:
 			doc = app.db_recommendation_collection.find({ "geodata.primaryCities.id": cityID }).skip(randint(1, count - 1)).limit(1).next()
 			url = doc["url"]
 	elif random == 2:
-		print "Recommendation from user history collection"
+		log.debug("Recommendation from user history collection")
 		count = app.db_user_history_collection.find({ "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID} }, {url:1}).count()
 		if count:
 			doc = app.db_user_history_collection.find({ "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID} }).skip(randint(1, count - 1)).limit(1).next()
 			url = doc["url"]
 
 	if not url:
-		print "Fallback recommendation from Bitly"
+		log.debug("Fallback recommendation from Bitly")
 		url = get_recommended_bitly_url(cityID)
 
 	return redirect(url, code=302)
 
-@app.route('/history/<userID>', methods=['POST'])
-def processHistory():
-	print "Processing browser history"
+@app.route('/history/<userID>', methods=['GET', 'POST'])
+@app.route('/history/<userID>/', methods=['GET', 'POST'])
+def processHistory(userID):
+	log.debug("Processing browser history for " + userID)
+	if request.method != 'POST':
+		return 'I need to have a POST with some history data'
 	historyItems = json.loads(request.form['history'])
-
+	log.debug(str(len(historyItems)) + " in browser history")
+	
 	for historyObject in historyItems:
 		historyObject["userID"] = userID;
-		historyObject["preinstallation"] = "true";
+		historyObject["preinstallation"] = "true"
 		args = (historyObject, config, False);
 		start_text_processing_queue.delay(*args)
 	
@@ -485,7 +457,7 @@ def loginpage():
 # Receives a single URL object from user and starts celery text processing queue
 @app.route('/monitor/', methods=['POST','GET'])
 def processURL():
-	print "Receiving new URL"
+	log.debug("Receiving new URL")
 	historyObject = json.loads(request.form['logURL'])
 	args = (historyObject, config, False);
 
