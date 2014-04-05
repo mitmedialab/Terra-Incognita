@@ -430,8 +430,10 @@ def processHistory(userID):
 	for historyObject in historyItems:
 		historyObject["userID"] = userID;
 		historyObject["preinstallation"] = "true"
-		args = (historyObject, config, False);
-		start_text_processing_queue.delay(*args)
+		count = app.db_user_history_collection.find({ "userID" : userID, "url":historyObject["url"], "lastVisitTime": historyObject["lastVisitTime"] }).count()
+		if count == 0:
+			args = (historyObject, config, False);
+			start_text_processing_queue.delay(*args)
 	
 	return 'Celery is processing ' + str(len(historyItems)) + ' history items'
 
