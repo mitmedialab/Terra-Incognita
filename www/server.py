@@ -9,7 +9,7 @@ from pymongo import MongoClient
 from terra_incognita_user import *
 from recommendations_bitly import *
 import ConfigParser
-import datetime
+import time
 import httplib
 import json
 import os
@@ -23,6 +23,7 @@ from cities_array import *
 import logging
 from random import shuffle,randint
 from text_processing.content_extraction import *
+
 
 # constants
 CONFIG_FILENAME = 'app.config'
@@ -63,7 +64,7 @@ def get_user_by_id(id):
 	user = None
 	for row in app.db_user_collection.find({ '_id': ObjectId(id) }):
 		user = get_user_from_DB_row(row)
-		user.lastLoginDate = datetime.datetime.utcnow();
+		user.lastLoginDate = time.time() * 1000;
 		break
 	if (user is not None):
 		app.db_user_collection.save(user.__dict__)

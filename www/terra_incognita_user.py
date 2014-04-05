@@ -1,6 +1,6 @@
 #	User class to handle login and some other stuff
 from flask.ext.login import UserMixin
-import datetime
+import time
 
 
 class TIUser(UserMixin):
@@ -33,6 +33,6 @@ def get_user_from_DB_row(row):
 def create_new_user(email):
 	t = email.split('@')
 	herUsername = t[0]
-	firstLoginDate = datetime.datetime.utcnow()
-	lastLoginDate = datetime.datetime.utcnow()
+	firstLoginDate = time.time() * 1000
+	lastLoginDate = time.time() * 1000
 	return TIUser(email, firstLoginDate=firstLoginDate, lastLoginDate=lastLoginDate, username=herUsername)

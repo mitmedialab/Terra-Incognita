@@ -64,7 +64,7 @@ def lookupCountryCapitalCity(geodata):
 			if cityrow["country_code"] == country and cityrow["capital"] == "1":
 		
 				newPrimaryCities.append({
-					"id" : cityrow["geonames_id"],
+					"id" : int(cityrow["geonames_id"]),
 					"lat" : cityrow["lat"],
 					"lon" : cityrow["lon"],
 					"name" : cityrow["city_name"],
