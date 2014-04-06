@@ -238,20 +238,26 @@ def recommend(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
 	app.db_recommendation_collection.insert(doc)
 	return json.dumps({"response":"ok"}, sort_keys=True, indent=4, default=json_util.default) 
 
-@app.route('/like/<userID>/<cityID>/', methods=['GET'])
+@app.route('/like/<userID>/<cityID>', methods=['POST'])
 @app.route('/like/', methods=['GET'])
 def like(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
 	cityID = int(cityID)
 	
-	url=request.args.get('url')
+	url=request.form['url']
+	
 
-	isThumbsUp=request.args.get('isThumbsUp')
+	isThumbsUp=request.form['isThumbsUp']
 	if isThumbsUp == "true":
 		isThumbsUp=1
 	else:
 		isThumbsUp=0
 	
-	if len(url) < 1:
+	print userID
+	print url
+	print cityID
+	print isThumbsUp
+	
+	if url is None or len(url) < 1:
 		return json.dumps({"error":"no url"}, sort_keys=True, indent=4, default=json_util.default)
 
 	# update docs associated with this user and this url and particular city
@@ -265,6 +271,7 @@ def like(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
 												{ "$set" : {"geodata.primaryCities.$.recommended": isThumbsUp } },
 												upsert=False,
 												multi=True)
+	
 	result = app.db.command({"getLastError" : 1})
 	return json.dumps({"response": "ok", "count" : result["n"]}, sort_keys=True, indent=4, default=json_util.default) 
 
@@ -279,8 +286,7 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 				"currentUserStoryCount":"",
 				"currentUserRecommendationCount":""
 			}
-	print cityID
-	print type(userID)
+
 	if userID is None or cityID is None or str(userID) == "null" or str(cityID) =="null":
 		return json.dumps({"result":"error - null user or null city"}, sort_keys=True, indent=4, default=json_util.default) 
 
@@ -459,7 +465,8 @@ def loginpage():
 # Receives a single URL object from user and starts celery text processing queue
 @app.route('/monitor/', methods=['POST','GET'])
 def processURL():
-	log.debug("Receiving new URL")
+	print "Receiving new URL"
+
 	historyObject = json.loads(request.form['logURL'])
 	args = (historyObject, config, False);
 

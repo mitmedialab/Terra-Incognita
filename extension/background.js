@@ -3,12 +3,18 @@
 // found in the LICENSE file.
 
 var urlMap = [];
-var SERVER_URL = "https://terra-incognita.co/";
-var COOKIE_PATH ="https://terra-incognita.co/login/";
 
-//var SERVER_URL = "http://localhost:5000/";
-//var COOKIE_PATH ="http://localhost:5000/login/";
+/*
+	SERVER
+*/
+	var SERVER_URL = "https://terra-incognita.co/";
+	var COOKIE_PATH ="https://terra-incognita.co/login/";
+/*
+	LOCAL TESTING
 
+	var SERVER_URL = "http://localhost:5000/";
+	var COOKIE_PATH ="http://localhost:5000/login/";
+*/
 var LOGIN_PAGE = "login/";
 var LOGIN_URL = SERVER_URL + LOGIN_PAGE;
 var DAYS_HISTORY = 30;
@@ -107,19 +113,13 @@ chrome.runtime.onMessage.addListener(
 		}
 		else if (request.msg == "submitHistoryItemRecommendation")
 		{
-				var xhr = new XMLHttpRequest();
+				var params = {"isThumbsUp" : request.isThumbsUp, "url" : request.url};
+				postData('like/' + USER_ID + '/' + request.city_id, params, function(response){
+																resultJSON = JSON.parse(response);
+																console.log(resultJSON);
+																sendResponse({result: resultJSON});
+															});
 				
-				xhr.open("GET", SERVER_URL + 'like/' + USER_ID + '/' + request.city_id + '?isThumbsUp=' + request.isThumbsUp + '&url=' + request.url, true);
-				
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState == 4) {
-						
-						resultJSON = JSON.parse(xhr.responseText);
-						console.log(resultJSON);
-						sendResponse({result: resultJSON});
-					}
-				}
-				xhr.send();
 				return true;
 		}
 	}
@@ -131,7 +131,6 @@ chrome.runtime.onMessage.addListener(
 */
 chrome.runtime.onInstalled.addListener(function(details) {
 	console.log("onInstalled");
-
 	chrome.storage.local.get("terraIncognitaUserHistory", 
 			function(result){
 				if ("terraIncognitaUserHistory" in result){
@@ -142,6 +141,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
 					var today = new Date();
 					var startCollecting = today.getTime() - DAYS_HISTORY*24*60*60*1000;
 					filteredResults = [];
+
 					chrome.history.search({text: '', startTime:startCollecting, maxResults:1000000000}, function(results) 
 						{ 
 							
@@ -156,10 +156,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
 							console.log(filteredResults.length + " results after filtering");
 							chrome.storage.local.set({"terraIncognitaUserHistory":filteredResults});
 						});
-					/*
-						User's city visits are saved in local storage until the user has an ID
-						Then they are sent to server for preinstallation comparison
-					*/
+					
 					
 				}
 			});
@@ -185,7 +182,7 @@ chrome.tabs.onCreated.addListener(function(tab) {
 													if ("terraIncognitaUserHistory" in result){
 														var val = result["terraIncognitaUserHistory"]
 														if (val != "done"){
-															postData('history/' + USER_ID + '/', 'history', val, function(){
+															postData('history/' + USER_ID + '/', {"history":val}, function(){
 																chrome.storage.local.set({"terraIncognitaUserHistory":"done"});
 															});
 															
@@ -234,7 +231,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 					if (tab.url == results[0].url && keepURL(results[0].url)){
 						historyObject = results[0];
 						historyObject.userID = USER_ID;
-						postData('monitor/', 'logURL', historyObject, null);
+
+						postData('monitor/', {'logURL': historyObject}, null);
 					}
 				});
 			});
@@ -263,11 +261,22 @@ function keepURL(url){
 /*
 	Handles post requests to server
 */
-function postData(routeName, paramName, data, successCallback){
+function postData(routeName, params, successCallback){
 	console.log("Route: " + routeName);
-	var json = JSON.stringify(data);
+	
 	var http = new XMLHttpRequest();
-	var params = paramName+"="+encodeURIComponent(json);
+
+	//Prepare key value pairs for submitting
+	var keys = Object.keys(params);
+	var newParams = "";
+	_.each(keys, function(key) {
+		//var data = JSON.stringify(params[key]);
+		var data = params[key];
+		if (newParams.length > 0)
+			newParams = newParams+"&"
+		newParams = newParams + key + "=" + encodeURIComponent(data);
+		});
+
 
 	http.open("POST", SERVER_URL + routeName, false);
 	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -275,10 +284,11 @@ function postData(routeName, paramName, data, successCallback){
 	http.onreadystatechange = function() {
 			if(http.readyState == 4 && http.status == 200) {
 					console.log(http.responseText);
-					successCallback();
+					if (successCallback)
+						successCallback(http.responseText);
 			}
 	};
-	http.send(params);
+	http.send(newParams);
 }
 
 

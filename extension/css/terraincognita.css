@@ -37,7 +37,7 @@ a.navbar-brand {
 	
 	padding-right: 20px;
 	background: rgba(255,255,255,0.5);
-	overflow: scroll;
+	overflow-y: scroll;
 	max-height: 280px;
 }
 #what-you-read{
