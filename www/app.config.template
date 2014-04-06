@@ -1,5 +1,6 @@
 [app]
 secret_key:
+bitly_token:
 
 [db]
 host: 

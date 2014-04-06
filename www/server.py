@@ -34,6 +34,7 @@ config = ConfigParser.ConfigParser()
 config.read(os.path.join(BASE_DIR,CONFIG_FILENAME))
 
 app = Flask(__name__,static_url_path='')
+app.secret_key= config.get('app','secret_key')
 app.debug = True
 
 # Geoserver
@@ -403,7 +404,7 @@ def go(userID='52dbeee6bd028634678cd069',cityID=703448):
 	random = randint(0,2)
 	if random == 0:
 		log.debug("Recommendation from Bitly")
-		url = get_recommended_bitly_url(cityID, config.get('app','secret_key'))
+		url = get_recommended_bitly_url(cityID, config.get('app','bitly_token'))
 	elif random == 1:
 		log.debug("Recommendation from recommendation collection")
 		count = app.db_recommendation_collection.find({ "geodata.primaryCities.id": cityID }, {url:1}).count()
@@ -419,7 +420,7 @@ def go(userID='52dbeee6bd028634678cd069',cityID=703448):
 
 	if not url:
 		log.debug("Fallback recommendation from Bitly")
-		url = get_recommended_bitly_url(cityID, config.get('app','secret_key'))
+		url = get_recommended_bitly_url(cityID, config.get('app','bitly_token'))
 
 	return redirect(url, code=302)
 
