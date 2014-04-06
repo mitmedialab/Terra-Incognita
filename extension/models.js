@@ -13,10 +13,17 @@ App.UserModel = Backbone.Model.extend({
 		_.bindAll(this, 'logUserStatus');
 		
 		var that = this;
-		//User's city visits are cached in localstorage
+		//User's city visits are cached in localstorage or else loaded from file
 		chrome.storage.local.get("userCityVisits", 
 										function(result){
-											that.set({"userCityVisits" : result["userCityVisits"]});
+											if (Object.keys(result).length === 0){
+												var userCityVisits = {};
+												_.each(CITIES_RAW_DATA["cities"], function(city){
+													userCityVisits[parseInt(city["geonames_id"])] = 0;
+												});
+											} else {
+												that.set({"userCityVisits" : result["userCityVisits"]});
+											}
 										});
 		
 		this.checkUserStatus();
@@ -60,20 +67,15 @@ App.UserModel = Backbone.Model.extend({
 		}
 		return randomCity.get("geonames_id");
 	},
-	// Save user city visits to local storage for next time - but don't reload user object
+	// Cache user city visits to local storage
 	loadUser: function(json){
 		App.debug('App.UserModel.loadUser()');
+		this.set({	
+					'userCityVisits' : json.cities
+				 });
 		chrome.storage.local.set({'userCityVisits': json.cities}, function() {
           App.debug('Updated userCityVisits saved to local storage');
         });
-		/*
-	
-		this.set({	
-					'userCityVisits' : json.cities,
-					'userHistoryPath':new App.HistoryItemCollection(json.last10HistoryItems)
-				 });
-		console.log(this.get("userCityVisits"))
-		*/
 		
 	}
 });

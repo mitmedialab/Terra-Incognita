@@ -162,13 +162,8 @@ App.CitySelectorView = Backbone.View.extend({
 		App.debug('App.CitySelectorView.initialize()');
 		_.bindAll(this, 'render');
 		this.options = options || {};
-		
+		this.model.on('change:userCityVisits', this.render,this);
 		this.rawCitiesData = options.cityCollection.rawCitiesData;
-		var that = this;
-		this.model.on("change:userCityVisits", function() {
-	      that.render();
-	    })
-		
 
 	    if(this.model.get("userCityVisits") && Object.keys(this.model.get("userCityVisits")).length != 0)	
 			this.render();

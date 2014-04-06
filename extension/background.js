@@ -109,7 +109,7 @@ chrome.runtime.onMessage.addListener(
 		{
 				var xhr = new XMLHttpRequest();
 				
-				xhr.open("GET",SERVER_URL + 'like/' + USER_ID + '/' + request.city_id +'?url=' + request.url + '&isThumbsUp=' + request.isThumbsUp, true);
+				xhr.open("GET", SERVER_URL + 'like/' + USER_ID + '/' + request.city_id + '?isThumbsUp=' + request.isThumbsUp + '&url=' + request.url, true);
 				
 				xhr.onreadystatechange = function() {
 					if (xhr.readyState == 4) {
