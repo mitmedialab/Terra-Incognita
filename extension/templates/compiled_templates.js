@@ -99,7 +99,9 @@ __p+='\n\n\n            <img src="../img/hr.png">\n            <h4 class="submit
 ((__t=( city_name ))==null?'':__t)+
 '</h4>\n            <form class="form-inline" role="form" style="margin-bottom:20px">\n              <div class="form-group">\n                <input style="min-width:200px" type="url" class="form-control" id="url_recommendation" placeholder="http://www.'+
 ((__t=( randomWord ))==null?'':__t)+
-'.com">\n              </div>\n              <button type="submit" class="btn btn-default">Submit</button>\n            </form>\n          </div>\n        \n\n\n        </div>\n        <div id="go-now">\n              <div style="position: relative; left: -50%;">\n                  <a href="http://localhost:5000/go/'+
+'.com">\n              </div>\n              <button type="submit" class="btn btn-default">Submit</button>\n            </form>\n          </div>\n        \n\n\n        </div>\n        <div id="go-now">\n              <div style="position: relative; left: -50%;">\n                  <a href="'+
+((__t=( serverURL ))==null?'':__t)+
+'go/'+
 ((__t=( userID ))==null?'':__t)+
 '/'+
 ((__t=( cityID ))==null?'':__t)+
@@ -161,4 +163,4 @@ __p+='\n              </tbody>\n          </table>  \n        </div>\n        ';
 __p+='\n        </div>\n';
 }
 return __p;
-} 
+}

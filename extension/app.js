@@ -7,6 +7,13 @@ App = {
 	initialize: function () {
 		App.debug('App.initialize()');
 		App.instance = this;
+		
+		/*
+			From the extension.config.js
+		*/
+		App.serverURL = SERVER_URL;
+		App.loginURL = LOGIN_URL;
+		
 		this.router = new App.Router()
 		this.router.navigate('');
 		Backbone.history.start();

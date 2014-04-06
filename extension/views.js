@@ -105,7 +105,7 @@ App.CityZoomedView = Backbone.View.extend({
 				  	
 				  	//$(event.target).addClass("glyphicon-chosen");
 				  	//$(event.target).parent().siblings().find(".glyphicon").addClass("glyphicon-unchosen");
-				  	//TODO: AWFUL! Must break up this view into subviews.
+				  	//TODO: AWFUL! Must break up this view into subviews instead of re-fetching from server.
 				  	//This is reloading everything from server to update the screen.
 				  	//Sorry for bad behavior to anyone who looks at this...
 				  	that.model.fetchReadingLists();
@@ -132,7 +132,8 @@ App.CityZoomedView = Backbone.View.extend({
 									userStories:this.model.get("userHistoryItemCollection"), 
 									systemStories:this.model.get("systemHistoryItemCollection"), 
 									cityStats : this.model.get("cityStats"),
-									userID : App.user.get("userID")
+									userID : App.user.get("userID"),
+									serverURL : App.serverURL
 								});
 		this.$el.html(html);
 		return this;
