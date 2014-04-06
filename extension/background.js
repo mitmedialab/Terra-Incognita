@@ -212,8 +212,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 					if (tab.url == results[0].url && keepURL(results[0].url)){
 						historyObject = results[0];
 						historyObject.userID = USER_ID;
-
-						postData('monitor/', {'logURL': historyObject}, null);
+						console.log(historyObject)
+						console.log(JSON.stringify(historyObject))
+						postData('monitor/', {'logURL': JSON.stringify(historyObject)}, null);
 					}
 				});
 			});
@@ -241,6 +242,8 @@ function keepURL(url){
 
 /*
 	Handles post requests to server
+	IMPORTANT - if your params contain JSON objects you should call JSON.stringify on them before 
+	sending them to this method
 */
 function postData(routeName, params, successCallback){
 	console.log("Route: " + routeName);
@@ -258,7 +261,7 @@ function postData(routeName, params, successCallback){
 		newParams = newParams + key + "=" + encodeURIComponent(data);
 		});
 
-
+	
 	http.open("POST", SERVER_URL + routeName, false);
 	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 

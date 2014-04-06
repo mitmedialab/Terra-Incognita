@@ -2,14 +2,13 @@ import os
 import bitly_api
 from cities_array import *
 
-BITLY_ACCESS_TOKEN = "BITLY_ACCESS_TOKEN"
 TOPICS = ["advertising","agriculture","art","automotive","aviation","banking","business","celebrity","computer","disasters","drugs","economics","education","energy","entertainment","fashion","finance","food","games","health","hobbies","humor","intellectual property","labor","legal","lgbt","marriage","military","mobile devices","news","philosophy","politics","real estate","reference","science","sexuality","shopping","social media","sports","technology","travel","weapons","weather"]
 
 #until we really integrate topic mapping
 TMP_USER_TOPICS = ["news","politics","entertainment"]
 
-def get_recommended_bitly_url(cityID):
-	bitly = get_bitly_connection()
+def get_recommended_bitly_url(cityID, bitlyToken):
+	bitly = get_bitly_connection(bitlyToken)
 	placedata = {}
 	for row in THE1000CITIES:
 		if cityID == int(row["geonames_id"]):
@@ -63,10 +62,10 @@ def pick_longest_result(results):
 	return result
 
 
-def get_bitly_connection():
+def get_bitly_connection(token):
 	"""Create a Connection based on username and access token credentials"""
-	if BITLY_ACCESS_TOKEN not in os.environ:
-		raise ValueError("Environment variable '{}' required".format(BITLY_ACCESS_TOKEN))
-	access_token = os.getenv(BITLY_ACCESS_TOKEN)
-	bitly = bitly_api.Connection(access_token=access_token)
+	if not token:
+		raise ValueError("Can't connect to bitly without a token!")
+	#access_token = os.getenv(BITLY_ACCESS_TOKEN)
+	bitly = bitly_api.Connection(access_token=token)
 	return bitly
