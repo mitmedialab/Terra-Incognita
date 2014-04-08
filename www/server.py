@@ -28,6 +28,7 @@ from text_processing.content_extraction import *
 # constants
 CONFIG_FILENAME = 'app.config'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LOG_DIR = os.path.join(BASE_DIR,'logs')
 
 # read in app config
 config = ConfigParser.ConfigParser()
@@ -48,8 +49,8 @@ app.db_user_collection = app.db[config.get('db','user_collection')]
 app.db_recommendation_collection = app.db[config.get('db','recommendation_item_collection')]
 
 # setup logging
-handler = logging.FileHandler('server.log')
-logging.basicConfig(filename='server.log',level=logging.DEBUG)
+handler = logging.FileHandler(os.path.join(LOG_DIR,'terra-flask-server.log'))
+logging.basicConfig(filename=os.path.join(LOG_DIR,'terra-flask-server.log'),level=logging.DEBUG)
 log = logging.getLogger('server')
 log.info("---------------------------------------------------------------------------")
 
