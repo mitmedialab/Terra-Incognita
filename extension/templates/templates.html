@@ -108,8 +108,19 @@
                 </thead>
               <tbody>
                 <% if (systemStories) { 
-                  systemStories.each(function(story){ %>
-                  <tr><td><a href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
+                  systemStories.each(function(story){ 
+                  rec = story.get('recommended');
+                      hasBeenReviewed = (rec != null);
+                      if (hasBeenReviewed){
+                        if (rec == 1){
+                          isThumbsUp = true;
+                        } else{
+                          isThumbsUp = false;
+                        }
+                      }
+
+                    %>
+                  <tr><td><% if (isThumbsUp) {%><span class="glyphicon glyphicon-thumbs-up"></span><%}%><a href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
               <% });
                 } %>
               </tbody>
@@ -128,10 +139,7 @@
                  <% if (userStories) { 
                   userStories.each(function(story){ 
                       rec = story.get('recommended');
-                      console.log("user story rec")
-                      console.log(rec)
                       hasBeenReviewed = (rec != null);
-                      console.log(hasBeenReviewed)
                       if (hasBeenReviewed){
                         if (rec == 1){
                           isThumbsUp = true;

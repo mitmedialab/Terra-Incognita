@@ -10,6 +10,8 @@
         
         {% if current_user.is_authenticated() %}
         <h1>Terra Incognita Dashboard</h1>
+        <h2>To Launch Terra Incognita</h2>
+        <p>Open a new tab in your browser with Cmd-T or Ctrl-T.</p>
         <h2>Login/Logout</h2>
         <p><strong>You are currently logged in to Terra Incognita with the email address {{ current_user.email }}.</strong></p>
          <button id="browserid-logout">Logout</button>

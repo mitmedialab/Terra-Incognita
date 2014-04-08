@@ -49,8 +49,10 @@ def get_recommended_bitly_url(cityID, bitlyToken):
 			result = pick_longest_result(results)
 			return result["url"]
 		else:
-			print "No recommendation"
-			return "https://en.wikipedia.org/wiki/" + place
+			print "Fallback on country recommendation for " + placedata["country_name"]
+			results = bitly.search(placedata["country_name"])
+			result = pick_longest_result(results)
+			return result["url"]
 
 def pick_longest_result(results):
 	result = None

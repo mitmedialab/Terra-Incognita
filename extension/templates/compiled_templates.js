@@ -114,7 +114,22 @@ __p+='\n        <div id="what-others-read">\n          <table class="table table
 '</th>\n                  </tr>\n                </thead>\n              <tbody>\n                ';
  if (systemStories) { 
                   systemStories.each(function(story){ 
-__p+='\n                  <tr><td><a href="'+
+                  rec = story.get('recommended');
+                      hasBeenReviewed = (rec != null);
+                      if (hasBeenReviewed){
+                        if (rec == 1){
+                          isThumbsUp = true;
+                        } else{
+                          isThumbsUp = false;
+                        }
+                      }
+
+                    
+__p+='\n                  <tr><td>';
+ if (isThumbsUp) {
+__p+='<span class="glyphicon glyphicon-thumbs-up"></span>';
+}
+__p+='<a href="'+
 ((__t=(story.get('url')))==null?'':__t)+
 '">'+
 ((__t=(story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') ))==null?'':__t)+
@@ -131,10 +146,7 @@ __p+='\n        <div id="what-you-read">\n          <table class="table table-co
  if (userStories) { 
                   userStories.each(function(story){ 
                       rec = story.get('recommended');
-                      console.log("user story rec")
-                      console.log(rec)
                       hasBeenReviewed = (rec != null);
-                      console.log(hasBeenReviewed)
                       if (hasBeenReviewed){
                         if (rec == 1){
                           isThumbsUp = true;
@@ -163,4 +175,4 @@ __p+='\n              </tbody>\n          </table>  \n        </div>\n        ';
 __p+='\n        </div>\n';
 }
 return __p;
-}
+} 
