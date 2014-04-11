@@ -111,6 +111,7 @@
                   systemStories.each(function(story){ 
                   rec = story.get('recommended');
                       hasBeenReviewed = (rec != null);
+                      isThumbsUp = false;
                       if (hasBeenReviewed){
                         if (rec == 1){
                           isThumbsUp = true;

@@ -413,13 +413,13 @@ def go(userID='52dbeee6bd028634678cd069',cityID=703448):
 		log.debug("Recommendation from recommendation collection")
 		count = app.db_recommendation_collection.find({ "geodata.primaryCities.id": cityID }, {url:1}).count()
 		if count:
-			doc = app.db_recommendation_collection.find({ "geodata.primaryCities.id": cityID }).skip(randint(1, count - 1)).limit(1).next()
+			doc = app.db_recommendation_collection.find({ "geodata.primaryCities.id": cityID }).skip(randint(0, count - 1)).limit(1).next()
 			url = doc["url"]
 	elif random == 2:
 		log.debug("Recommendation from user history collection")
 		count = app.db_user_history_collection.find({ "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID} }, {url:1}).count()
 		if count:
-			doc = app.db_user_history_collection.find({ "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID} }).skip(randint(1, count - 1)).limit(1).next()
+			doc = app.db_user_history_collection.find({ "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID} }).skip(randint(0, count - 1)).limit(1).next()
 			url = doc["url"]
 
 	if not url:

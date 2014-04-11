@@ -242,11 +242,14 @@ App.CitySelectorView = Backbone.View.extend({
 				
 			})
 			.on("mouseover", function(d) {   
+
 				d3.select(this).attr('fill-opacity', 1.0);
-
-
-				that.$el.text(d.city_name + ", " + d.country_name);
-				that.$el.css({left:d3.mouse(this)[0],bottom:height+1});
+				that.$el.text(d.continent_name.toUpperCase() + " :: " + d.country_name + " :: " +d.city_name);
+				if (width - d3.mouse(this)[0] < that.$el.width()){
+					that.$el.css({left:d3.mouse(this)[0] - that.$el.width(),bottom:height+1});
+				} else {
+					that.$el.css({left:d3.mouse(this)[0],bottom:height+1});
+				}
 				   
 			})                  
 			.on("mouseout", function(d) {       

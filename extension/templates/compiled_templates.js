@@ -116,6 +116,7 @@ __p+='\n        <div id="what-others-read">\n          <table class="table table
                   systemStories.each(function(story){ 
                   rec = story.get('recommended');
                       hasBeenReviewed = (rec != null);
+                      isThumbsUp = false;
                       if (hasBeenReviewed){
                         if (rec == 1){
                           isThumbsUp = true;
@@ -175,4 +176,4 @@ __p+='\n              </tbody>\n          </table>  \n        </div>\n        ';
 __p+='\n        </div>\n';
 }
 return __p;
-} 
+}
