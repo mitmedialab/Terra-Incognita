@@ -7,7 +7,10 @@ host:
 user: 
 pass: 
 name: terra_incognita
-collection: history_items
+recommendation_item_collection: recommendations
+user_collection: users
+user_behavior_collection: user_behavior_items
+user_city_clicks_collection: user_city_clicks
 
 [geoparser]
 geoserver_url:http://localhost:8080/parse

@@ -47,6 +47,8 @@ app.db = db_client[config.get('db','name')]
 app.db_user_history_collection = app.db[config.get('db','user_history_item_collection')]
 app.db_user_collection = app.db[config.get('db','user_collection')]
 app.db_recommendation_collection = app.db[config.get('db','recommendation_item_collection')]
+app.db_user_behavior_collection = app.db[config.get('db','user_behavior_collection')]
+app.db_user_city_clicks_collection = app.db[config.get('db','user_city_clicks_collection')]
 
 # setup logging
 handler = logging.FileHandler(os.path.join(LOG_DIR,'terra-flask-server.log'))
@@ -65,7 +67,7 @@ def get_user_by_id(id):
 	user = None
 	for row in app.db_user_collection.find({ '_id': ObjectId(id) }):
 		user = get_user_from_DB_row(row)
-		user.lastLoginDate = time.time() * 1000;
+		user.lastLoginDate = time.time() * 1000
 		break
 	if (user is not None):
 		app.db_user_collection.save(user.__dict__)
@@ -256,11 +258,6 @@ def like(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
 	else:
 		isThumbsUp=0
 	
-	print userID
-	print url
-	print cityID
-	print isThumbsUp
-	
 	if url is None or len(url) < 1:
 		return json.dumps({"error":"no url"}, sort_keys=True, indent=4, default=json_util.default)
 
@@ -393,6 +390,31 @@ def getUsername(userID):
 	doc = app.db_user_collection.find({"_id": ObjectId(userID)}, {"username":1}).skip(0).limit(1).next()
 	return doc["username"]
 
+
+# Metrics: Log when a user clicks on a story in the app
+@app.route('/logstoryclick/<userID>/<cityID>', methods=['POST'])
+def logStoryClick(userID='52dbeee6bd028634678cd069',cityID=703448):
+	doc = {}
+	doc["cityID"] = int(cityID)
+	doc["userID"] = userID
+	doc["clicked_at"] = time.time() * 1000
+	doc["ui_source"] = request.form['ui_source']
+	doc["random_city"] = int(request.form['isRandomCity']) #should be 1 or 0
+	doc["url"] = request.form['url']
+
+	app.db_user_behavior_collection.insert(doc)
+	return json.dumps({"result":"ok"}, sort_keys=True, indent=4, default=json_util.default) 
+
+# Metrics: Log when a user clicks on a city in the app
+@app.route('/logcityclick/<userID>/<cityID>')
+def logCityClick(userID='52dbeee6bd028634678cd069',cityID=703448):
+	doc ={}
+	doc["userID"] = userID
+	doc["cityID"] = int(cityID)
+	doc["clicked_at"] = time.time() * 1000
+	app.db_user_city_clicks_collection.insert(doc)
+	return json.dumps({"result":"ok"}, sort_keys=True, indent=4, default=json_util.default) 
+
 # Send user to an exciting destination
 # 1/3 the time it gets a recommendation from bitly
 # 1/3 the time it gets a recommendatino from the recommendation collection
@@ -406,26 +428,43 @@ def go(userID='52dbeee6bd028634678cd069',cityID=703448):
 	cityID = int(cityID)
 	url = ''
 	random = randint(0,2)
+	recommendationSource = ""
 	if random == 0:
 		log.debug("Recommendation from Bitly")
+		recommendationSource = "bitly"
 		url = get_recommended_bitly_url(cityID, config.get('app','bitly_token'))
 	elif random == 1:
 		log.debug("Recommendation from recommendation collection")
+		recommendationSource = "recommendation_collection"
 		count = app.db_recommendation_collection.find({ "geodata.primaryCities.id": cityID }, {url:1}).count()
 		if count:
 			doc = app.db_recommendation_collection.find({ "geodata.primaryCities.id": cityID }).skip(randint(0, count - 1)).limit(1).next()
 			url = doc["url"]
 	elif random == 2:
 		log.debug("Recommendation from user history collection")
+		recommendationSource = "user_history_collection"
 		count = app.db_user_history_collection.find({ "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID} }, {url:1}).count()
 		if count:
 			doc = app.db_user_history_collection.find({ "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID} }).skip(randint(0, count - 1)).limit(1).next()
 			url = doc["url"]
 
 	if not url:
+		recommendationSource = "bitly"
 		log.debug("Fallback recommendation from Bitly")
 		url = get_recommended_bitly_url(cityID, config.get('app','bitly_token'))
 
+	#Red Button Metric: Log to the DB that they clicked on the red button, when, and where we sent them
+	doc = {}
+	doc["cityID"] = cityID
+	doc["userID"] = userID
+	doc["clicked_at"] = time.time() * 1000
+	doc["ui_source"] = "redbutton"
+	doc["recommendation_source"] = recommendationSource
+	doc["random_city"] = int(request.args.get('r')) #should be 1 or 0
+	doc["url"] = url
+
+	app.db_user_behavior_collection.insert(doc)
+	
 	return redirect(url, code=302)
 
 @app.route('/history/<userID>', methods=['GET', 'POST'])

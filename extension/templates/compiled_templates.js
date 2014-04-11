@@ -26,7 +26,9 @@ __p+='  \n        <div id="city-zoomed"><h1>'+
 ((__t=( country_name ))==null?'':__t)+
 '</h1>\n        ';
  if (population != "0") { 
-__p+='\n          <p id="city-zoomed-population" class="city-stats">pop. '+
+__p+='\n          <p id="city-zoomed-population" class="city-stats">'+
+((__t=( isCapitalCity ? "Capital city, " : "" ))==null?'':__t)+
+' pop. '+
 ((__t=( population ))==null?'':__t)+
 '</p>\n        ';
  } 
@@ -105,6 +107,8 @@ __p+='\n\n\n            <img src="../img/hr.png">\n            <h4 class="submit
 ((__t=( userID ))==null?'':__t)+
 '/'+
 ((__t=( cityID ))==null?'':__t)+
+'?r='+
+((__t=( isRandomCity ))==null?'':__t)+
 '" role="button" class="btn btn-lg btn-danger btn-go">Read About '+
 ((__t=( city_name ))==null?'':__t)+
 '</a></th>\n              </div>\n        </div> \n        <div id="what-people-read">\n        ';
@@ -130,7 +134,7 @@ __p+='\n                  <tr><td>';
  if (isThumbsUp) {
 __p+='<span class="glyphicon glyphicon-thumbs-up"></span>';
 }
-__p+='<a href="'+
+__p+='<a class="system-story" href="'+
 ((__t=(story.get('url')))==null?'':__t)+
 '">'+
 ((__t=(story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') ))==null?'':__t)+
@@ -164,7 +168,7 @@ __p+='\n                  <tr><td><a href="'+
 ((__t=(story.get('url')))==null?'':__t)+
 '" title="I do not recommend this!"><span class="glyphicon glyphicon-thumbs-down '+
 ((__t=( hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-unchosen' : 'glyphicon-chosen') : '' ))==null?'':__t)+
-' " style="padding-right:10px"></span></a> <a href="'+
+' " style="padding-right:10px"></span></a> <a class="user-story" href="'+
 ((__t=(story.get('url')))==null?'':__t)+
 '">'+
 ((__t=(story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') ))==null?'':__t)+

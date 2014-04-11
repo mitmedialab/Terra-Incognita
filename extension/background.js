@@ -94,6 +94,35 @@ chrome.runtime.onMessage.addListener(
 				xhr.send();
 				return true;
 		}
+		else if (request.msg == "logCityClick")
+		{
+				var xhr = new XMLHttpRequest();
+				
+				xhr.open("GET",SERVER_URL + 'logcityclick/' + USER_ID + '/' + request.city_id, true);
+				
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4) {
+						
+						resultJSON = JSON.parse(xhr.responseText);
+						console.log(resultJSON);
+						sendResponse({result: resultJSON});
+					}
+				}
+				xhr.send();
+				return true;
+		}
+		else if (request.msg == "logStoryClick")
+		{
+				var params = {"ui_source" : request.ui_source, "url" : request.url, "isRandomCity" : request.isRandomCity };
+				postData('logstoryclick/' + USER_ID + '/' + request.city_id, params, function(response){
+																resultJSON = JSON.parse(response);
+																console.log(resultJSON);
+																sendResponse({result: resultJSON});
+															});
+				
+				return true;
+
+		}
 		else if (request.msg == "submitHistoryItemRecommendation")
 		{
 				var params = {"isThumbsUp" : request.isThumbsUp, "url" : request.url};
@@ -109,10 +138,12 @@ chrome.runtime.onMessage.addListener(
 		{
 				console.log("saveCityFromTab")
 				var cityID = request.cityID;
+				var isRandomCity = request.isRandomCity;
 				var tabID = sender.tab.id;
 				console.log("city ID is " + cityID)
 				console.log("tab ID is " + tabID)
-				tabToCityMap[tabID]= cityID;
+				console.log("isRandomCity is " + isRandomCity)
+				tabToCityMap[tabID]= {"cityID":cityID,"isRandomCity":isRandomCity};
 				sendResponse({status: "ok"});
 				return true;
 		}
@@ -121,9 +152,11 @@ chrome.runtime.onMessage.addListener(
 				var cityID = "";
 				var tabID = sender.tab.id;
 				if (tabID in tabToCityMap){
-					cityID = tabToCityMap[sender.tab.id];
+					console.log("THERE SHOULD BE A CITY LOADED IN TAB ALREADY")
+					cityID = tabToCityMap[sender.tab.id]["cityID"];
+					isRandomCity = tabToCityMap[sender.tab.id]["isRandomCity"];
 				}
-				sendResponse({cityID: cityID});
+				sendResponse({cityID: cityID, isRandomCity:isRandomCity});
 				return true;
 		}
 	}

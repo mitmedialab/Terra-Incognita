@@ -25,7 +25,7 @@
 <script id="city-zoomed-reading-lists" type="text/template">  
         <div id="city-zoomed"><h1><%= city_name %>, <%= country_name %></h1>
         <% if (population != "0") { %>
-          <p id="city-zoomed-population" class="city-stats">pop. <%= population %></p>
+          <p id="city-zoomed-population" class="city-stats"><%= isCapitalCity ? "Capital city, " : "" %> pop. <%= population %></p>
         <% } %>
         
           <div class="city-stats">
@@ -94,7 +94,7 @@
         </div>
         <div id="go-now">
               <div style="position: relative; left: -50%;">
-                  <a href="<%= serverURL %>go/<%= userID %>/<%= cityID %>" role="button" class="btn btn-lg btn-danger btn-go">Read About <%= city_name %></a></th>
+                  <a href="<%= serverURL %>go/<%= userID %>/<%= cityID %>?r=<%= isRandomCity %>" role="button" class="btn btn-lg btn-danger btn-go">Read About <%= city_name %></a></th>
               </div>
         </div> 
         <div id="what-people-read">
@@ -121,7 +121,7 @@
                       }
 
                     %>
-                  <tr><td><% if (isThumbsUp) {%><span class="glyphicon glyphicon-thumbs-up"></span><%}%><a href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
+                  <tr><td><% if (isThumbsUp) {%><span class="glyphicon glyphicon-thumbs-up"></span><%}%><a class="system-story" href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
               <% });
                 } %>
               </tbody>
@@ -149,7 +149,7 @@
                         }
                       }
                     %>
-                  <tr><td><a href="<%=story.get('url')%>" title="I recommend this!"><span class="glyphicon glyphicon-thumbs-up <%= hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-chosen' : 'glyphicon-unchosen') : '' %>"></span></a> <a href="<%=story.get('url')%>" title="I do not recommend this!"><span class="glyphicon glyphicon-thumbs-down <%= hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-unchosen' : 'glyphicon-chosen') : '' %> " style="padding-right:10px"></span></a> <a href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
+                  <tr><td><a href="<%=story.get('url')%>" title="I recommend this!"><span class="glyphicon glyphicon-thumbs-up <%= hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-chosen' : 'glyphicon-unchosen') : '' %>"></span></a> <a href="<%=story.get('url')%>" title="I do not recommend this!"><span class="glyphicon glyphicon-thumbs-down <%= hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-unchosen' : 'glyphicon-chosen') : '' %> " style="padding-right:10px"></span></a> <a class="user-story" href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
               <% }); 
                 } %>
               </tbody>

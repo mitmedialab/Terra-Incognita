@@ -23,15 +23,22 @@ App.MapView = Backbone.View.extend({
 		
 		var that = this;
 		this.userModel.on("change:userCityVisits", function() {
+			if (that.cityZoomedView){
+					that.cityZoomedView.clearAll();
+			}
 			var cityID ="";
+			var isRandomCity = true;
 			if (that.options.cityID && that.options.cityID !=""){
 				cityID = that.options.cityID;
+				isRandomCity = that.options.isRandomCity;
 			}else{
 				cityID = that.userModel.getUnvisitedCityID();
+				isRandomCity = true;
 			}
 		    that.cityZoomedView = new App.CityZoomedView(
 				{	
-					model: that.cityCollection.getCityModel(cityID)
+					model: that.cityCollection.getCityModel(cityID),
+					isRandomCity:isRandomCity
 				});
 		    })
 		// Create sub-views
@@ -70,7 +77,8 @@ App.CityZoomedView = Backbone.View.extend({
 	template: TEMPLATES['city-zoomed-reading-lists'],
 	events : {
 		"submit" : "submitRecommendation",
-		"click .glyphicon-thumbs-up,.glyphicon-thumbs-down": "submitHistoryItemRecommendation"
+		"click .glyphicon-thumbs-up,.glyphicon-thumbs-down": "submitHistoryItemRecommendation",
+		"click .system-story,.user-story": "logStoryClick"
 	},
 	initialize: function (options) {
 		App.debug('App.CityZoomedView.initialize()');
@@ -80,15 +88,24 @@ App.CityZoomedView = Backbone.View.extend({
 		_.bindAll(this, 'clearAll');
 		_.bindAll(this, 'submitRecommendation');
 		_.bindAll(this, 'submitHistoryItemRecommendation');
+		_.bindAll(this, 'logStoryClick');
+		this.isRandomCity = this.options.isRandomCity;
 		this.model.on('change',this.render,this);
 		this.model.fetchReadingLists();
 		this.model.fetchCityStats();
 		this.randomWords = ["fun", "weird", "local","different","interesting","what","alternative","whoa", "notwar"];
 		//Background page caches cityID in relation to tab for "Back purposes"
-		chrome.runtime.sendMessage({msg: "saveCityFromTab", "cityID":this.model.get("geonames_id")}, function(response){
+		chrome.runtime.sendMessage({msg: "saveCityFromTab", "cityID":this.model.get("geonames_id"),"isRandomCity":this.isRandomCity}, function(response){
 			console.log("Saved city with tab")
 		});
 		this.render();
+	},
+	logStoryClick : function(event){
+		App.debug('App.CityZoomedView.logStoryClick()');
+		alert("hi");
+		chrome.runtime.sendMessage({msg: "logStoryClick", "city_id": this.model.get("geonames_id"), "isRandomCity":(this.isRandomCity ? 1 : 0), "ui_source":  ($(event.target).hasClass("system-story") ? "system-story" : "user-story"), "url" : $(event.target).attr("href"), }, function(response) {
+		  App.debug(response)	  
+		});
 	},
 	submitRecommendation : function( event) {
             event.preventDefault();
@@ -128,13 +145,16 @@ App.CityZoomedView = Backbone.View.extend({
 	clearAll: function(){
 		App.debug('App.CityZoomedView.clearAll()');
 		this.undelegateEvents();
-  		$(this.el).empty();
+		this.unbind();
+		$(this.el).empty();
+		//this.remove();
 	},
 	render: function () {
 		App.debug('App.CityZoomedView.render()');
 		
 		App.map.setView([this.model.get("lat"), this.model.get("lon")], 12);
-		
+		console.log("CAPITAL CITY")
+		console.log(this.model.get("capital"))
 		var html = this.template({ 	randomWord: this.randomWords[Math.floor(Math.random() * this.randomWords.length)], 
 									population : this.addCommas(this.model.get("pop")), 
 									cityID : this.model.get("geonames_id"), 
@@ -144,7 +164,9 @@ App.CityZoomedView = Backbone.View.extend({
 									systemStories:this.model.get("systemHistoryItemCollection"), 
 									cityStats : this.model.get("cityStats"),
 									userID : App.user.get("userID"),
-									serverURL : App.serverURL
+									serverURL : App.serverURL,
+									isRandomCity : (this.isRandomCity ? 1 : 0),
+									isCapitalCity : this.model.get("capital") == 1 ? true : false
 								});
 		this.$el.html(html);
 		return this;
@@ -248,17 +270,20 @@ App.CitySelectorView = Backbone.View.extend({
 				}
 				App.router.mapView.cityZoomedView = new App.CityZoomedView(
 					{
-						model: cityModel
+						model: cityModel,
+						isRandomCity : false
 					});
-				
+				chrome.runtime.sendMessage({msg: "logCityClick", "city_id":d.geonames_id}, function(response){
+					console.log("Logged city click")
+				});
 				
 			})
 			.on("mouseover", function(d) {   
 
 				d3.select(this).attr('fill-opacity', 1.0);
 				that.$el.text(d.continent_name.toUpperCase() + " :: " + d.country_name + " :: " +d.city_name);
-				if (width - d3.mouse(this)[0] < that.$el.width()){
-					that.$el.css({left:d3.mouse(this)[0] - that.$el.width(),bottom:height+1});
+				if (d3.mouse(this)[0] > width/2){
+					that.$el.css({left:d3.mouse(this)[0] - that.$el.outerWidth(),bottom:height+1});
 				} else {
 					that.$el.css({left:d3.mouse(this)[0],bottom:height+1});
 				}

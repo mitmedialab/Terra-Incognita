@@ -6,15 +6,16 @@ App.Router = Backbone.Router.extend({
 	
 	initialize: function (options) {
 		App.debug('App.Router.initialize()');
-		if (options)	
-			cityID = options.cityID;
+		this.options = options || {};
+		
 		this.userModel = new App.UserModel();
 		App.user = this.userModel;
 		this.cityCollection = new App.CityCollection([],{"rawCitiesData":CITIES_RAW_DATA["cities"]});
 		this.mapView = new App.MapView({
 			userModel: this.userModel,
 			cityCollection: this.cityCollection,
-			cityID : cityID
+			cityID : this.options.cityID,
+			isRandomCity : this.options.isRandomCity
 		});
 		
 		this.listenForUserData();
