@@ -199,7 +199,7 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 	
 	# If not much in the way of system history, then grab recommendations from the recs DB
 	# then shuffle it -- randomize access so doesn't always show the top 20
-	'''if len(systemHistoryItemCollection) < 10:
+	if len(systemHistoryItemCollection) < 10:
 		RECOMMENDATION_PIPELINE = [
 			{ "$match" : { "geodata.primaryCities.id": cityID, "title":{"$ne":"" } }},
 			{ "$sort" : { "_id" : 1 } },
@@ -209,7 +209,7 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 		q = app.db_recommendation_collection.aggregate(RECOMMENDATION_PIPELINE)
 
 		systemHistoryItemCollection.extend(list(row["_id"] for row in q["result"]))
-		shuffle(systemHistoryItemCollection)'''
+		shuffle(systemHistoryItemCollection)
 	result["systemHistoryItemCollection"] = systemHistoryItemCollection
 	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
 
