@@ -51,8 +51,11 @@ def get_recommended_bitly_url(cityID, bitlyToken):
 		else:
 			print "Fallback on country recommendation for " + placedata["country_name"]
 			results = bitly.search(placedata["country_name"])
-			result = pick_longest_result(results)
-			return result["url"]
+			if len(results) > 0:
+				result = pick_longest_result(results)
+				return result["url"]
+			else:
+				return "http://globalvoicesonline.org"
 
 def pick_longest_result(results):
 	result = None

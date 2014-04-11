@@ -17,3 +17,4 @@ var USER_COOKIE = "terra-incognita-id";
 var USER_ID = null;
 var IS_LOGGED_IN = false;
 var USER_JSON = null;
+var DEBUG = true;

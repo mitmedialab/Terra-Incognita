@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 var urlMap = [];
+var tabToCityMap ={};
 
 function checkLoggedIn(callback){
 	chrome.cookies.get({ url: COOKIE_PATH, name: USER_COOKIE },
@@ -23,6 +24,7 @@ function checkLoggedIn(callback){
 	
 }
 function initBackground(){
+	if (DEBUG) {console.log("initBackground");}
 	checkLoggedIn(function(){console.log("initBackground::checkLoggedIn: " + IS_LOGGED_IN)});
 }
 initBackground();
@@ -103,6 +105,27 @@ chrome.runtime.onMessage.addListener(
 				
 				return true;
 		}
+		else if (request.msg == "saveCityFromTab")
+		{
+				console.log("saveCityFromTab")
+				var cityID = request.cityID;
+				var tabID = sender.tab.id;
+				console.log("city ID is " + cityID)
+				console.log("tab ID is " + tabID)
+				tabToCityMap[tabID]= cityID;
+				sendResponse({status: "ok"});
+				return true;
+		}
+		else if (request.msg == "checkForCityInTab")
+		{	
+				var cityID = "";
+				var tabID = sender.tab.id;
+				if (tabID in tabToCityMap){
+					cityID = tabToCityMap[sender.tab.id];
+				}
+				sendResponse({cityID: cityID});
+				return true;
+		}
 	}
 );
 /*
@@ -111,13 +134,19 @@ chrome.runtime.onMessage.addListener(
 	- store in localStorage until they have a userID
 */
 chrome.runtime.onInstalled.addListener(function(details) {
-	console.log("onInstalled");
+	if (DEBUG) {console.log("onInstalled");}
+	
 	chrome.storage.local.get("terraIncognitaUserHistory", 
 			function(result){
 				if ("terraIncognitaUserHistory" in result){
 					var val = result["terraIncognitaUserHistory"]
 					console.log("User pre-installation history has already been saved.")
 				} else{
+					
+					console.log("Launching new tab because they installed TI for the first time")
+					chrome.tabs.create({
+					    url: 'chrome://newtab'
+					});
 					console.log("Saving user pre-installation history.")
 					var today = new Date();
 					var startCollecting = today.getTime() - DAYS_HISTORY*24*60*60*1000;
@@ -198,7 +227,7 @@ chrome.tabs.onCreated.addListener(function(tab) {
 	Tab changes or new tab 
 */
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-				
+		console.log("onUpdated")
 		if (changeInfo.status == "loading" && changeInfo.url != "undefined"){
 						urlMap[tabId] = true;
 		}
@@ -209,6 +238,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 				//retrieve latest URL from history so we get the metadata
 				chrome.history.search({text: '', maxResults:1}, function(results)
 				{
+					if (DEBUG){	console.log("HISTORY URL"); 
+								console.log(results[0]);
+								console.log(tab.url);
+					}
 					if (tab.url == results[0].url && keepURL(results[0].url)){
 						historyObject = results[0];
 						historyObject.userID = USER_ID;

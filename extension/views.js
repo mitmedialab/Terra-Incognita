@@ -11,6 +11,7 @@ App.MapView = Backbone.View.extend({
 		_.bindAll(this, 'render');
 		
 		// Create models
+
 		this.cityCollection = options.cityCollection;
 		this.userModel = options.userModel;
 		this.userModel.on('change', this.render,this);
@@ -22,9 +23,15 @@ App.MapView = Backbone.View.extend({
 		
 		var that = this;
 		this.userModel.on("change:userCityVisits", function() {
+			var cityID ="";
+			if (that.options.cityID && that.options.cityID !=""){
+				cityID = that.options.cityID;
+			}else{
+				cityID = that.userModel.getUnvisitedCityID();
+			}
 		    that.cityZoomedView = new App.CityZoomedView(
-				{
-					model: that.cityCollection.getCityModel(that.userModel.getUnvisitedCityID())
+				{	
+					model: that.cityCollection.getCityModel(cityID)
 				});
 		    })
 		// Create sub-views
@@ -77,6 +84,10 @@ App.CityZoomedView = Backbone.View.extend({
 		this.model.fetchReadingLists();
 		this.model.fetchCityStats();
 		this.randomWords = ["fun", "weird", "local","different","interesting","what","alternative","whoa", "notwar"];
+		//Background page caches cityID in relation to tab for "Back purposes"
+		chrome.runtime.sendMessage({msg: "saveCityFromTab", "cityID":this.model.get("geonames_id")}, function(response){
+			console.log("Saved city with tab")
+		});
 		this.render();
 	},
 	submitRecommendation : function( event) {
@@ -239,6 +250,7 @@ App.CitySelectorView = Backbone.View.extend({
 					{
 						model: cityModel
 					});
+				
 				
 			})
 			.on("mouseover", function(d) {   
