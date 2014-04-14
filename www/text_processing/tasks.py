@@ -14,14 +14,11 @@ logger = get_task_logger(__name__)
 
 @app.task()
 def start_text_processing_queue(*args,**kwargs):
-	logger.info("starting text processing queue")
-	
+
 	doc = args[0]
-	
-	config = args[1]
-	
+	print "starting text processing queue for " + doc['url']
+	config = args[1]	
 	isRecommendation = args[2]
-	
 
 	db_client = MongoClient()
 	app.db = db_client[config.get('db','name')]
@@ -43,8 +40,6 @@ def start_text_processing_queue(*args,**kwargs):
 
 		if doc is not None and "extractedText" in doc:
 			# Geoparsing
-			print "geoserver url is "
-			print config.get('geoparser','geoserver_url')
 			doc["geodata"] = geoparseSingleText(doc["extractedText"], config.get('geoparser','geoserver_url'))
 			
 			# Chance that the geodata might come from the recommendation database instead of geoparser
@@ -53,7 +48,7 @@ def start_text_processing_queue(*args,**kwargs):
 			# Currently taking the most recently submitted recommendation's geodata, maybe in the future merge all
 			# matching recommendations' geodata?
 			if "geodata" not in doc:
-				print "NO GEO DATA FOUND FOR URL - WHUT?"
+				print "No geodata found for URL: " + doc['url']
 				recommendationCollection = app.db[config.get('db','recommendation_item_collection')]
 				recDocMatches = recommendationCollection.find({'url':doc["url"], "geodata.primaryCities.id" : {"$exists":"true"}}).sort([("lastVisitTime",1)]).limit(1)
 				if recDocMatches.count() > 0:
