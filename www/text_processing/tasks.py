@@ -25,58 +25,65 @@ def start_text_processing_queue(*args,**kwargs):
 
 	db_client = MongoClient()
 	app.db = db_client[config.get('db','name')]
+	alreadyAdded = 0
+
 	if isRecommendation:
 		app.db_collection = app.db[config.get('db','recommendation_item_collection')]
 	else:
 		app.db_collection = app.db[config.get('db','user_history_item_collection')]
+
+		# make sure doc doesn't already exist
+		alreadyAdded = app.db_collection.find({"userID":doc["userID"], "lastVisitTime":doc["lastVisitTime"], "url":doc["url"]}).count()
 		
-	# Content Extraction & add Web page title
-	doc = extractSingleURL(doc)
+	if alreadyAdded > 0:
+		print "Already added this document for this user. I'm ignoring it now."
+	else:
+		# Content Extraction & add Web page title
+		doc = extractSingleURL(doc)
 
-	
-	if doc is not None and "extractedText" in doc:
-		# Geoparsing
-		print "geoserver url is "
-		print config.get('geoparser','geoserver_url')
-		doc["geodata"] = geoparseSingleText(doc["extractedText"], config.get('geoparser','geoserver_url'))
-		
-		# Chance that the geodata might come from the recommendation database instead of geoparser
-		# i.e. user submitted video recommendation
-		# try that as a second shot at geodata
-		# Currently taking the most recently submitted recommendation's geodata, maybe in the future merge all
-		# matching recommendations' geodata?
-		if "geodata" not in doc:
-			print "NO GEO DATA FOUND FOR URL - WHUT?"
-			recommendationCollection = app.db[config.get('db','recommendation_item_collection')]
-			recDocMatches = recommendationCollection.find({'url':doc["url"], "geodata.primaryCities.id" : {"$exists":"true"}}).sort([("lastVisitTime",1)]).limit(1)
-			if recDocMatches.count() > 0:
-				match = recDocMatches.next()
-				doc["geodata"] = match["geodata"]
+		if doc is not None and "extractedText" in doc:
+			# Geoparsing
+			print "geoserver url is "
+			print config.get('geoparser','geoserver_url')
+			doc["geodata"] = geoparseSingleText(doc["extractedText"], config.get('geoparser','geoserver_url'))
+			
+			# Chance that the geodata might come from the recommendation database instead of geoparser
+			# i.e. user submitted video recommendation
+			# try that as a second shot at geodata
+			# Currently taking the most recently submitted recommendation's geodata, maybe in the future merge all
+			# matching recommendations' geodata?
+			if "geodata" not in doc:
+				print "NO GEO DATA FOUND FOR URL - WHUT?"
+				recommendationCollection = app.db[config.get('db','recommendation_item_collection')]
+				recDocMatches = recommendationCollection.find({'url':doc["url"], "geodata.primaryCities.id" : {"$exists":"true"}}).sort([("lastVisitTime",1)]).limit(1)
+				if recDocMatches.count() > 0:
+					match = recDocMatches.next()
+					doc["geodata"] = match["geodata"]
 
-		# Add Continent and Region info to geodata
-		if "geodata" in doc and doc["geodata"] is not None:
-			doc["geodata"] = lookupContinentAndRegion(doc["geodata"])
-			# if there is country data but not city data then make the primary city the country's capital city
-			if "primaryCountries" in doc["geodata"]:
-				doc["geodata"] = lookupCountryCapitalCity(doc["geodata"])
+			# Add Continent and Region info to geodata
+			if "geodata" in doc and doc["geodata"] is not None:
+				doc["geodata"] = lookupContinentAndRegion(doc["geodata"])
+				# if there is country data but not city data then make the primary city the country's capital city
+				if "primaryCountries" in doc["geodata"]:
+					doc["geodata"] = lookupCountryCapitalCity(doc["geodata"])
 
 
-		# Topic Mapping
-		doc["topics"] = map_topics(doc["extractedText"])
+			# Topic Mapping
+			doc["topics"] = map_topics(doc["extractedText"])
 
-		# Saves to DB if there is geodata
-		# If it is a user history item then remove extracted text (space reasons) and save it to DB
-		# because we want to be able to compare user browsing with and without geo
-		# If it's a recommendation and no geodata then just discard it because it's not useful to us
+			# Saves to DB 
+			# If it is a user history item then remove extracted text (space reasons) and save it to DB
+			# because we want to be able to compare user browsing with and without geo
+			# If it's a recommendation and no geodata then just discard it because it's not useful to us
 
-		if "geodata" in doc and "primaryCities" in doc["geodata"]:
-			print "Saved doc"
-			app.db_collection.save(doc)
-		elif "userID" in doc and not isRecommendation:
-			print "No geodata, but deleting extracted text and saving to DB for user metrics"
-			doc["extractedText"] = ""
-			app.db_collection.save(doc)
-		else:
-			print "Discarding because no geodata and it's a recommendation: " + doc["url"]
+			if "geodata" in doc and "primaryCities" in doc["geodata"]:
+				print "Saved doc"
+				app.db_collection.save(doc)
+			elif "userID" in doc and not isRecommendation:
+				print "No geodata, but deleting extracted text and saving to DB for user metrics"
+				doc["extractedText"] = ""
+				app.db_collection.save(doc)
+			else:
+				print "Discarding because no geodata and it's a recommendation: " + doc["url"]
 
 	logger.info("done with text processing queue")

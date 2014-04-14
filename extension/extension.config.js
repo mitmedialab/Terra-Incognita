@@ -12,8 +12,9 @@
 */
 var LOGIN_PAGE = "login/";
 var LOGIN_URL = SERVER_URL + LOGIN_PAGE;
-var DAYS_HISTORY = 30;
+var DAYS_HISTORY = 45;
 var USER_COOKIE = "terra-incognita-id";
+var LOCAL_STORAGE_HISTORY_VARIABLE = "terraIncognitaUserHistory";
 var USER_ID = null;
 var IS_LOGGED_IN = false;
 var USER_JSON = null;

@@ -102,7 +102,6 @@ App.CityZoomedView = Backbone.View.extend({
 	},
 	logStoryClick : function(event){
 		App.debug('App.CityZoomedView.logStoryClick()');
-		alert("hi");
 		chrome.runtime.sendMessage({msg: "logStoryClick", "city_id": this.model.get("geonames_id"), "isRandomCity":(this.isRandomCity ? 1 : 0), "ui_source":  ($(event.target).hasClass("system-story") ? "system-story" : "user-story"), "url" : $(event.target).attr("href"), }, function(response) {
 		  App.debug(response)	  
 		});

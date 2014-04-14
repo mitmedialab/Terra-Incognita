@@ -169,10 +169,11 @@ chrome.runtime.onMessage.addListener(
 chrome.runtime.onInstalled.addListener(function(details) {
 	if (DEBUG) {console.log("onInstalled");}
 	
-	chrome.storage.local.get("terraIncognitaUserHistory", 
+	chrome.storage.local.get(LOCAL_STORAGE_HISTORY_VARIABLE, 
 			function(result){
-				if ("terraIncognitaUserHistory" in result){
-					var val = result["terraIncognitaUserHistory"]
+				if (LOCAL_STORAGE_HISTORY_VARIABLE in result){
+					var val = result[LOCAL_STORAGE_HISTORY_VARIABLE]
+					console.log(LOCAL_STORAGE_HISTORY_VARIABLE + " is " + val)
 					console.log("User pre-installation history has already been saved.")
 				} else{
 					
@@ -197,7 +198,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
 								}
 							}
 							console.log(filteredResults.length + " results after filtering");
-							chrome.storage.local.set({"terraIncognitaUserHistory":filteredResults});
+							chrome.storage.local.set({LOCAL_STORAGE_HISTORY_VARIABLE:filteredResults});
 						});
 					
 					
@@ -220,13 +221,13 @@ chrome.tabs.onCreated.addListener(function(tab) {
 		/*
 			Check if we should send their prior browsing history or if we've already done that
 		*/
-		chrome.storage.local.get("terraIncognitaUserHistory", 
+		chrome.storage.local.get(LOCAL_STORAGE_HISTORY_VARIABLE, 
 												function(result){
-													if ("terraIncognitaUserHistory" in result){
-														var val = result["terraIncognitaUserHistory"]
+													if (LOCAL_STORAGE_HISTORY_VARIABLE in result){
+														var val = result[LOCAL_STORAGE_HISTORY_VARIABLE]
 														if (val != "done"){
 															postData('history/' + USER_ID + '/', {"history":val}, function(){
-																chrome.storage.local.set({"terraIncognitaUserHistory":"done"});
+																chrome.storage.local.set({LOCAL_STORAGE_HISTORY_VARIABLE:"done"});
 															});
 															
 														}

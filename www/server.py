@@ -476,6 +476,10 @@ def processHistory(userID):
 	historyItems = json.loads(request.form['history'])
 	log.debug(str(len(historyItems)) + " in browser history")
 	
+	# save entire history object to DB - this is a backup in case the queue messes things up
+	app.db_user_collection.update({ "_id": ObjectId(userID)}, { "$set" : {"history-pre-installation":historyItems}})
+
+	# then start text queue for each item
 	for historyObject in historyItems:
 		historyObject["userID"] = userID;
 		historyObject["preinstallation"] = "true"
