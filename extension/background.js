@@ -169,11 +169,11 @@ chrome.runtime.onMessage.addListener(
 chrome.runtime.onInstalled.addListener(function(details) {
 	if (DEBUG) {console.log("onInstalled");}
 	
-	chrome.storage.local.get(LOCAL_STORAGE_HISTORY_VARIABLE, 
+	chrome.storage.local.get("terraIncognitaUserHistory", 
 			function(result){
-				if (LOCAL_STORAGE_HISTORY_VARIABLE in result){
-					var val = result[LOCAL_STORAGE_HISTORY_VARIABLE]
-					console.log(LOCAL_STORAGE_HISTORY_VARIABLE + " is " + val)
+				if ("terraIncognitaUserHistory" in result){
+					var val = result["terraIncognitaUserHistory"]
+					console.log("terraIncognitaUserHistory" + " is " + val)
 					console.log("User pre-installation history has already been saved.")
 				} else{
 					
@@ -198,7 +198,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
 								}
 							}
 							console.log(filteredResults.length + " results after filtering");
-							chrome.storage.local.set({LOCAL_STORAGE_HISTORY_VARIABLE:filteredResults});
+							chrome.storage.local.set({"terraIncognitaUserHistory":filteredResults});
 						});
 					
 					
@@ -221,13 +221,14 @@ chrome.tabs.onCreated.addListener(function(tab) {
 		/*
 			Check if we should send their prior browsing history or if we've already done that
 		*/
-		chrome.storage.local.get(LOCAL_STORAGE_HISTORY_VARIABLE, 
+		chrome.storage.local.get("terraIncognitaUserHistory", 
 												function(result){
-													if (LOCAL_STORAGE_HISTORY_VARIABLE in result){
-														var val = result[LOCAL_STORAGE_HISTORY_VARIABLE]
+													if ("terraIncognitaUserHistory" in result){
+														var val = result["terraIncognitaUserHistory"]
 														if (val != "done"){
-															postData('history/' + USER_ID + '/', {"history":val}, function(){
-																chrome.storage.local.set({LOCAL_STORAGE_HISTORY_VARIABLE:"done"});
+															console.log("Posting history data to the server")
+															postData('history/' + USER_ID + '/', {"history":JSON.stringify(val)}, function(){
+																chrome.storage.local.set({"terraIncognitaUserHistory":"done"});
 															});
 															
 														}
@@ -272,15 +273,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 				//retrieve latest URL from history so we get the metadata
 				chrome.history.search({text: '', maxResults:1}, function(results)
 				{
-					if (DEBUG){	console.log("HISTORY URL"); 
-								console.log(results[0]);
-								console.log(tab.url);
-					}
 					if (tab.url == results[0].url && keepURL(results[0].url)){
 						historyObject = results[0];
 						historyObject.userID = USER_ID;
 						console.log(historyObject)
-						console.log(JSON.stringify(historyObject))
 						postData('monitor/', {'logURL': JSON.stringify(historyObject)}, null);
 					}
 				});

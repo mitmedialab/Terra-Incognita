@@ -5,7 +5,6 @@ def extractSingleURL(doc):
 	try:
 		extractor = Extractor(extractor='ArticleExtractor', url=url)
 		extractedText = extractor.getText()
-		print (extractor.getHTML())
 		if (len(extractedText) > 0):
 			# make sure to include title in the extracted text object so it
 			# gets geoparsed
