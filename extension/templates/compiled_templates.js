@@ -20,7 +20,7 @@ return __p;
 TEMPLATES['city-zoomed-reading-lists']=function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='  \n        <div id="city-zoomed"><h1>'+
+__p+='  \n      \n        <div id="city-zoomed"><h1>'+
 ((__t=( city_name ))==null?'':__t)+
 ', '+
 ((__t=( country_name ))==null?'':__t)+
@@ -32,8 +32,11 @@ __p+='\n          <p id="city-zoomed-population" class="city-stats">'+
 ((__t=( population ))==null?'':__t)+
 '</p>\n        ';
  } 
-__p+='\n        \n          <div class="city-stats">\n\n\n            ';
- if (cityStats) { 
+__p+='\n          \n          <div class="city-stats">\n\n\n            ';
+ if (false) { 
+__p+='\n            ';
+ //if (cityStats) { 
+              
 __p+='\n                <img src="../img/hr.png" style="margin-bottom:10px">\n                ';
  if (cityStats.get("firstVisitUsername").length ==0) { 
 __p+='\n                    <p><strong>First Reader:</strong> Nobody! You could be the first.</p>\n                ';
@@ -97,40 +100,31 @@ __p+='\n                      \n                      <p><em>Recommend '+
  } 
 __p+='\n                </p>\n            ';
  } 
-__p+='\n\n\n            <img src="../img/hr.png">\n            <h4 class="submit-recommendation">Submit a recommendation about '+
-((__t=( city_name ))==null?'':__t)+
-'</h4>\n            <form class="form-inline" role="form" style="margin-bottom:20px">\n              <div class="form-group">\n                <input style="min-width:200px" type="url" class="form-control" id="url_recommendation" placeholder="http://www.'+
-((__t=( randomWord ))==null?'':__t)+
-'.com">\n              </div>\n              <button type="submit" class="btn btn-default">Submit</button>\n            </form>\n          </div>\n        \n\n\n        </div>\n        <div id="go-now">\n              <div style="position: relative; left: -50%;">\n                  <a href="'+
-((__t=( serverURL ))==null?'':__t)+
-'go/'+
-((__t=( userID ))==null?'':__t)+
-'/'+
-((__t=( cityID ))==null?'':__t)+
-'?r='+
-((__t=( isRandomCity ))==null?'':__t)+
-'" role="button" class="btn btn-lg btn-danger btn-go">Read About '+
-((__t=( city_name ))==null?'':__t)+
-'</a></th>\n              </div>\n        </div> \n        <div id="what-people-read">\n        ';
+__p+='\n\n\n            <img src="../img/hr.png">\n            <div id="what-people-read">\n              ';
  if (systemStories && systemStories.size() > 0) { 
-__p+='\n        <div id="what-others-read">\n          <table class="table table-condensed">\n            <thead>\n                  <tr>\n                    <th>What Others Are Reading About '+
+__p+='\n              <div id="what-others-read">\n                <table class="table table-condensed">\n                  <thead>\n                        <tr>\n                          <th>5 Things to Read About '+
 ((__t=( city_name ))==null?'':__t)+
-'</th>\n                  </tr>\n                </thead>\n              <tbody>\n                ';
+' ('+
+((__t=(systemStories.size()))==null?'':__t)+
+')</th>\n                        </tr>\n                      </thead>\n                    <tbody>\n\n                    \n                      ';
  if (systemStories) { 
-                  systemStories.each(function(story){ 
-                  rec = story.get('recommended');
-                      hasBeenReviewed = (rec != null);
-                      isThumbsUp = false;
-                      if (hasBeenReviewed){
-                        if (rec == 1){
-                          isThumbsUp = true;
-                        } else{
-                          isThumbsUp = false;
-                        }
-                      }
+                        var count = 0;
+                        systemStories.each(function(story){ 
+                          count++;
 
-                    
-__p+='\n                  <tr><td>';
+                        rec = story.get('recommended');
+                            hasBeenReviewed = (rec != null);
+                            isThumbsUp = false;
+                            if (hasBeenReviewed){
+                              if (rec == 1){
+                                isThumbsUp = true;
+                              } else{
+                                isThumbsUp = false;
+                              }
+                            }
+                            if (count<5){
+                          
+__p+='\n                        <tr><td>';
  if (isThumbsUp) {
 __p+='<span class="glyphicon glyphicon-thumbs-up"></span>';
 }
@@ -138,29 +132,41 @@ __p+='<a class="system-story" href="'+
 ((__t=(story.get('url')))==null?'':__t)+
 '">'+
 ((__t=(story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') ))==null?'':__t)+
-'</a></td></tr>\n              ';
- });
-                } 
-__p+='\n              </tbody>\n          </table> \n        </div> \n        ';
+'</a></td></tr>\n                    ';
+ }});
+                      } 
+__p+='\n                    </tbody>\n                </table> \n              </div> \n              ';
  } 
-__p+='\n        ';
+__p+='\n              <div id="go-now">\n                  <a href="'+
+((__t=( serverURL ))==null?'':__t)+
+'go/'+
+((__t=( userID ))==null?'':__t)+
+'/'+
+((__t=( cityID ))==null?'':__t)+
+'?r='+
+((__t=( isRandomCity ))==null?'':__t)+
+'" role="button" class="btn btn-lg btn-danger btn-go">'+
+((__t=( randomSaying ))==null?'':__t)+
+'</a>\n              </div> \n              ';
  if (userStories && userStories.size() > 0) { 
-__p+='\n        <div id="what-you-read">\n          <table class="table table-condensed">\n            <thead>\n                  <tr>\n                    <th>What You Read About '+
+__p+='\n              <div id="what-you-read">\n                <table class="table table-condensed">\n                  <thead>\n                        <tr>\n                          <th>What You Read About '+
 ((__t=( city_name ))==null?'':__t)+
-'</th>\n                  </tr>\n                </thead>\n              <tbody>\n                 ';
+' ('+
+((__t=(userStories.size()))==null?'':__t)+
+')</th>\n                        </tr>\n                      </thead>\n                    <tbody>\n                       ';
  if (userStories) { 
-                  userStories.each(function(story){ 
-                      rec = story.get('recommended');
-                      hasBeenReviewed = (rec != null);
-                      if (hasBeenReviewed){
-                        if (rec == 1){
-                          isThumbsUp = true;
-                        } else{
-                          isThumbsUp = false;
-                        }
-                      }
-                    
-__p+='\n                  <tr><td><a href="'+
+                        userStories.each(function(story){ 
+                            rec = story.get('recommended');
+                            hasBeenReviewed = (rec != null);
+                            if (hasBeenReviewed){
+                              if (rec == 1){
+                                isThumbsUp = true;
+                              } else{
+                                isThumbsUp = false;
+                              }
+                            }
+                          
+__p+='\n                        <tr><td><a href="'+
 ((__t=(story.get('url')))==null?'':__t)+
 '" title="I recommend this!"><span class="glyphicon glyphicon-thumbs-up '+
 ((__t=( hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-chosen' : 'glyphicon-unchosen') : '' ))==null?'':__t)+
@@ -172,12 +178,16 @@ __p+='\n                  <tr><td><a href="'+
 ((__t=(story.get('url')))==null?'':__t)+
 '">'+
 ((__t=(story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') ))==null?'':__t)+
-'</a></td></tr>\n              ';
+'</a></td></tr>\n                    ';
  }); 
-                } 
-__p+='\n              </tbody>\n          </table>  \n        </div>\n        ';
+                      } 
+__p+='\n                    </tbody>\n                </table>  \n              </div>\n              ';
  } 
-__p+='\n        </div>\n';
+__p+='\n              </div>\n              <!--\n            <h4 class="submit-recommendation">Submit a recommendation about '+
+((__t=( city_name ))==null?'':__t)+
+'</h4>\n            <form class="form-inline" role="form" style="margin-bottom:20px">\n              <div class="form-group">\n                <input style="min-width:200px" type="url" class="form-control" id="url_recommendation" placeholder="http://www.'+
+((__t=( randomWord ))==null?'':__t)+
+'.com">\n              </div>\n              <button type="submit" class="btn btn-default">Submit</button>\n            </form>-->\n          </div>\n        \n\n\n        </div>\n        \n        \n';
 }
 return __p;
-}
+} 

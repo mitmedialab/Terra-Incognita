@@ -23,15 +23,18 @@
   </div>
 </script>
 <script id="city-zoomed-reading-lists" type="text/template">  
+      
         <div id="city-zoomed"><h1><%= city_name %>, <%= country_name %></h1>
         <% if (population != "0") { %>
           <p id="city-zoomed-population" class="city-stats"><%= isCapitalCity ? "Capital city, " : "" %> pop. <%= population %></p>
         <% } %>
-        
+          
           <div class="city-stats">
 
 
-            <% if (cityStats) { %>
+            <% if (false) { %>
+            <% //if (cityStats) { 
+              %>
                 <img src="../img/hr.png" style="margin-bottom:10px">
                 <% if (cityStats.get("firstVisitUsername").length ==0) { %>
                     <p><strong>First Reader:</strong> Nobody! You could be the first.</p>
@@ -80,83 +83,89 @@
 
 
             <img src="../img/hr.png">
+            <div id="what-people-read">
+              <% if (systemStories && systemStories.size() > 0) { %>
+              <div id="what-others-read">
+                <table class="table table-condensed">
+                  <thead>
+                        <tr>
+                          <th>5 Things to Read About <%= city_name %> (<%=systemStories.size()%>)</th>
+                        </tr>
+                      </thead>
+                    <tbody>
+
+                    
+                      <% if (systemStories) { 
+                        var count = 0;
+                        systemStories.each(function(story){ 
+                          count++;
+
+                        rec = story.get('recommended');
+                            hasBeenReviewed = (rec != null);
+                            isThumbsUp = false;
+                            if (hasBeenReviewed){
+                              if (rec == 1){
+                                isThumbsUp = true;
+                              } else{
+                                isThumbsUp = false;
+                              }
+                            }
+                            if (count<5){
+                          %>
+                        <tr><td><% if (isThumbsUp) {%><span class="glyphicon glyphicon-thumbs-up"></span><%}%><a class="system-story" href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
+                    <% }});
+                      } %>
+                    </tbody>
+                </table> 
+              </div> 
+              <% } %>
+              <div id="go-now">
+                  <a href="<%= serverURL %>go/<%= userID %>/<%= cityID %>?r=<%= isRandomCity %>" role="button" class="btn btn-lg btn-danger btn-go"><%= randomSaying %></a>
+              </div> 
+              <% if (userStories && userStories.size() > 0) { %>
+              <div id="what-you-read">
+                <table class="table table-condensed">
+                  <thead>
+                        <tr>
+                          <th>What You Read About <%= city_name %> (<%=userStories.size()%>)</th>
+                        </tr>
+                      </thead>
+                    <tbody>
+                       <% if (userStories) { 
+                        userStories.each(function(story){ 
+                            rec = story.get('recommended');
+                            hasBeenReviewed = (rec != null);
+                            if (hasBeenReviewed){
+                              if (rec == 1){
+                                isThumbsUp = true;
+                              } else{
+                                isThumbsUp = false;
+                              }
+                            }
+                          %>
+                        <tr><td><a href="<%=story.get('url')%>" title="I recommend this!"><span class="glyphicon glyphicon-thumbs-up <%= hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-chosen' : 'glyphicon-unchosen') : '' %>"></span></a> <a href="<%=story.get('url')%>" title="I do not recommend this!"><span class="glyphicon glyphicon-thumbs-down <%= hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-unchosen' : 'glyphicon-chosen') : '' %> " style="padding-right:10px"></span></a> <a class="user-story" href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
+                    <% }); 
+                      } %>
+                    </tbody>
+                </table>  
+              </div>
+              <% } %>
+              </div>
+              <!--
             <h4 class="submit-recommendation">Submit a recommendation about <%= city_name %></h4>
             <form class="form-inline" role="form" style="margin-bottom:20px">
               <div class="form-group">
                 <input style="min-width:200px" type="url" class="form-control" id="url_recommendation" placeholder="http://www.<%= randomWord %>.com">
               </div>
               <button type="submit" class="btn btn-default">Submit</button>
-            </form>
+            </form>-->
           </div>
         
 
 
         </div>
-        <div id="go-now">
-              <div style="position: relative; left: -50%;">
-                  <a href="<%= serverURL %>go/<%= userID %>/<%= cityID %>?r=<%= isRandomCity %>" role="button" class="btn btn-lg btn-danger btn-go">Read About <%= city_name %></a></th>
-              </div>
-        </div> 
-        <div id="what-people-read">
-        <% if (systemStories && systemStories.size() > 0) { %>
-        <div id="what-others-read">
-          <table class="table table-condensed">
-            <thead>
-                  <tr>
-                    <th>What Others Are Reading About <%= city_name %></th>
-                  </tr>
-                </thead>
-              <tbody>
-                <% if (systemStories) { 
-                  systemStories.each(function(story){ 
-                  rec = story.get('recommended');
-                      hasBeenReviewed = (rec != null);
-                      isThumbsUp = false;
-                      if (hasBeenReviewed){
-                        if (rec == 1){
-                          isThumbsUp = true;
-                        } else{
-                          isThumbsUp = false;
-                        }
-                      }
-
-                    %>
-                  <tr><td><% if (isThumbsUp) {%><span class="glyphicon glyphicon-thumbs-up"></span><%}%><a class="system-story" href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
-              <% });
-                } %>
-              </tbody>
-          </table> 
-        </div> 
-        <% } %>
-        <% if (userStories && userStories.size() > 0) { %>
-        <div id="what-you-read">
-          <table class="table table-condensed">
-            <thead>
-                  <tr>
-                    <th>What You Read About <%= city_name %></th>
-                  </tr>
-                </thead>
-              <tbody>
-                 <% if (userStories) { 
-                  userStories.each(function(story){ 
-                      rec = story.get('recommended');
-                      hasBeenReviewed = (rec != null);
-                      if (hasBeenReviewed){
-                        if (rec == 1){
-                          isThumbsUp = true;
-                        } else{
-                          isThumbsUp = false;
-                        }
-                      }
-                    %>
-                  <tr><td><a href="<%=story.get('url')%>" title="I recommend this!"><span class="glyphicon glyphicon-thumbs-up <%= hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-chosen' : 'glyphicon-unchosen') : '' %>"></span></a> <a href="<%=story.get('url')%>" title="I do not recommend this!"><span class="glyphicon glyphicon-thumbs-down <%= hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-unchosen' : 'glyphicon-chosen') : '' %> " style="padding-right:10px"></span></a> <a class="user-story" href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
-              <% }); 
-                } %>
-              </tbody>
-          </table>  
-        </div>
-        <% } %>
-        </div>
+        
+        
 </script>
 <script type="text/javascript">
 	sources = $("script[id]").map(function(i, s){

@@ -25,8 +25,10 @@ def start_text_processing_queue(*args,**kwargs):
 	alreadyAdded = 0
 
 	if isRecommendation:
+		print "the doc is a recommendation"
 		app.db_collection = app.db[config.get('db','recommendation_item_collection')]
 	else:
+		print "the doc is a user history item"
 		app.db_collection = app.db[config.get('db','user_history_item_collection')]
 
 		# make sure doc doesn't already exist
@@ -35,10 +37,17 @@ def start_text_processing_queue(*args,**kwargs):
 	if alreadyAdded > 0:
 		print "Already added this document for this user. I'm ignoring it now."
 	else:
+		print "This document is not in the DB"
 		# Content Extraction & add Web page title
 		doc = extractSingleURL(doc)
 
-		if doc is not None and "extractedText" in doc:
+		if doc is None:
+			print "Extraction Error: return None"
+		elif "extractedText" not in doc and not isRecommendation:
+			print "No extracted Text returned, but saving to DB for user metrics"
+			doc["extractedText"] = ""
+			app.db_collection.save(doc)
+		else:
 			# Geoparsing
 			doc["geodata"] = geoparseSingleText(doc["extractedText"], config.get('geoparser','geoserver_url'))
 			
@@ -57,6 +66,8 @@ def start_text_processing_queue(*args,**kwargs):
 
 			# Add Continent and Region info to geodata
 			if "geodata" in doc and doc["geodata"] is not None:
+				print "Geodata found"
+				print "Adding continent and region info to geodata"
 				doc["geodata"] = lookupContinentAndRegion(doc["geodata"])
 				# if there is country data but not city data then make the primary city the country's capital city
 				if "primaryCountries" in doc["geodata"]:

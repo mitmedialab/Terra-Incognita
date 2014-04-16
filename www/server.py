@@ -42,8 +42,10 @@ app.debug = True
 app.geoserver = config.get('geoparser','geoserver_url')
 
 # MongoDB & links to each collection
-db_client = MongoClient()
+uri = "mongodb://"+ config.get('db','user')+ ":"+ config.get('db','pass')+"@" +config.get('db','host') + ":" + config.get('db','port')
+db_client = MongoClient(uri)
 app.db = db_client[config.get('db','name')]
+#app.db.authenticate(config.get('db','user'), config.get('db','pass'))
 app.db_user_history_collection = app.db[config.get('db','user_history_item_collection')]
 app.db_user_collection = app.db[config.get('db','user_collection')]
 app.db_recommendation_collection = app.db[config.get('db','recommendation_item_collection')]

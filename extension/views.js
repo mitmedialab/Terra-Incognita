@@ -94,6 +94,7 @@ App.CityZoomedView = Backbone.View.extend({
 		this.model.fetchReadingLists();
 		this.model.fetchCityStats();
 		this.randomWords = ["fun", "weird", "local","different","interesting","what","alternative","whoa", "notwar"];
+		this.randomSayings =["Fortune favors the bold", "Fortune favors the brave","Chance favors the prepared mind"];
 		//Background page caches cityID in relation to tab for "Back purposes"
 		chrome.runtime.sendMessage({msg: "saveCityFromTab", "cityID":this.model.get("geonames_id"),"isRandomCity":this.isRandomCity}, function(response){
 			console.log("Saved city with tab")
@@ -152,9 +153,9 @@ App.CityZoomedView = Backbone.View.extend({
 		App.debug('App.CityZoomedView.render()');
 		
 		App.map.setView([this.model.get("lat"), this.model.get("lon")], 12);
-		console.log("CAPITAL CITY")
-		console.log(this.model.get("capital"))
+		
 		var html = this.template({ 	randomWord: this.randomWords[Math.floor(Math.random() * this.randomWords.length)], 
+									randomSaying: this.randomSayings[Math.floor(Math.random() * this.randomSayings.length)], 
 									population : this.addCommas(this.model.get("pop")), 
 									cityID : this.model.get("geonames_id"), 
 									city_name: this.model.get("city_name"), 

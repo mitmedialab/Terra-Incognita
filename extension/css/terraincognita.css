@@ -1,3 +1,6 @@
+#map{
+	width:50%;height:100%;position:absolute;top:0;bottom:0;
+}
 .navbar-inverse {
 	background-color: transparent;
 }
@@ -13,12 +16,14 @@ a.navbar-brand {
 #city-zoomed{
 	position: absolute;
 	top: 45px;
-	left: 0;
-	background: rgba(255,255,255,0.5);
+	right: 0;
+	/*background: rgba(255,255,255,0.5);*/
 	padding: 5px 10px;
 	border: 1px solid #ddd;
-	width: 300px;
+	width: 50%;
 	text-align: center;
+	overflow-y: scroll;
+	height: 100%;
 }
 #city-zoomed h1{
 	color:#444;
@@ -27,28 +32,25 @@ a.navbar-brand {
 	text-shadow: 2px 2px 2px #999;
 	margin-left: 35px;
 }
-#what-people-read{
-	width:375px;
-	position: absolute;
-	right: 0;
-	top: 50px;
+
+#what-people-read tr{
+	font-size:16px;
+	text-align: left;
 }
 #what-others-read,#what-you-read{
 	
 	padding-right: 20px;
 	background: rgba(255,255,255,0.5);
-	overflow-y: scroll;
-	max-height: 280px;
+	/*overflow-y: scroll;
+	max-height: 280px;*/
 }
 #what-you-read{
 	margin-top:20px;
 }
-#go-now{
-	
-}
+
 th{
 	font-size:20px;
-	font-family: Fondamento, serif;
+	font-family: 'Helvetica Neue', sans-serif;
 }
 tr{
 	font-size:12px;
@@ -83,9 +85,7 @@ font-size: 14px;
 z-index: 1000;
 
 }
-#go-now{
-	position: absolute; left: 50%; top:65%;
-}
+
 .btn-go{
 	font-family: Fondamento, serif;
 }

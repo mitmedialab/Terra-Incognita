@@ -33,9 +33,16 @@ run: mongod
 check if running on beryl:
 service mongodb status
 
+restart on beryl:
+sudo service mongodb stop
+sudo service mongodb restart
+
 MONGODB SHELL
 -----------------------------------------------------------
 Launch: /usr/local/bin/mongo
+
+IF MONGO HAS PASSWORD
+mongo -u username -p password --authenticationDatabase admin
 
 over http://terra-incognita.co:28017/
 
