@@ -4,7 +4,7 @@ var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments
 with(obj||{}){
 __p+='\n  You have read about '+
 ((__t=( visitedCityCount ))==null?'':__t)+
-'/1000 cities\n';
+' cities. Wanna go somewhere else?\n';
 }
 return __p;
 }
@@ -110,13 +110,19 @@ __p+='\n                </div>\n            ';
  } 
 __p+='\n\n\n            <!--<img src="../img/hr.png">-->\n            <div id="what-people-read">\n              ';
  if (systemStories && systemStories.size() > 0) { 
-__p+='\n              <div id="what-others-read">\n                <table class="table table-condensed">\n                  <thead>\n                        <tr>\n                          <th>5 Things to Read About '+
+__p+='\n              <div id="what-others-read">\n                <table class="table table-condensed">\n                  <thead>\n                        <tr>\n                          <th>'+
+((__t=(systemStories.size() == 1 ? "1" : (systemStories.size() >= 5 ? "5" : systemStories.size() )))==null?'':__t)+
+' Things to Read About '+
 ((__t=( city_name ))==null?'':__t)+
-' ('+
+' \n                              ';
+ if (systemStories.size() > 5) { 
+__p+='\n                              (<a href="#" class="show-all-system-stories">'+
 ((__t=(systemStories.size()))==null?'':__t)+
-')</th>\n                        </tr>\n                      </thead>\n                    <tbody>\n\n                    \n                      ';
+'</a>)\n                              ';
+ } 
+__p+='\n                          </th>\n                        </tr>\n                      </thead>\n                    <tbody>\n\n                    \n                      ';
  if (systemStories) { 
-                        var count = 0;
+                        var count = 1;
                         systemStories.each(function(story){ 
                           
 
@@ -130,9 +136,11 @@ __p+='\n              <div id="what-others-read">\n                <table class=
                                 isThumbsUp = false;
                               }
                             }
-                            if (count<5){
+                            
                           
-__p+='\n                        <tr><td>';
+__p+='\n                        <tr class="system-story-row" style="'+
+((__t=( count > 5 ? 'display:none' : '' ))==null?'':__t)+
+'"><td>';
  if (isThumbsUp) {
 __p+='<span class="glyphicon glyphicon-thumbs-up"></span>';
 }
@@ -141,7 +149,7 @@ __p+='<a class="system-story" href="'+
 '">'+
 ((__t=(story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') ))==null?'':__t)+
 '</a></td></tr>\n                    ';
- }
+ 
                         count++;
 
                       });
@@ -184,11 +192,15 @@ __p+='\n                        <tr><td><a href="'+
                       } 
 __p+='\n                    </tbody>\n                </table>  \n              </div>\n              ';
  } 
-__p+='\n              </div>\n              <!--\n            <h4 class="submit-recommendation">Submit a recommendation about '+
+__p+='\n              </div>\n             ';
+ if (userStories && userStories.size() > 5) { 
+__p+='\n              <h4 class="submit-recommendation">Submit a recommendation about '+
 ((__t=( city_name ))==null?'':__t)+
-'</h4>\n            <form class="form-inline" role="form" style="margin-bottom:20px">\n              <div class="form-group">\n                <input style="min-width:200px" type="url" class="form-control" id="url_recommendation" placeholder="http://www.'+
+'</h4>\n              <form class="form-inline" role="form" style="margin-bottom:20px">\n                <div class="form-group">\n                  <input style="min-width:200px" type="url" class="form-control" id="url_recommendation" placeholder="http://www.'+
 ((__t=( randomWord ))==null?'':__t)+
-'.com">\n              </div>\n              <button type="submit" class="btn btn-default">Submit</button>\n            </form>-->\n          </div>\n        \n\n\n        </div>\n        \n        \n';
+'.com">\n                </div>\n                <button type="submit" class="btn btn-default">Submit</button>\n              </form>\n            ';
+ } 
+__p+='\n          </div>\n        \n\n\n        </div>\n        \n        \n';
 }
 return __p;
 } 

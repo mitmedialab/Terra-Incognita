@@ -21,7 +21,8 @@ config = ConfigParser.ConfigParser()
 config.read(os.path.join(BASE_DIR,CONFIG_FILENAME))
 
 #DB
-db_client = MongoClient()
+uri = "mongodb://"+ config.get('db','user')+ ":"+ config.get('db','pass')+"@" +config.get('db','host') + ":" + config.get('db','port')
+db_client = MongoClient(uri)
 db = db_client[config.get('db','name')]
 db_recommendation_collection = db[config.get('db','recommendation_item_collection')]
 

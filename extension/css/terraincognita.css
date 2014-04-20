@@ -23,7 +23,7 @@ a.navbar-brand {
 	width: 40%;
 	text-align: center;
 	overflow-y: scroll;
-	height: 100%;
+	bottom:50px;
 }
 #city-zoomed h1{
 	color:#444;
@@ -98,11 +98,15 @@ left: 20%;*/
 	font-family: 'Helvetica Neue', sans-serif;
 	font-size:20px;
 	text-align: left;
+	font-weight:bold;
 }
 
 #first-reader, #first-recommender{
 	width: 50%;
 	float:left;
+}
+.show-all-system-stories{
+
 }
 
 

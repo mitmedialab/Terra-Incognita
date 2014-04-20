@@ -1,7 +1,7 @@
 <script type="text/javascript" src="../lib/jquery/js/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="../lib/underscore/underscore-1.5.2-min.js"></script>
 <script id="city-selector-template" type="text/template">
-  You have read about <%= visitedCityCount %>/1000 cities
+  You have read about <%= visitedCityCount %> cities. Wanna go somewhere else?
 </script>
 <script id="login-modal-template" type="text/template">
   <div id="login-modal" class="modal fade">
@@ -92,14 +92,18 @@
                 <table class="table table-condensed">
                   <thead>
                         <tr>
-                          <th>5 Things to Read About <%= city_name %> (<%=systemStories.size()%>)</th>
+                          <th><%=systemStories.size() == 1 ? "1" : (systemStories.size() >= 5 ? "5" : systemStories.size() )%> Things to Read About <%= city_name %> 
+                              <% if (systemStories.size() > 5) { %>
+                              (<a href="#" class="show-all-system-stories"><%=systemStories.size()%></a>)
+                              <% } %>
+                          </th>
                         </tr>
                       </thead>
                     <tbody>
 
                     
                       <% if (systemStories) { 
-                        var count = 0;
+                        var count = 1;
                         systemStories.each(function(story){ 
                           
 
@@ -113,10 +117,10 @@
                                 isThumbsUp = false;
                               }
                             }
-                            if (count<5){
+                            
                           %>
-                        <tr><td><% if (isThumbsUp) {%><span class="glyphicon glyphicon-thumbs-up"></span><%}%><a class="system-story" href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
-                    <% }
+                        <tr class="system-story-row" style="<%= count > 5 ? 'display:none' : '' %>"><td><% if (isThumbsUp) {%><span class="glyphicon glyphicon-thumbs-up"></span><%}%><a class="system-story" href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
+                    <% 
                         count++;
 
                       });
@@ -155,14 +159,15 @@
               </div>
               <% } %>
               </div>
-              <!--
-            <h4 class="submit-recommendation">Submit a recommendation about <%= city_name %></h4>
-            <form class="form-inline" role="form" style="margin-bottom:20px">
-              <div class="form-group">
-                <input style="min-width:200px" type="url" class="form-control" id="url_recommendation" placeholder="http://www.<%= randomWord %>.com">
-              </div>
-              <button type="submit" class="btn btn-default">Submit</button>
-            </form>-->
+             <% if (userStories && userStories.size() > 5) { %>
+              <h4 class="submit-recommendation">Submit a recommendation about <%= city_name %></h4>
+              <form class="form-inline" role="form" style="margin-bottom:20px;text-align:left">
+                <div class="form-group">
+                  <input style="min-width:200px" type="url" class="form-control" id="url_recommendation" placeholder="http://www.<%= randomWord %>.com">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+              </form>
+            <% } %>
           </div>
         
 

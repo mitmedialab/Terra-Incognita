@@ -20,7 +20,8 @@ def start_text_processing_queue(*args,**kwargs):
 	config = args[1]	
 	isRecommendation = args[2]
 
-	db_client = MongoClient()
+	uri = "mongodb://"+ config.get('db','user')+ ":"+ config.get('db','pass')+"@" +config.get('db','host') + ":" + config.get('db','port')
+	db_client = MongoClient(uri)
 	app.db = db_client[config.get('db','name')]
 	alreadyAdded = 0
 

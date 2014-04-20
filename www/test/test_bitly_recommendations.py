@@ -17,7 +17,8 @@ filepath = os.path.abspath(os.path.join(BASE_DIR, "..", CONFIG_FILENAME))
 config = ConfigParser.ConfigParser()
 config.read(filepath)
 
-db_client = MongoClient()
+uri = "mongodb://"+ config.get('db','user')+ ":"+ config.get('db','pass')+"@" +config.get('db','host') + ":" + config.get('db','port')
+db_client = MongoClient(uri)
 db = db_client[config.get('db','name')]
 db_collection = db[config.get('db','recommendation_item_collection')]
 doc_cursor = db_collection.find(timeout=False)

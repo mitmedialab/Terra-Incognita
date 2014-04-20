@@ -78,7 +78,8 @@ App.CityZoomedView = Backbone.View.extend({
 	events : {
 		"submit" : "submitRecommendation",
 		"click .glyphicon-thumbs-up,.glyphicon-thumbs-down": "submitHistoryItemRecommendation",
-		"click .system-story,.user-story": "logStoryClick"
+		"click .system-story,.user-story": "logStoryClick",
+		"click .show-all-system-stories" : "toggleSystemStories"
 	},
 	initialize: function (options) {
 		App.debug('App.CityZoomedView.initialize()');
@@ -100,6 +101,17 @@ App.CityZoomedView = Backbone.View.extend({
 			console.log("Saved city with tab")
 		});
 		this.render();
+	},
+	toggleSystemStories : function(event){
+		App.debug('App.CityZoomedView.showSystemStories()');
+		event.preventDefault();
+		if ($('.system-story-row:hidden').size() > 0){
+			$('.system-story-row').show();
+		} else{
+			$('.system-story-row:gt(4)').hide();
+		}
+		
+
 	},
 	logStoryClick : function(event){
 		App.debug('App.CityZoomedView.logStoryClick()');
@@ -148,7 +160,7 @@ App.CityZoomedView = Backbone.View.extend({
 		this.undelegateEvents();
 		this.unbind();
 		$(this.el).empty();
-		//this.remove();
+		
 	},
 	render: function () {
 		App.debug('App.CityZoomedView.render()');
