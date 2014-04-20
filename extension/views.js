@@ -16,8 +16,8 @@ App.MapView = Backbone.View.extend({
 		this.userModel = options.userModel;
 		this.userModel.on('change', this.render,this);
 		this.userModel.on('change:loginURL', this.renderLogin,this);
-		this.map = L.mapbox.map('map', 'kanarinka.hcc1900i');//random spot -- .setView([this.getRandomInRange(-90,90,3), this.getRandomInRange(-180,180,3)], 9);
-		
+		this.map = L.mapbox.map('map', 'kanarinka.hcc1900i', { zoomControl:false });
+
 		App.map = this.map;
 		this.citySelectorView = new App.CitySelectorView({cityCollection: this.cityCollection, model: this.userModel});
 		
@@ -144,6 +144,7 @@ App.CityZoomedView = Backbone.View.extend({
 	
 	clearAll: function(){
 		App.debug('App.CityZoomedView.clearAll()');
+		this.minimap.removeFrom(App.map);
 		this.undelegateEvents();
 		this.unbind();
 		$(this.el).empty();
@@ -153,6 +154,23 @@ App.CityZoomedView = Backbone.View.extend({
 		App.debug('App.CityZoomedView.render()');
 		
 		App.map.setView([this.model.get("lat"), this.model.get("lon")], 12);
+		var that = this;
+
+		
+			if (!this.minimap){
+
+				var markerPos = new L.LatLng(that.model.get("lat"), that.model.get("lon"));
+				var pinAnchor = new L.Point(5, 5);
+				var pin = new L.Icon({ iconUrl: "img/dot.png", iconAnchor: pinAnchor });
+				var cityMarker = L.marker(markerPos, { icon: pin });
+
+				
+				var tileLayer = L.mapbox.tileLayer('kanarinka.hcc1900i');
+				var cityLayerGroup = L.layerGroup([tileLayer, cityMarker]);
+				this.minimap = new L.Control.MiniMap(cityLayerGroup, {zoomLevelFixed:1, position:"bottomright"}).addTo(App.map);
+			}
+			
+		//random spot -- .setView([this.getRandomInRange(-90,90,3), this.getRandomInRange(-180,180,3)], 9);
 		
 		var html = this.template({ 	randomWord: this.randomWords[Math.floor(Math.random() * this.randomWords.length)], 
 									randomSaying: this.randomSayings[Math.floor(Math.random() * this.randomSayings.length)], 

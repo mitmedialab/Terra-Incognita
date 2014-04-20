@@ -23,45 +23,48 @@
   </div>
 </script>
 <script id="city-zoomed-reading-lists" type="text/template">  
-      
+        
         <div id="city-zoomed"><h1><%= city_name %>, <%= country_name %></h1>
         <% if (population != "0") { %>
           <p id="city-zoomed-population" class="city-stats"><%= isCapitalCity ? "Capital city, " : "" %> pop. <%= population %></p>
         <% } %>
-          
-          <div class="city-stats">
-
-
-            <% if (false) { %>
-            <% //if (cityStats) { 
+          <div id="go-now">
+              <a href="<%= serverURL %>go/<%= userID %>/<%= cityID %>?r=<%= isRandomCity %>" role="button" class="btn btn-lg btn-danger btn-go"><%= randomSaying %></a>
+              
+          </div> 
+          <div class="city-stats">            
+            <% if (cityStats) { 
               %>
-                <img src="../img/hr.png" style="margin-bottom:10px">
-                <% if (cityStats.get("firstVisitUsername").length ==0) { %>
-                    <p><strong>First Reader:</strong> Nobody! You could be the first.</p>
-                <%} else {%>
-                    <p> <strong>First Reader:</strong> <%= cityStats.get("firstVisitUsername") %></p>
-                <% } %>
+               <div id="top-reader">
+                <!--
+                
+                  <% if (cityStats.get("firstVisitUsername").length ==0) { %>
+                      <p><strong>First Reader:</strong> Nobody! You could be the first.</p>
+                  <%} else {%>
+                      <p> <strong>First Reader:</strong> <%= cityStats.get("firstVisitUsername") %></p>
+                  <% } %>
 
+                -->
                 <% if (!_.isEmpty(cityStats.get("mostRead")) ) { %>
                   <p><strong>Top Reader of <%= city_name %>:</strong> <%= cityStats.get("mostRead")["username"] %> 
                   <% if (cityStats.get("mostRead")["isCurrentUser"] == "true"){%> - YOU! <% } %>(<%= cityStats.get("mostRead")["count"] %>)
                   </p>
                 <% } %>
 
-                <% if (cityStats.get("firstVisitUsername").length !=0 
+                <!--<% if (cityStats.get("firstVisitUsername").length !=0 
                         && !_.isEmpty(cityStats.get("mostRead")) 
                         && cityStats.get("mostRead")["isCurrentUser"] != "true" ) 
                   { %>
                   <p><em>Read <%= cityStats.get("mostRead")["count"] - cityStats.get("currentUserStoryCount") + 1 %> more articles to be the Top Reader.</em> </p>
-                  <% } %>
-
-                <img src="../img/hr.png" style="margin-bottom:10px">
-
-                <% if (cityStats.get("firstRecommendationUsername").length ==0) { %>
+                  <% } %>-->
+                  </div>
+        
+                <div id="top-recommender">
+                <!--<% if (cityStats.get("firstRecommendationUsername").length ==0) { %>
                   <p><strong>First Recommender:</strong> Nobody! You could be the first.</p>
                 <%} else {%>
                   <p><strong>First Recommender:</strong> <%= cityStats.get("firstRecommendationUsername") %></p>
-                <% } %>
+                <% } %>-->
 
                 
 
@@ -71,18 +74,18 @@
                 <% } %>
                 
                   
-                  <% if (cityStats.get("firstRecommendationUsername").length !=0 
+                  <!--<% if (cityStats.get("firstRecommendationUsername").length !=0 
                         && !_.isEmpty(cityStats.get("mostRecommendations")) 
                         && cityStats.get("mostRecommendations")["isCurrentUser"] != "true" ) { %>
                       
-                      <p><em>Recommend <%= cityStats.get("mostRecommendations")["count"] - cityStats.get("currentUserRecommendationCount") + 1 %> more articles to be the Top Recommender.</em></p>
+                      <p><em>Recommend <%= cityStats.get("mostRecommendations")["count"] - cityStats.get("currentUserRecommendationCount") + 1 %> more articles to be the Top Recommender.</em></p>-->
                      
                   <% } %>
-                </p>
+                </div>
             <% } %>
 
 
-            <img src="../img/hr.png">
+            <!--<img src="../img/hr.png">-->
             <div id="what-people-read">
               <% if (systemStories && systemStories.size() > 0) { %>
               <div id="what-others-read">
@@ -98,7 +101,7 @@
                       <% if (systemStories) { 
                         var count = 0;
                         systemStories.each(function(story){ 
-                          count++;
+                          
 
                         rec = story.get('recommended');
                             hasBeenReviewed = (rec != null);
@@ -113,15 +116,16 @@
                             if (count<5){
                           %>
                         <tr><td><% if (isThumbsUp) {%><span class="glyphicon glyphicon-thumbs-up"></span><%}%><a class="system-story" href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
-                    <% }});
+                    <% }
+                        count++;
+
+                      });
                       } %>
                     </tbody>
                 </table> 
               </div> 
               <% } %>
-              <div id="go-now">
-                  <a href="<%= serverURL %>go/<%= userID %>/<%= cityID %>?r=<%= isRandomCity %>" role="button" class="btn btn-lg btn-danger btn-go"><%= randomSaying %></a>
-              </div> 
+
               <% if (userStories && userStories.size() > 0) { %>
               <div id="what-you-read">
                 <table class="table table-condensed">

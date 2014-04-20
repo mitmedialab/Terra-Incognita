@@ -1,5 +1,5 @@
 #map{
-	width:50%;height:100%;position:absolute;top:0;bottom:0;
+	width:60%;height:100%;position:absolute;top:0;bottom:0;
 }
 .navbar-inverse {
 	background-color: transparent;
@@ -20,7 +20,7 @@ a.navbar-brand {
 	/*background: rgba(255,255,255,0.5);*/
 	padding: 5px 10px;
 	border: 1px solid #ddd;
-	width: 50%;
+	width: 40%;
 	text-align: center;
 	overflow-y: scroll;
 	height: 100%;
@@ -85,20 +85,33 @@ font-size: 14px;
 z-index: 1000;
 
 }
-
+#go-now{
+	/*position: absolute;
+top: 65%;
+left: 20%;*/
+}
 .btn-go{
 	font-family: Fondamento, serif;
 }
 .submit-recommendation{
 	margin-top:20px;
-	font-family: Fondamento, serif;
+	font-family: 'Helvetica Neue', sans-serif;
+	font-size:20px;
+	text-align: left;
+}
+
+#first-reader, #first-recommender{
+	width: 50%;
+	float:left;
 }
 
 
 
 
-
 /* MAP CLASSES */
+.leaflet-control-minimap{
+	margin-bottom:90px !important;
+}
 .leaflet-control-zoom{
 	position:absolute;
 	top:55px;
