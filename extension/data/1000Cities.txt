@@ -1,4 +1,4 @@
-var CITIES_RAW_DATA = {
+{
   "cities" : [
     {
       "geonames_id" : 2507480,
@@ -20001,4 +20001,4 @@ var CITIES_RAW_DATA = {
       "west" : 1
     }
   ]
-};
+}

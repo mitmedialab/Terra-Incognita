@@ -83,7 +83,8 @@ sudo service cliff start
 UPDATING FROM GIT:
 Go to /usr/local/lib/cliff
 sudo service cliff stop
-git fetch
+git fetch --all
+git reset --hard origin/master
 sudo mvn compile
 sudo service cliff start
 
@@ -150,6 +151,16 @@ db.terra_incognita.users.update({"_id": { "$oid" : "52dbeee6bd028634678cd069" } 
 INTEGRATING WITH FLASK-LOGIN & PERSONA
 -----------------------------------------------------------
 http://stackoverflow.com/questions/21033870/how-to-run-flask-login-flask-browserid-and-flask-sqlalchemy-in-harmony
+
+TO REDO 1000 CITIES FILE
+-----------------------------------------------------------
+DOwnload from Google spreadsheet
+Import into Refine
+Make sure to set char encoding to UTF-8!!!
+Sort by continent_name, then by country_name then by city_name
+Export>Templating, make "cities" the main array in the file
+Open up file and replace nulls with 0's
+Save it as variable in 1000cities.js file
 
 CLEANING MEDIACLOUD SOURCES FILE WITH REGEXES
 -----------------------------------------------------------
