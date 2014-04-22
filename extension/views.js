@@ -47,8 +47,8 @@ App.MapView = Backbone.View.extend({
 	
 	render: function () {
 		App.debug('App.MapView.render()')
-		if (this.userModel.get('authenticated')) {	
-			$("#hello").html('Hello, ' + this.userModel.get('userID'));
+		if (this.userModel.get('username')) {	
+			$("#hello").html('Hello, ' + this.userModel.get('username'));
 		} 
 		
 		return this;

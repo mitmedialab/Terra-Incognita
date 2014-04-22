@@ -189,7 +189,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
 					chrome.history.search({text: '', startTime:startCollecting, maxResults:1000000000}, function(results) 
 						{ 
 							
-							console.log("logging " + DAYS_HISTORY + " days browsing history"); 
+							
 							
 							for (var i = 0;i<results.length;i++){
 								var result = results[i];

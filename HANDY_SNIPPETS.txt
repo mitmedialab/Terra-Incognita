@@ -97,6 +97,10 @@ Start Celery Flower on 5555: celery flower
 Celery Flower -- terra-incognita.co:5555/ OR http://127.0.0.1:5555/
 Celery flower -- consider how to secure (password, SSL, only on launch)
 
+
+on BERYL
+sudo /etc/init.d/celeryd start/stop/status/restart
+
 RABBIT MQ
 -----------------------------------------------------------
 Mgmt plugin: http://localhost:15672

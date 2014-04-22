@@ -5,7 +5,8 @@ App.UserModel = Backbone.Model.extend({
 		authenticated: false,
 		loginURL:'',
 		userID:'',
-		userCityVisits:[]
+		userCityVisits:[],
+		username:''
 	},
 	initialize: function () {
 		App.debug('App.UserModel.initialize()')
@@ -71,7 +72,8 @@ App.UserModel = Backbone.Model.extend({
 	loadUser: function(json){
 		App.debug('App.UserModel.loadUser()');
 		this.set({	
-					'userCityVisits' : json.cities
+					'userCityVisits' : json.cities,
+					'username' : json.username
 				 });
 		chrome.storage.local.set({'userCityVisits': json.cities}, function() {
           App.debug('Updated userCityVisits saved to local storage');

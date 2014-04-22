@@ -144,7 +144,7 @@ def user(userID='52dbeee6bd028634678cd069'):
 	]
 	if (userID is not None):
 		
-		userData = {"userID":userID,"cities":[], "last10HistoryItems":[]}
+		userData = {"userID":userID,"username":getUsername(userID), "cities":[]}
 		
 		# removing last 10 history items for the moment
 		#cursor = app.db_user_history_collection.find({ "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY },"userID":userID }, {"typedCount":1,"title":1,"url":1,"lastVisitTime":1,"geodata.primaryCities":1,"visitCount":1}).sort([("lastVisitTime",-1)]).skip(0).limit(10)
@@ -517,8 +517,8 @@ def processURL():
 	print "Receiving new URL"
 	historyObject = json.loads(request.form['logURL'])
 	args = (historyObject, config, False);
-
-	start_text_processing_queue.delay(*args)
+	start_text_processing_queue(*args)
+	#start_text_processing_queue.delay(*args)
 	return 'Celery is processing your URL dude - ' + historyObject["url"]
 
 if __name__ == '__main__':
