@@ -1,0 +1,310 @@
+<html>
+    <head>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        .form-group, h5{
+            margin-bottom: 40px;
+        }
+
+        </style>
+    </head>
+    <body>
+        <div class="container">
+        <h1>Terra Incognita Short Pre-Study Survey</h1>
+        <h5>Contact <a href="mailto:dignazio@mit.edu">Catherine D'Ignazio</a> with questions</h5>
+        {% if errorCount %}
+            <h3 style="color:red">Please fill out the {{errorCount}} missing questions in red below.</h3>
+        {% endif %}
+        <form role="form" action="/presurvey/{{userID}}" method="POST">
+          
+        {% set Q1 = "Q1gender" %}
+
+          <div class="form-group" {% if error[Q1] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q1}}">What gender best describes you?</label>
+            <div class="radio">
+              <label>
+                <input type="radio" name="{{Q1}}" value="female" {% if responses[Q1] == "female" %}checked {% endif %}>
+                Female
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="{{Q1}}" value="male" {% if responses[Q1] == "male" %}checked {% endif %}>
+                Male
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="{{Q1}}" value="transgender" {% if responses[Q1] == "transgender" %}checked {% endif %}>
+                Transgender
+              </label>
+            </div>
+          </div>
+          
+          {% set Q2 = "Q2country" %}
+          <div class="form-group" {% if error[Q2] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q2}}">What is your country of origin?</label>
+            <input type="text" class="form-control" name="{{Q2}}" placeholder="Country of origin" value={{responses[Q2]}}>
+          </div>
+
+          {% set Q3 = "Q3fair" %}
+          <div class="form-group" {% if error[Q3] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q3}}">Do you think your country of origin is represented fairly in news media? </label>
+            <div class="radio">
+              <label>
+                <input type="radio" name="{{Q3}}" value="yes" {% if responses[Q3] == "yes" %}checked {% endif %}>
+                Mostly yes
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="{{Q3}}" value="no" {% if responses[Q3] == "no" %}checked {% endif %}>
+                Mostly no
+              </label>
+            </div>
+            </div>
+
+            {% set Q4 = "Q4profession" %}
+            <div class="form-group" {% if error[Q4] == 1 %} style="color:red"{% endif %}>
+                <label for="{{Q4}}">What is your profession?</label>
+                <input type="text" class="form-control" name="{{Q4}}" placeholder="Profession" value={{responses[Q4]}}>
+            </div>
+
+            {% set Q5 = "Q5language" %}
+            <div class="form-group" {% if error[Q5] == 1 %} style="color:red"{% endif %}>
+                <label for="{{Q5}}">Which sentence best describes your language experience?</label>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q5}}" value="none" {% if responses[Q5] == "none" %}checked {% endif %}>
+                    I have never studied or spoken a foreign language.
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q5}}" value="studied" {% if responses[Q5] == "studied" %}checked {% endif %}>
+                    I have studied or have some basic ability in a foreign language.
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q5}}" value="fluent" {% if responses[Q5] == "fluent" %}checked {% endif %}>
+                    I speak more than one language fluently.
+                  </label>
+                </div>
+            </div>
+
+            {% set Q6 = "Q6newsreading" %}
+            <div class="form-group" {% if error[Q6] == 1 %} style="color:red"{% endif %}>
+                <label for="{{Q6}}">Which sentence best describes your weekly newsreading experience?</label>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q6}}" value="notmuch" {% if responses[Q6] == "notmuch" %}checked {% endif %}>
+                    I don't read much global news.
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q6}}" value="mediaattention" {% if responses[Q6] == "mediaattention" %}checked {% endif %}>
+                    I read about other countries that are getting media attention (e.g. Ukraine).
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q6}}" value="regularlyfollowcountries" {% if responses[Q6] == "regularlyfollowcountries" %}checked {% endif %}>
+                    I keep up with particular countries or regions on a regular basis whether or not they are in the headlines.
+                  </label>
+                </div>
+            </div>
+
+            {% set Q7 = "Q7newsimportance" %}
+            <div class="form-group" {% if error[Q7] == 1 %} style="color:red"{% endif %}>
+                <label for="{{Q7}}">Do you think reading news about countries other than your own is important?</label>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q7}}" value="notreally" {% if responses[Q7] == "notreally" %}checked {% endif %}>
+                    Not really.
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q7}}" value="yesbuttime" {% if responses[Q7] == "yesbuttime" %}checked {% endif %}>
+                    Yes, but I don't always have time for it.
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q7}}" value="yesandeffort" {% if responses[Q7] == "yesandeffort" %}checked {% endif %}>
+                    Yes, and I make a concerted effort to do so.
+                  </label>
+                </div>
+            </div>
+
+            {% set Q8 = "Q8family" %}
+             <div class="form-group" {% if error[Q8] == 1 %} style="color:red"{% endif %}>
+                <label for="{{Q8}}">How many of your family members that you correspond with frequently live in a different country from you?</label>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q8}}" value="0" {% if responses[Q8] == "0" %}checked {% endif %}>
+                    0
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q8}}" value="1" {% if responses[Q8] == "1" %}checked {% endif %}>
+                    1
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q8}}" value="2" {% if responses[Q8] == "2" %}checked {% endif %}>
+                    2
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q8}}" value="3" {% if responses[Q8] == "3" %}checked {% endif %}>
+                    3
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q8}}" value="4" {% if responses[Q8] == "4" %}checked {% endif %}>
+                    4 or more
+                  </label>
+                </div>
+            </div>
+
+            {% set Q9 = "Q9friendsabroad" %}
+            <div class="form-group" {% if error[Q9] == 1 %} style="color:red"{% endif %}>
+                <label for="{{Q9}}">How many friends do you correspond with frequently who are from your current country of residence but who are living abroad? (e.g. if you live in the US, how many friends are from the US but living in foreign countries?)</label>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q9}}" value="0" {% if responses[Q9] == "0" %}checked {% endif %}>
+                    0
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q9}}" value="1" {% if responses[Q9] == "1" %}checked {% endif %}>
+                    1
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q9}}" value="2" {% if responses[Q9] == "2" %}checked {% endif %}>
+                    2
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q9}}" value="3" {% if responses[Q9] == "3" %}checked {% endif %}>
+                    3
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q9}}" value="4" {% if responses[Q9] == "4" %}checked {% endif %}>
+                    4 or more
+                  </label>
+                </div>
+            </div>
+
+            {% set Q10 = "Q10foreignfriends" %}
+            <div class="form-group" {% if error[Q10] == 1 %} style="color:red"{% endif %}>
+                <label for="{{Q10}}">How many friends do you correspond with frequently who are from countries other than your current country of residence? (e.g. if you live in the US, how many friends do you have who are from other countries?)</label>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q10}}" value="0" {% if responses[Q10] == "0" %}checked {% endif %}>
+                    0
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q10}}" value="1" {% if responses[Q10] == "1" %}checked {% endif %}>
+                    1
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q10}}" value="2" {% if responses[Q10] == "2" %}checked {% endif %}>
+                    2
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q10}}" value="3" {% if responses[Q10] == "3" %}checked {% endif %}>
+                    3
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q10}}" value="4" {% if responses[Q10] == "4" %}checked {% endif %}>
+                    4 or more
+                  </label>
+                </div>
+            </div>
+
+            {% set Q11 = "Q11travel" %}
+            <div class="form-group" {% if error[Q11] == 1 %} style="color:red"{% endif %}>
+                <label for="{{Q11}}">In the last year, how many times did you travel to a country other than your current country of residence?</label>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q11}}" value="0" {% if responses[Q11] == "0" %}checked {% endif %}>
+                    0
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q11}}" value="1" {% if responses[Q11] == "1" %}checked {% endif %}>
+                    1
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q11}}" value="2" {% if responses[Q11] == "2" %}checked {% endif %}>
+                    2
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q11}}" value="3" {% if responses[Q11] == "3" %}checked {% endif %}>
+                    3 or more
+                  </label>
+                </div>
+            </div>
+
+            {% set Q12 = "Q12liveabroad" %}
+            <div class="form-group" {% if error[Q12] == 1 %} style="color:red"{% endif %}>
+                <label for="{{Q12}}">How much total time have you spent living abroad?</label>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q12}}" value="0" {% if responses[Q12] == "0" %}checked {% endif %}>
+                    None
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q12}}" value="1" {% if responses[Q12] == "1" %}checked {% endif %}>
+                    3-12 months
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{Q12}}" value="2" {% if responses[Q12] == "2" %}checked {% endif %}>
+                    More than 12 months
+                  </label>
+                </div>
+                
+            </div>
+
+
+
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    
+    </body>
+</html>

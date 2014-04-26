@@ -38,8 +38,26 @@ chrome.runtime.onMessage.addListener(
 		if (request.msg == "checkLoggedIn")
 		{
 				checkLoggedIn( function(){
-					sendResponse({isLoggedIn: IS_LOGGED_IN, loginURL : SERVER_URL + LOGIN_PAGE, userID : USER_ID});
+					sendResponse({isLoggedIn: IS_LOGGED_IN, serverURL : SERVER_URL, loginURL : SERVER_URL + LOGIN_PAGE, userID : USER_ID});
 				});
+				return true;
+		}
+		if (request.msg == "checkFormsFilledOut")
+		{
+				var xhr = new XMLHttpRequest();
+				
+				xhr.open("GET",SERVER_URL + 'formsfilledout/' + USER_ID + '/', true);
+				
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4) {
+						
+						forms = JSON.parse(xhr.responseText);
+						console.log(forms);
+						
+						sendResponse({hasSignedConsentForm: forms["hasSignedConsentForm"], hasCompletedPreSurvey: forms["hasCompletedPreSurvey"]});
+					}
+				}
+				xhr.send();
 				return true;
 		}
 		
@@ -188,9 +206,6 @@ chrome.runtime.onInstalled.addListener(function(details) {
 
 					chrome.history.search({text: '', startTime:startCollecting, maxResults:1000000000}, function(results) 
 						{ 
-							
-							
-							
 							for (var i = 0;i<results.length;i++){
 								var result = results[i];
 								if (keepURL(result.url)){

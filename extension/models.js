@@ -12,6 +12,8 @@ App.UserModel = Backbone.Model.extend({
 		App.debug('App.UserModel.initialize()')
 		_.bindAll(this, 'checkUserStatus');
 		_.bindAll(this, 'logUserStatus');
+		_.bindAll(this, 'checkUserForms');
+		_.bindAll(this, 'logUserForms');
 		
 		var that = this;
 		//User's city visits are cached in localstorage or else loaded from file
@@ -34,21 +36,31 @@ App.UserModel = Backbone.Model.extend({
 		App.debug('App.UserModel.checkUserStatus()');
 		var that = this;
 		chrome.runtime.sendMessage({msg: "checkLoggedIn"}, function(response) {
-			that.logUserStatus(response.isLoggedIn, response.loginURL, response.userID);
+			that.logUserStatus(response.isLoggedIn, response.serverURL,response.loginURL, response.userID);
 		});
 	},
-	logUserStatus: function(isLoggedIn, loginURL, userID){
+	checkUserForms: function(){
+		App.debug('App.UserModel.checkUserForms()');
+		var that = this;
+		chrome.runtime.sendMessage({msg: "checkFormsFilledOut"}, that.logUserForms);
+	},
+	logUserStatus: function(isLoggedIn, serverURL, loginURL, userID){
 		App.debug('App.UserModel.logUserStatus()');
 		if (isLoggedIn){
 			App.debug("User is logged in");
-			this.set({"authenticated": true, "loginURL":loginURL, "userID":userID});
-			
+			this.set({"authenticated": true, "loginURL":loginURL, "serverURL":serverURL, "userID":userID});
+			this.checkUserForms();
 		}
 		else{
 			App.debug("User is not logged in.");
 			App.debug("LoginURL is: " + loginURL);
-			this.set({"authenticated": false, "loginURL":loginURL, "userID":userID});
+			this.set({"authenticated": false, "serverURL":serverURL, "loginURL":loginURL, "userID":userID});
 		}
+	},
+	logUserForms: function(response){
+		App.debug('App.UserModel.logUserForms()');
+		this.set({"hasSignedConsentForm": response["hasSignedConsentForm"], "hasCompletedPreSurvey":response["hasCompletedPreSurvey"]});
+
 	},
 	getCityVisitCount: function(geonames_id){
 		var userCityVisits = this.get("userCityVisits");

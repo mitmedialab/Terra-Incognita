@@ -142,12 +142,13 @@ def consentForm(userID):
 	if request.method == 'GET':
 		user = app.db_user_collection.find({ "_id": ObjectId(userID)}).next()
 		
-		if "signature" in user and 'signature_date' in user and 'researcher_signature_date' in user:
+		if "signed_consent" in user:
 			signature = user['signature']
 			signature_date = user['signature_date']
 			researcher_signature_date = user['researcher_signature_date']
 	elif request.method == 'POST':
 		user = app.db_user_collection.find({ "_id": ObjectId(userID)}).next()
+		user["signed_consent"] = 1
 		user["signature"] = request.form['signature']
 		user["signature_date"] = request.form['signature_date']
 		user["researcher_signature_date"] = today.strftime('%m-%d-%Y')
@@ -159,14 +160,56 @@ def consentForm(userID):
 			error = "Please enter today's date."
 		else:
 			app.db_user_collection.save(user)
-			user = app.db_user_collection.find({ "_id": ObjectId(userID)}).next()
-			return redirect('/presurvey')
+			if 'filled_out_presurvey' in user and user['filled_out_presurvey'] == 1:
+				return redirect('/login')
+			else:
+				return redirect('/presurvey/'+userID)
 
 	return render_template('couhes/consentform.htm', error=error, userID=userID, today=today.strftime('%m-%d-%Y'), signature=signature, signature_date=signature_date, researcher_signature_date=researcher_signature_date)
 
+@app.route('/formsfilledout/<userID>/')
+@app.route('/formsfilledout/<userID>')
+def formsfilledout(userID):
+	hasSignedConsentForm = app.db_user_collection.find({ "_id": ObjectId(userID),"signed_consent":1}).count()
+	hasCompletedPreSurvey = app.db_user_collection.find({ "_id": ObjectId(userID),"filled_out_presurvey":1}).count()
+	return json.dumps({"hasSignedConsentForm":hasSignedConsentForm, "hasCompletedPreSurvey":hasCompletedPreSurvey}, sort_keys=True, indent=4, default=json_util.default) 
+
 @app.route('/presurvey/<userID>', methods=['GET', 'POST'])
 def presurvey(userID):
-	return "ok"
+	error={}
+	errorCount = 0
+	responses={}
+	if request.method == 'POST':
+		user = app.db_user_collection.find({ "_id": ObjectId(userID)}).next()
+		fields = 	[	'Q1gender',
+						'Q2country',
+						'Q3fair',
+						'Q4profession',
+						'Q5language',
+						'Q6newsreading',
+						'Q7newsimportance',
+						'Q8family',
+						'Q9friendsabroad',
+						'Q10foreignfriends',
+						'Q11travel',
+						'Q12liveabroad'	
+					]
+		for field in fields:
+			if field in request.form and len(request.form[field]) > 0:
+				user[field]=request.form[field]
+				error[field]=0
+			else:
+				error[field]=1
+				errorCount+=1
+		if errorCount==0:
+			user["filled_out_presurvey"] =1
+			app.db_user_collection.save(user)
+			return redirect('/login')
+		else:
+			responses=request.form
+		print error
+
+	return render_template('presurvey.html', userID=userID, error=error,errorCount=errorCount, responses=responses)
 
 #Send user their city data
 #consider storing 1000 cities data in localstorage for faster retrieval later
@@ -535,11 +578,14 @@ def processHistory(userID):
 @app.route('/login/', methods=['GET', 'POST'])
 def loginpage():
 	error = ""
+	userID = ""
 	hasSignedConsentForm = False
-	userID = session['user_id']
-	if userID:
-		hasSignedConsentForm = app.db_user_collection.find({ "_id": ObjectId(userID), "signature":{"$exists":1}}).count() >=1
-		hasCompletedPreSurvey = app.db_user_collection.find({ "_id": ObjectId(userID), "survey":{"$exists":1}}).count() >=1
+	hasCompletedPreSurvey = False
+	if "user_id" in session:
+		userID = session['user_id']
+	if userID != "":
+		hasSignedConsentForm = app.db_user_collection.find({ "_id": ObjectId(userID), "signed_consent":1}).count() >=1
+		hasCompletedPreSurvey = app.db_user_collection.find({ "_id": ObjectId(userID), "filled_out_presurvey":1}).count() >=1
 
 	if request.method == 'POST':
 		oldusername = request.form['oldusername']
@@ -557,7 +603,7 @@ def loginpage():
 	return render_template('login.html', error=error, hasSignedConsentForm=hasSignedConsentForm,hasCompletedPreSurvey=hasCompletedPreSurvey)
 
 
-# Receives a single URL object from user and starts celery text processing queue
+# Receives a single URL object from user and logs it through the text processing queue
 @app.route('/monitor/', methods=['POST','GET'])
 def processURL():
 	print "Receiving new URL"

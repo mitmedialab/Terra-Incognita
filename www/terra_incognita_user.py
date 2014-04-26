@@ -21,7 +21,10 @@ def get_user_from_DB_row(row):
 
 def create_new_user(email):
 	t = email.split('@')
-	herUsername = t[0]
-	firstLoginDate = time.time() * 1000
-	lastLoginDate = time.time() * 1000
-	return TIUser(email, firstLoginDate=firstLoginDate, lastLoginDate=lastLoginDate, username=herUsername)
+	stuff = {}
+	stuff["email"] = email
+	stuff["username"] = t[0]
+	stuff["firstLoginDate"] = time.time() * 1000
+	stuff["lastLoginDate"] = time.time() * 1000
+
+	return TIUser(stuff)

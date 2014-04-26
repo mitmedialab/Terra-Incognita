@@ -16,6 +16,7 @@ App.MapView = Backbone.View.extend({
 		this.userModel = options.userModel;
 		this.userModel.on('change', this.render,this);
 		this.userModel.on('change:loginURL', this.renderLogin,this);
+		this.userModel.on('change:hasSignedConsentForm', this.renderFormsNotification,this);
 		this.map = L.mapbox.map('map', 'kanarinka.hcc1900i', { zoomControl:false });
 
 		App.map = this.map;
@@ -59,6 +60,13 @@ App.MapView = Backbone.View.extend({
 			this.loginView = new App.LoginView({ model: this.userModel });
 		else if (this.userModel.get('loginURL') != ''){
 			$("#loginURL, #changeUsernameURL").attr("href", this.userModel.get('loginURL'));
+		}
+	},
+	renderFormsNotification: function(){
+		App.debug('App.MapView.renderFormsNotification()')
+		console.log("BLADGASLDSA")
+		if ( this.userModel.get('hasSignedConsentForm') != null && (!this.userModel.get('hasSignedConsentForm') || !this.userModel.get('hasCompletedPreSurvey'))){
+			this.formsNotificationView = new App.FormsNotificationView({ model: this.userModel });
 		}
 	},
 	/*
@@ -339,8 +347,7 @@ App.LoginView = Backbone.View.extend({
 		App.debug('App.LoginView.initialize()');
 		this.options = options || {};
 		_.bindAll(this, 'render');
-		_.bindAll(this, 'login');
-		_.bindAll(this, 'error');
+		
 		//this.model.on('unauthorized', this.error);
 		//this.model.on('change',this.render,this);
 		this.render();
@@ -357,29 +364,49 @@ App.LoginView = Backbone.View.extend({
 		//call window into being
 		this.$el.find('#login-modal').modal();
 		
-		/*this.$el=$("#loggedIn");
-		
-		if (this.model.get("authenticated") == true)
-			this.$el.html("You are logged in to Terra Incognita. <a href='"+this.model.get("loginURL")+"'>Logout</a>");
-		else
-			this.$el.html("You are not logged into Terra Incognita. <a href='"+this.model.get("loginURL")+"'>Login now</a>");
-			//window.location.href=this.model.get("loginURL");
-		*/
 		return this;
 	},
 	
-	login: function (event) {
-		App.debug('App.LoginView.login()');
-		event.preventDefault();
-		username = $('input[name=username]', this.$el).val();
-		password = $('input[name=password]', this.$el).val();
-		$('input[name=username]', this.$el).val('');
-		$('input[name=password]', this.$el).val('');
-		this.model.signIn(username, password);
+	
+});
+/**
+ * FormsNotificationView modal.
+ */
+App.FormsNotificationView = Backbone.View.extend({
+	el: $("#forms-notification-view"),
+	template: TEMPLATES['forms-modal-template'],
+	initialize: function (options) {
+		App.debug('App.FormsNotificationView.initialize()');
+		this.options = options || {};
+		_.bindAll(this, 'render');
+		
+		//this.model.on('unauthorized', this.error);
+		//this.model.on('change',this.render,this);
+		this.render();
+	},
+	events: {
+		'click button': 'login'
+	},
+	render: function () {
+		App.debug('App.FormsNotificationView.render()');
+		var linkURL = this.model.get("serverURL");
+		if (this.model.get("hasSignedConsentForm") == 0){
+			linkURL = linkURL + "consent/" + this.model.get("userID")
+		} else {
+			linkURL = linkURL + "presurvey/" + this.model.get("userID")
+		}
+		var html = this.template({ linkURL : linkURL, hasSignedConsentForm : this.model.get("hasSignedConsentForm"), hasCompletedPreSurvey : this.model.get("hasCompletedPreSurvey") });
+		this.$el.html(html);
+		
+		//call window into being
+		
+
+		this.$el.find('#forms-modal').modal();
+		$('#forms-modal').on('hidden.bs.modal', function (e) {
+		  $('body').html("<a href='"+linkURL +"'>Click here to fill out the forms.</a>");
+		})
+		return this;
 	},
 	
-	error: function (message) {
-		$('.message', this.$el).html(message);
-		$('input[name=username]', this.$el).focus();
-	}
+	
 });

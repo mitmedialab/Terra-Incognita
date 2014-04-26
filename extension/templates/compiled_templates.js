@@ -17,6 +17,21 @@ __p+='\n  <div id="login-modal" class="modal fade">\n    <div class="modal-dialo
 }
 return __p;
 }
+TEMPLATES['forms-modal-template']=function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='\n  <div id="forms-modal" class="modal fade">\n    <div class="modal-dialog">\n      <div class="modal-content">\n        <div class="modal-header">\n          \n          <h4 class="modal-title">Incomplete Forms</h4>\n        </div>\n        <div class="modal-body">\n          ';
+ if (hasSignedConsentForm == "0") { 
+__p+='\n          <p>Sorry! You cannot use Terra Incognita until you fill out the user consent form and a short survey. </p>\n          ';
+ } else { 
+__p+='\n            <p>Sorry! You need to fill out a short survey before using Terra Incognita. It will take about 2 minutes.</p>\n          ';
+ } 
+__p+='\n        </div>\n        <div class="modal-footer">\n          \n          <a role="button" class="btn btn-primary" href="'+
+((__t=( linkURL ))==null?'':__t)+
+'">Click here to complete your form.</a>\n        </div>\n      </div>\n    </div>\n  </div>\n';
+}
+return __p;
+}
 TEMPLATES['city-zoomed-reading-lists']=function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
@@ -162,4 +177,4 @@ __p+='\n              <h4 class="submit-recommendation">Submit a recommendation 
 __p+='\n          </div>\n        \n\n\n        </div>\n        \n        \n';
 }
 return __p;
-} 
+}

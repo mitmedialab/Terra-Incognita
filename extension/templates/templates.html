@@ -22,6 +22,29 @@
     </div>
   </div>
 </script>
+<script id="forms-modal-template" type="text/template">
+  <div id="forms-modal" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          
+          <h4 class="modal-title">Incomplete Forms</h4>
+        </div>
+        <div class="modal-body">
+          <% if (hasSignedConsentForm == "0") { %>
+          <p>Sorry! You cannot use Terra Incognita until you fill out the user consent form and a short survey. </p>
+          <% } else { %>
+            <p>Sorry! You need to fill out a short survey before using Terra Incognita. It will take about 2 minutes.</p>
+          <% } %>
+        </div>
+        <div class="modal-footer">
+          
+          <a role="button" class="btn btn-primary" href="<%= linkURL %>">Click here to complete your form.</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
 <script id="city-zoomed-reading-lists" type="text/template">  
         
         <div id="city-zoomed"><h1><%= city_name %>, <%= country_name %></h1>

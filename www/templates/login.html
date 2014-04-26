@@ -4,51 +4,64 @@
         <script src="https://login.persona.org/include.js" type="text/javascript"></script>
         <script src="/js/cookies.js"></script>
         <script type="text/javascript">{{ auth_script|safe }}</script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     </head>
     <body>
+        <div class="container">
         {% if current_user.is_authenticated() %}
         <h1>Terra Incognita Dashboard</h1>
-        <h2>To Launch Terra Incognita</h2>
+        
+        {% if hasSignedConsentForm and hasCompletedPreSurvey %}
+        <hr>
+        <h3>You are ready to launch Terra Incognita!</h3>
         <p>Open a new tab in your browser with Cmd-T or Ctrl-T.</p>
+        
+        {% endif %}
+        
         <hr>
-        <h2>Login/Logout</h2>
-        <p><strong>You are currently logged in to Terra Incognita with the email address {{ current_user.email }}.</strong></p>
-         <button id="browserid-logout">Logout</button>
-        <script>
-            docCookies.setItem('terra-incognita-id', '{{ current_user.get_id() }}', 60*60*24*365);
-            
-        </script>
-        <hr>
-            <h2>User Study Consent Form</h2>
+            <h3>User Study Consent Form</h3>
             <p>
                 {% if hasSignedConsentForm == True %}
-                You have signed the user study consent form. <a href="/consent/{{ current_user.get_id() }}">Click here</a> to view and print the form.
+                Thanks - You have signed the user study consent form. <a href="/consent/{{ current_user.get_id() }}">Click here</a> to view and print the form.
+                
                 {% else %}
-                <a href="/consent/{{ current_user.get_id() }}">Click here</a> to sign the user study consent form.
+                <a href="/consent/{{ current_user.get_id() }}">Click here</a> to sign the user study consent form. You have to complete the consent form before using the software.
                 {% endif %}
             </p>   
-        {% if not hasCompletedPreSurvey %}
+        
         <hr>
-            <h2>Pre-Study Survey</h2>
+            <h3>Pre-Study Survey</h3>
+            {% if not hasCompletedPreSurvey %}
             <p>
-               <a href="/presurvey/{{ current_user.get_id() }}">Please complete the pre-study survey. </a>
-            </p>   
-        {% endif %}
+               <a href="/presurvey/{{ current_user.get_id() }}">Please complete the pre-study survey. </a> You have to complete the survey before using the software.
+            </p>  
+            {% else %}
+                Thanks - you completed the pre-study survey.
+            {% endif %}
+        
             <hr>
-            <h2>About Usernames</h2>
+            <h3>About Usernames</h3>
             <p><strong>Your current username is {{ current_user.username }}.</strong></p>
             <p>In Terra Incognita, your username is associated with how many articles you have read and recommended about a particular city <a href="/images/usernames.jpg">like this</a>. Your username is displayed on city leaderboards with a count. Your username is not associated with any individual urls, i.e. users cannot see the individual news articles you have read about a place, only the number of articles you have read about a place. You can change your username at any time.</p>
             {% if error %}
-                <h2 style="color:red">{{ error }}</h2>
+                <h3 style="color:red">{{ error }}</h3>
             {% endif %}
-            <h2>Change your username to: </h2>
+            <h3>Change your username to: </h3>
                 <form action="/login/" method="POST">
                     <input type="hidden" name="userID" value="{{ current_user.get_id() }}">
                     <input type="text" name="newusername" value="{{ current_user.username }}" >
                     <input type="hidden" name="oldusername" value="{{ current_user.username }}" >
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
-
+            <hr>
+            <h3>Login/Logout</h3>
+            <p><strong>You are currently logged in to Terra Incognita with the email address {{ current_user.email }}.</strong></p>
+             <button id="browserid-logout">Logout</button>
+            <script>
+                docCookies.setItem('terra-incognita-id', '{{ current_user.get_id() }}', 60*60*24*365);
+                
+            </script>
         {% else %}
             <h3>You are currently not logged in.</h3>
             <script>
@@ -56,5 +69,6 @@
             </script>
             <button id="browserid-login">Login</button>
         {% endif %}
+    </div>
     </body>
 </html>
