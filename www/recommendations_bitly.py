@@ -45,7 +45,7 @@ def get_recommended_bitly_url(cityID, bitlyToken):
 		#try just geo
 		results = bitly.search(place)
 		if len(results) > 0:
-			print "Non-Topic Recommendation " + results[0]["url"]
+			print "Non-Topic Recommendation " 
 			result = pick_longest_result(results)
 			return result["url"]
 		else:

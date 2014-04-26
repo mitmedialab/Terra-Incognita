@@ -6,12 +6,11 @@
         <script type="text/javascript">{{ auth_script|safe }}</script>
     </head>
     <body>
-        
-        
         {% if current_user.is_authenticated() %}
         <h1>Terra Incognita Dashboard</h1>
         <h2>To Launch Terra Incognita</h2>
         <p>Open a new tab in your browser with Cmd-T or Ctrl-T.</p>
+        <hr>
         <h2>Login/Logout</h2>
         <p><strong>You are currently logged in to Terra Incognita with the email address {{ current_user.email }}.</strong></p>
          <button id="browserid-logout">Logout</button>
@@ -19,7 +18,23 @@
             docCookies.setItem('terra-incognita-id', '{{ current_user.get_id() }}', 60*60*24*365);
             
         </script>
-            
+        <hr>
+            <h2>User Study Consent Form</h2>
+            <p>
+                {% if hasSignedConsentForm == True %}
+                You have signed the user study consent form. <a href="/consent/{{ current_user.get_id() }}">Click here</a> to view and print the form.
+                {% else %}
+                <a href="/consent/{{ current_user.get_id() }}">Click here</a> to sign the user study consent form.
+                {% endif %}
+            </p>   
+        {% if not hasCompletedPreSurvey %}
+        <hr>
+            <h2>Pre-Study Survey</h2>
+            <p>
+               <a href="/presurvey/{{ current_user.get_id() }}">Please complete the pre-study survey. </a>
+            </p>   
+        {% endif %}
+            <hr>
             <h2>About Usernames</h2>
             <p><strong>Your current username is {{ current_user.username }}.</strong></p>
             <p>In Terra Incognita, your username is associated with how many articles you have read and recommended about a particular city <a href="/images/usernames.jpg">like this</a>. Your username is displayed on city leaderboards with a count. Your username is not associated with any individual urls, i.e. users cannot see the individual news articles you have read about a place, only the number of articles you have read about a place. You can change your username at any time.</p>

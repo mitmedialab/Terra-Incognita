@@ -23,6 +23,7 @@ from cities_array import *
 import logging
 from random import shuffle,randint
 from text_processing.content_extraction import *
+import datetime
 
 
 # constants
@@ -45,7 +46,7 @@ app.geoserver = config.get('geoparser','geoserver_url')
 uri = "mongodb://"+ config.get('db','user')+ ":"+ config.get('db','pass')+"@" +config.get('db','host') + ":" + config.get('db','port')
 db_client = MongoClient(uri)
 app.db = db_client[config.get('db','name')]
-#app.db.authenticate(config.get('db','user'), config.get('db','pass'))
+
 app.db_user_history_collection = app.db[config.get('db','user_history_item_collection')]
 app.db_user_collection = app.db[config.get('db','user_collection')]
 app.db_recommendation_collection = app.db[config.get('db','recommendation_item_collection')]
@@ -130,6 +131,42 @@ def hello():
 def cities():
 	return app.send_static_file('1000cities.html')
 
+@app.route('/consent/<userID>', methods=['GET', 'POST'])
+def consentForm(userID):
+	error = ""
+	today = datetime.date.today()
+	signature = ''
+	signature_date = ''
+	researcher_signature_date = False
+
+	if request.method == 'GET':
+		user = app.db_user_collection.find({ "_id": ObjectId(userID)}).next()
+		
+		if "signature" in user and 'signature_date' in user and 'researcher_signature_date' in user:
+			signature = user['signature']
+			signature_date = user['signature_date']
+			researcher_signature_date = user['researcher_signature_date']
+	elif request.method == 'POST':
+		user = app.db_user_collection.find({ "_id": ObjectId(userID)}).next()
+		user["signature"] = request.form['signature']
+		user["signature_date"] = request.form['signature_date']
+		user["researcher_signature_date"] = today.strftime('%m-%d-%Y')
+		userID = request.form['userID']
+		
+		if user["signature"] == "":
+			error="Please enter your signature."
+		elif user["signature_date"] == "":
+			error = "Please enter today's date."
+		else:
+			app.db_user_collection.save(user)
+			user = app.db_user_collection.find({ "_id": ObjectId(userID)}).next()
+			return redirect('/presurvey')
+
+	return render_template('couhes/consentform.htm', error=error, userID=userID, today=today.strftime('%m-%d-%Y'), signature=signature, signature_date=signature_date, researcher_signature_date=researcher_signature_date)
+
+@app.route('/presurvey/<userID>', methods=['GET', 'POST'])
+def presurvey(userID):
+	return "ok"
 
 #Send user their city data
 #consider storing 1000 cities data in localstorage for faster retrieval later
@@ -382,11 +419,13 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 
 	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
 
-#Test Aggregation Pipeline db requests
-@app.route('/testdb/<userID>/<cityID>')
+#Test function for various things
 @app.route('/testdb/')
-def testdb(userID='52dbeee6bd028634678cd069',cityID=4930956):
-	return "hi"
+def testdb():
+	userID = "5340168960de7dd9d8394aa7"
+	app.db_user_collection.update({ "_id": ObjectId(userID)},{ "$set":{'signature':"boo"}})
+
+	return "Updated your user"
 
 def getUsername(userID):
 	doc = app.db_user_collection.find({"_id": ObjectId(userID)}, {"username":1}).skip(0).limit(1).next()
@@ -496,6 +535,12 @@ def processHistory(userID):
 @app.route('/login/', methods=['GET', 'POST'])
 def loginpage():
 	error = ""
+	hasSignedConsentForm = False
+	userID = session['user_id']
+	if userID:
+		hasSignedConsentForm = app.db_user_collection.find({ "_id": ObjectId(userID), "signature":{"$exists":1}}).count() >=1
+		hasCompletedPreSurvey = app.db_user_collection.find({ "_id": ObjectId(userID), "survey":{"$exists":1}}).count() >=1
+
 	if request.method == 'POST':
 		oldusername = request.form['oldusername']
 		newusername = request.form['newusername']
@@ -506,9 +551,10 @@ def loginpage():
 		elif app.db_user_collection.find({ "username": newusername }).count():
 			error = "That username already exists"
 		else:
-			r = app.db_user_collection.update({ "_id": ObjectId(userID)}, { "$set" : {"username":newusername}})
+			r = app.db_user_collection.update(	{ "_id": ObjectId(userID)}, 
+												{ "$set" : {"username":newusername}})
 			
-	return render_template('login.html', error=error)
+	return render_template('login.html', error=error, hasSignedConsentForm=hasSignedConsentForm,hasCompletedPreSurvey=hasCompletedPreSurvey)
 
 
 # Receives a single URL object from user and starts celery text processing queue
@@ -519,7 +565,9 @@ def processURL():
 	args = (historyObject, config, False);
 	start_text_processing_queue(*args)
 	#start_text_processing_queue.delay(*args)
-	return 'Celery is processing your URL dude - ' + historyObject["url"]
+	return 'We is processing your URL dude - ' + historyObject["url"]
+
+
 
 if __name__ == '__main__':
 	app.debug = True

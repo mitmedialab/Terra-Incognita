@@ -26,65 +26,44 @@
         
         <div id="city-zoomed"><h1><%= city_name %>, <%= country_name %></h1>
         <% if (population != "0") { %>
-          <p id="city-zoomed-population" class="city-stats"><%= isCapitalCity ? "Capital city, " : "" %> pop. <%= population %></p>
+          <p id="city-zoomed-population" class="city-stats"><%= isCapitalCity ? "Capital City, " : "" %> pop. <%= population %></p>
         <% } %>
-          <div id="go-now">
-              <a href="<%= serverURL %>go/<%= userID %>/<%= cityID %>?r=<%= isRandomCity %>" role="button" class="btn btn-lg btn-danger btn-go"><%= randomSaying %></a>
-              
-          </div> 
+         
           <div class="city-stats">            
             <% if (cityStats) { 
               %>
                <div id="top-reader">
-                <!--
                 
-                  <% if (cityStats.get("firstVisitUsername").length ==0) { %>
-                      <p><strong>First Reader:</strong> Nobody! You could be the first.</p>
-                  <%} else {%>
-                      <p> <strong>First Reader:</strong> <%= cityStats.get("firstVisitUsername") %></p>
-                  <% } %>
-
-                -->
                 <% if (!_.isEmpty(cityStats.get("mostRead")) ) { %>
-                  <p><strong>Top Reader of <%= city_name %>:</strong> <%= cityStats.get("mostRead")["username"] %> 
+                  <p><span style="text-transform:uppercase">Top Reader</span>: <%= cityStats.get("mostRead")["username"] %> 
                   <% if (cityStats.get("mostRead")["isCurrentUser"] == "true"){%> - YOU! <% } %>(<%= cityStats.get("mostRead")["count"] %>)
                   </p>
                 <% } %>
 
-                <!--<% if (cityStats.get("firstVisitUsername").length !=0 
-                        && !_.isEmpty(cityStats.get("mostRead")) 
-                        && cityStats.get("mostRead")["isCurrentUser"] != "true" ) 
-                  { %>
-                  <p><em>Read <%= cityStats.get("mostRead")["count"] - cityStats.get("currentUserStoryCount") + 1 %> more articles to be the Top Reader.</em> </p>
-                  <% } %>-->
+                
                   </div>
         
                 <div id="top-recommender">
-                <!--<% if (cityStats.get("firstRecommendationUsername").length ==0) { %>
-                  <p><strong>First Recommender:</strong> Nobody! You could be the first.</p>
-                <%} else {%>
-                  <p><strong>First Recommender:</strong> <%= cityStats.get("firstRecommendationUsername") %></p>
-                <% } %>-->
+                
 
                 
 
                 <% if (!_.isEmpty(cityStats.get("mostRecommendations")) ) { %>
-                  <p> <strong>Top Recommender of <%= city_name %> : </strong><%= cityStats.get("mostRecommendations")["username"] %> 
-                  <% if (cityStats.get("mostRecommendations")["isCurrentUser"] == "true"){%> - YOU!<% } %></p> (<%= cityStats.get("mostRecommendations")["count"]%>)
+                  <p><span style="text-transform:uppercase">Top Recommender</span>: <%= cityStats.get("mostRecommendations")["username"] %> 
+                  <% if (cityStats.get("mostRecommendations")["isCurrentUser"] == "true"){%> - YOU!<% } %> (<%= cityStats.get("mostRecommendations")["count"]%>)
                 <% } %>
-                
+                </p>
                   
-                  <!--<% if (cityStats.get("firstRecommendationUsername").length !=0 
-                        && !_.isEmpty(cityStats.get("mostRecommendations")) 
-                        && cityStats.get("mostRecommendations")["isCurrentUser"] != "true" ) { %>
-                      
-                      <p><em>Recommend <%= cityStats.get("mostRecommendations")["count"] - cityStats.get("currentUserRecommendationCount") + 1 %> more articles to be the Top Recommender.</em></p>-->
+                 
                      
-                  <% } %>
+                  
                 </div>
             <% } %>
-
-
+            </div>
+            <div id="go-now">
+                <a href="<%= serverURL %>go/<%= userID %>/<%= cityID %>?r=<%= isRandomCity %>" role="button" class="btn btn-lg btn-danger btn-go"><%= randomSaying %></a>
+                
+            </div> 
             <!--<img src="../img/hr.png">-->
             <div id="what-people-read">
               <% if (systemStories && systemStories.size() > 0) { %>
@@ -92,9 +71,9 @@
                 <table class="table table-condensed">
                   <thead>
                         <tr>
-                          <th><%=systemStories.size() == 1 ? "1" : (systemStories.size() >= 5 ? "5" : systemStories.size() )%> Things to Read About <%= city_name %> 
+                          <th><%=systemStories.size() == 1 ? "1" : (systemStories.size() >= 5 ? "5" : systemStories.size() )%> Things to Read 
                               <% if (systemStories.size() > 5) { %>
-                              (<a href="#" class="show-all-system-stories"><%=systemStories.size()%></a>)
+                              (<a href="#" class="show-all-system-stories"><%= "See all " + systemStories.size()  %></a>)
                               <% } %>
                           </th>
                         </tr>
@@ -135,7 +114,7 @@
                 <table class="table table-condensed">
                   <thead>
                         <tr>
-                          <th>What You Read About <%= city_name %> (<%=userStories.size()%>)</th>
+                          <th>What You Read (<%=userStories.size()%>)</th>
                         </tr>
                       </thead>
                     <tbody>

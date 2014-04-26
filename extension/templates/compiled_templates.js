@@ -27,37 +27,17 @@ __p+='  \n        \n        <div id="city-zoomed"><h1>'+
 '</h1>\n        ';
  if (population != "0") { 
 __p+='\n          <p id="city-zoomed-population" class="city-stats">'+
-((__t=( isCapitalCity ? "Capital city, " : "" ))==null?'':__t)+
+((__t=( isCapitalCity ? "Capital City, " : "" ))==null?'':__t)+
 ' pop. '+
 ((__t=( population ))==null?'':__t)+
 '</p>\n        ';
  } 
-__p+='\n          <div id="go-now">\n              <a href="'+
-((__t=( serverURL ))==null?'':__t)+
-'go/'+
-((__t=( userID ))==null?'':__t)+
-'/'+
-((__t=( cityID ))==null?'':__t)+
-'?r='+
-((__t=( isRandomCity ))==null?'':__t)+
-'" role="button" class="btn btn-lg btn-danger btn-go">'+
-((__t=( randomSaying ))==null?'':__t)+
-'</a>\n              \n          </div> \n          <div class="city-stats">            \n            ';
+__p+='\n         \n          <div class="city-stats">            \n            ';
  if (cityStats) { 
               
-__p+='\n               <div id="top-reader">\n                <!--\n                \n                  ';
- if (cityStats.get("firstVisitUsername").length ==0) { 
-__p+='\n                      <p><strong>First Reader:</strong> Nobody! You could be the first.</p>\n                  ';
-} else {
-__p+='\n                      <p> <strong>First Reader:</strong> '+
-((__t=( cityStats.get("firstVisitUsername") ))==null?'':__t)+
-'</p>\n                  ';
- } 
-__p+='\n\n                -->\n                ';
+__p+='\n               <div id="top-reader">\n                \n                ';
  if (!_.isEmpty(cityStats.get("mostRead")) ) { 
-__p+='\n                  <p><strong>Top Reader of '+
-((__t=( city_name ))==null?'':__t)+
-':</strong> '+
+__p+='\n                  <p><span style="text-transform:uppercase">Top Reader</span>: '+
 ((__t=( cityStats.get("mostRead")["username"] ))==null?'':__t)+
 ' \n                  ';
  if (cityStats.get("mostRead")["isCurrentUser"] == "true"){
@@ -67,57 +47,38 @@ __p+='('+
 ((__t=( cityStats.get("mostRead")["count"] ))==null?'':__t)+
 ')\n                  </p>\n                ';
  } 
-__p+='\n\n                <!--';
- if (cityStats.get("firstVisitUsername").length !=0 
-                        && !_.isEmpty(cityStats.get("mostRead")) 
-                        && cityStats.get("mostRead")["isCurrentUser"] != "true" ) 
-                  { 
-__p+='\n                  <p><em>Read '+
-((__t=( cityStats.get("mostRead")["count"] - cityStats.get("currentUserStoryCount") + 1 ))==null?'':__t)+
-' more articles to be the Top Reader.</em> </p>\n                  ';
- } 
-__p+='-->\n                  </div>\n        \n                <div id="top-recommender">\n                <!--';
- if (cityStats.get("firstRecommendationUsername").length ==0) { 
-__p+='\n                  <p><strong>First Recommender:</strong> Nobody! You could be the first.</p>\n                ';
-} else {
-__p+='\n                  <p><strong>First Recommender:</strong> '+
-((__t=( cityStats.get("firstRecommendationUsername") ))==null?'':__t)+
-'</p>\n                ';
- } 
-__p+='-->\n\n                \n\n                ';
+__p+='\n\n                \n                  </div>\n        \n                <div id="top-recommender">\n                \n\n                \n\n                ';
  if (!_.isEmpty(cityStats.get("mostRecommendations")) ) { 
-__p+='\n                  <p> <strong>Top Recommender of '+
-((__t=( city_name ))==null?'':__t)+
-' : </strong>'+
+__p+='\n                  <p><span style="text-transform:uppercase">Top Recommender</span>: '+
 ((__t=( cityStats.get("mostRecommendations")["username"] ))==null?'':__t)+
 ' \n                  ';
  if (cityStats.get("mostRecommendations")["isCurrentUser"] == "true"){
 __p+=' - YOU!';
  } 
-__p+='</p> ('+
+__p+=' ('+
 ((__t=( cityStats.get("mostRecommendations")["count"]))==null?'':__t)+
 ')\n                ';
  } 
-__p+='\n                \n                  \n                  <!--';
- if (cityStats.get("firstRecommendationUsername").length !=0 
-                        && !_.isEmpty(cityStats.get("mostRecommendations")) 
-                        && cityStats.get("mostRecommendations")["isCurrentUser"] != "true" ) { 
-__p+='\n                      \n                      <p><em>Recommend '+
-((__t=( cityStats.get("mostRecommendations")["count"] - cityStats.get("currentUserRecommendationCount") + 1 ))==null?'':__t)+
-' more articles to be the Top Recommender.</em></p>-->\n                     \n                  ';
+__p+='\n                </p>\n                  \n                 \n                     \n                  \n                </div>\n            ';
  } 
-__p+='\n                </div>\n            ';
- } 
-__p+='\n\n\n            <!--<img src="../img/hr.png">-->\n            <div id="what-people-read">\n              ';
+__p+='\n            </div>\n            <div id="go-now">\n                <a href="'+
+((__t=( serverURL ))==null?'':__t)+
+'go/'+
+((__t=( userID ))==null?'':__t)+
+'/'+
+((__t=( cityID ))==null?'':__t)+
+'?r='+
+((__t=( isRandomCity ))==null?'':__t)+
+'" role="button" class="btn btn-lg btn-danger btn-go">'+
+((__t=( randomSaying ))==null?'':__t)+
+'</a>\n                \n            </div> \n            <!--<img src="../img/hr.png">-->\n            <div id="what-people-read">\n              ';
  if (systemStories && systemStories.size() > 0) { 
 __p+='\n              <div id="what-others-read">\n                <table class="table table-condensed">\n                  <thead>\n                        <tr>\n                          <th>'+
 ((__t=(systemStories.size() == 1 ? "1" : (systemStories.size() >= 5 ? "5" : systemStories.size() )))==null?'':__t)+
-' Things to Read About '+
-((__t=( city_name ))==null?'':__t)+
-' \n                              ';
+' Things to Read \n                              ';
  if (systemStories.size() > 5) { 
 __p+='\n                              (<a href="#" class="show-all-system-stories">'+
-((__t=(systemStories.size()))==null?'':__t)+
+((__t=( "See all " + systemStories.size()  ))==null?'':__t)+
 '</a>)\n                              ';
  } 
 __p+='\n                          </th>\n                        </tr>\n                      </thead>\n                    <tbody>\n\n                    \n                      ';
@@ -158,9 +119,7 @@ __p+='\n                    </tbody>\n                </table> \n              <
  } 
 __p+='\n\n              ';
  if (userStories && userStories.size() > 0) { 
-__p+='\n              <div id="what-you-read">\n                <table class="table table-condensed">\n                  <thead>\n                        <tr>\n                          <th>What You Read About '+
-((__t=( city_name ))==null?'':__t)+
-' ('+
+__p+='\n              <div id="what-you-read">\n                <table class="table table-condensed">\n                  <thead>\n                        <tr>\n                          <th>What You Read ('+
 ((__t=(userStories.size()))==null?'':__t)+
 ')</th>\n                        </tr>\n                      </thead>\n                    <tbody>\n                       ';
  if (userStories) { 
@@ -196,7 +155,7 @@ __p+='\n              </div>\n             ';
  if (userStories && userStories.size() > 5) { 
 __p+='\n              <h4 class="submit-recommendation">Submit a recommendation about '+
 ((__t=( city_name ))==null?'':__t)+
-'</h4>\n              <form class="form-inline" role="form" style="margin-bottom:20px">\n                <div class="form-group">\n                  <input style="min-width:200px" type="url" class="form-control" id="url_recommendation" placeholder="http://www.'+
+'</h4>\n              <form class="form-inline" role="form" style="margin-bottom:20px;text-align:left">\n                <div class="form-group">\n                  <input style="min-width:200px" type="url" class="form-control" id="url_recommendation" placeholder="http://www.'+
 ((__t=( randomWord ))==null?'':__t)+
 '.com">\n                </div>\n                <button type="submit" class="btn btn-default">Submit</button>\n              </form>\n            ';
  } 

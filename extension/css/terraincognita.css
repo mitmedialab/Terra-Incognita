@@ -25,12 +25,18 @@ a.navbar-brand {
 	overflow-y: scroll;
 	bottom:50px;
 }
+#city-zoomed-population{
+margin-top: 8px;
+margin-bottom: 20px;
+font-size: 16px;
+}
 #city-zoomed h1{
 	color:#444;
 	font-family: 'Fondamento', cursive;
-	font-size: 40px;
-	text-shadow: 2px 2px 2px #999;
+	font-size: 45px;
+	/*text-shadow: 2px 2px 2px #999;*/
 	margin-left: 35px;
+	margin-bottom: 2px;
 }
 
 #what-people-read tr{
@@ -57,7 +63,7 @@ tr{
 	line-height:1.2;
 }
 .city-stats{
-	font-size:12px;line-height:12px;margin-top:20px;
+	font-size:12px;line-height:12px;margin-top:10px;
 }
 .glyphicon-thumbs-up,.glyphicon-thumbs-down{
 	padding-right:3px;
@@ -86,9 +92,8 @@ z-index: 1000;
 
 }
 #go-now{
-	/*position: absolute;
-top: 65%;
-left: 20%;*/
+margin-top: 20px;
+margin-bottom: 20px;
 }
 .btn-go{
 	font-family: Fondamento, serif;
@@ -139,6 +144,7 @@ svg{
 	left:0;
 	background-color:none;
 	border-top:1px solid #101010;
+	
 }
 #svg-extra{
 	position:absolute;

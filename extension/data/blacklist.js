@@ -9,6 +9,7 @@ var BLACKLIST = [
 ".mp4",
 ".mp3",
 "amazon.com",
+"dropbox.com",
 "twitter.com",
 "file://",
 "chrome-extension://",
