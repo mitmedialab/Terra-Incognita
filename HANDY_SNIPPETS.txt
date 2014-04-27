@@ -210,6 +210,8 @@ Converting mediacloud csv to tld whitelist (possibly write scripte for this late
 15. Manually delete anything that contains http: because it's definitely bad data at this point
 16. Search for ':' and manually delete anything that looks like bad data
 17. add theguardian.com
+18. remove everything with GOOGLE in domain -- ^.*google\..*$
+19. Remove facebook.com and twitter.com links
 
 PYTHON PACKAGES INSTALL DIR ON MACOSX
 -----------------------------------------------------------
