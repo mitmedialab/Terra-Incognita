@@ -16,7 +16,7 @@ git reset --hard origin/master
 in /var/www/terra-incognita.co/Terra-Incognita
 
 start/stop apache
-start/stop celery
+
 
 SET PYTHON BREAKPOINT
 -----------------------------------------------------------

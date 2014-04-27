@@ -64,7 +64,6 @@ App.MapView = Backbone.View.extend({
 	},
 	renderFormsNotification: function(){
 		App.debug('App.MapView.renderFormsNotification()')
-		console.log("BLADGASLDSA")
 		if ( this.userModel.get('hasSignedConsentForm') != null && (!this.userModel.get('hasSignedConsentForm') || !this.userModel.get('hasCompletedPreSurvey'))){
 			this.formsNotificationView = new App.FormsNotificationView({ model: this.userModel });
 		}
@@ -312,7 +311,7 @@ App.CitySelectorView = Backbone.View.extend({
 						isRandomCity : false
 					});
 				chrome.runtime.sendMessage({msg: "logCityClick", "city_id":d.geonames_id}, function(response){
-					console.log("Logged city click")
+					//console.log("Logged city click")
 				});
 				
 			})
@@ -357,7 +356,7 @@ App.LoginView = Backbone.View.extend({
 	},
 	render: function () {
 		App.debug('App.LoginView.render()');
-		console.log(this.model.get("loginURL"))
+	
 		var html = this.template({ loginURL : this.model.get("loginURL") });
 		this.$el.html(html);
 		

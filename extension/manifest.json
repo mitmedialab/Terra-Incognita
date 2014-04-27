@@ -1,7 +1,12 @@
 {
   "name": "Terra Incognita: 1000 Cities of the World",
+  "short_name": "Terra Incognita",
   "description": "A global news game and recommendation system",
-  "version": "2.0",
+  "version": "2.1.2",
+  "icons": { "16": "img/terraicon16.png",
+           "48": "img/terraicon48.png",
+          "128": "img/terraicon128.png" 
+  },
   "permissions": [
     "activeTab",
     "tabs",
@@ -13,12 +18,17 @@
     "https://*/*"
 
   ],
+
   "background": {
     "page": "background.html",
     "persistent": true
   },
   "browser_action": {
-    "default_title": "Terra Incognita"
+    "default_icon": {                   
+            "19": "img/terraicon19.png",  
+            "38": "img/terraicon38.png"    
+          },
+    "default_title": "Terra Incognita: 1000 Cities of the World"
   },
   "chrome_url_overrides" : {
     "newtab": "terraincognita.html"
