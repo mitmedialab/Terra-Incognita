@@ -1,5 +1,3 @@
-from celery import Celery
-from celery.utils.log import get_task_logger
 from content_extraction import *
 from map_topics import *
 from geoprocessing import *
@@ -8,11 +6,6 @@ from pymongo import MongoClient
 from cities_array import *
 
 
-## Celery text processing queue
-app = Celery('text_processing.tasks', backend ="amqp", broker='amqp://guest@localhost//')
-logger = get_task_logger(__name__)
-
-@app.task()
 def start_text_processing_queue(*args,**kwargs):
 
 	doc = args[0]
@@ -22,18 +15,18 @@ def start_text_processing_queue(*args,**kwargs):
 
 	uri = "mongodb://"+ config.get('db','user')+ ":"+ config.get('db','pass')+"@" +config.get('db','host') + ":" + config.get('db','port')
 	db_client = MongoClient(uri)
-	app.db = db_client[config.get('db','name')]
+	db = db_client[config.get('db','name')]
 	alreadyAdded = 0
 
 	if isRecommendation:
 		print "the doc is a recommendation"
-		app.db_collection = app.db[config.get('db','recommendation_item_collection')]
+		db_collection = db[config.get('db','recommendation_item_collection')]
 	else:
 		print "the doc is a user history item"
-		app.db_collection = app.db[config.get('db','user_history_item_collection')]
+		db_collection = db[config.get('db','user_history_item_collection')]
 
 		# make sure doc doesn't already exist
-		alreadyAdded = app.db_collection.find({"userID":doc["userID"], "lastVisitTime":doc["lastVisitTime"], "url":doc["url"]}).count()
+		alreadyAdded = db_collection.find({"userID":doc["userID"], "lastVisitTime":doc["lastVisitTime"], "url":doc["url"]}).count()
 		
 	if alreadyAdded > 0:
 		print "Already added this document for this user. I'm ignoring it now."
@@ -47,7 +40,7 @@ def start_text_processing_queue(*args,**kwargs):
 		elif "extractedText" not in doc and not isRecommendation:
 			print "No extracted Text returned, but saving to DB for user metrics"
 			doc["extractedText"] = ""
-			app.db_collection.save(doc)
+			db_collection.save(doc)
 		else:
 			# Geoparsing
 			doc["geodata"] = geoparseSingleText(doc["extractedText"], config.get('geoparser','geoserver_url'))
@@ -59,7 +52,7 @@ def start_text_processing_queue(*args,**kwargs):
 			# matching recommendations' geodata?
 			if "geodata" not in doc:
 				print "No geodata found for URL: " + doc['url']
-				recommendationCollection = app.db[config.get('db','recommendation_item_collection')]
+				recommendationCollection = db[config.get('db','recommendation_item_collection')]
 				recDocMatches = recommendationCollection.find({'url':doc["url"], "geodata.primaryCities.id" : {"$exists":"true"}}).sort([("lastVisitTime",1)]).limit(1)
 				if recDocMatches.count() > 0:
 					match = recDocMatches.next()
@@ -69,13 +62,15 @@ def start_text_processing_queue(*args,**kwargs):
 			if "geodata" in doc and doc["geodata"] is not None:
 				print "Geodata found"
 				print "Adding continent and region info to geodata"
+				
 				doc["geodata"] = lookupContinentAndRegion(doc["geodata"])
+				
 				# if there is country data but not city data then make the primary city the country's capital city
 				if "primaryCountries" in doc["geodata"]:
 					doc["geodata"] = lookupCountryCapitalCity(doc["geodata"])
 
 
-			# Topic Mapping
+			# Topic Mng
 			doc["topics"] = map_topics(doc["extractedText"])
 
 			# Saves to DB 
@@ -85,12 +80,12 @@ def start_text_processing_queue(*args,**kwargs):
 
 			if "geodata" in doc and "primaryCities" in doc["geodata"]:
 				print "Saved doc"
-				app.db_collection.save(doc)
+				db_collection.save(doc)
 			elif "userID" in doc and not isRecommendation:
 				print "No geodata, but deleting extracted text and saving to DB for user metrics"
 				doc["extractedText"] = ""
-				app.db_collection.save(doc)
+				db_collection.save(doc)
 			else:
 				print "Discarding because no geodata and it's a recommendation: " + doc["url"]
 
-	logger.info("done with text processing queue")
+	

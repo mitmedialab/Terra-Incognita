@@ -88,6 +88,24 @@ git reset --hard origin/master
 sudo mvn compile
 sudo service cliff start
 
+UPDATING TOMCAT LOCALLY
+from install dir -- mvn tomcat7:redeploy -DskipTests
+
+UPDATE TOMCAT APP ON CIVICDEV
+changes on local machine
+make local WAR file
+upload WAR to home dir on civicdev 
+sudo move it into /var/lib/tomcat7/webapps/
+
+git update into ~/CLIFF (ser dir)
+mvn compile
+mvn package
+Copy the WAR file 
+
+TOMCAT ON CIVICDEV
+-----------------------------------------------------------
+sudo service tomcat7 restart/stop/start
+
 
 CELERY
 -----------------------------------------------------------

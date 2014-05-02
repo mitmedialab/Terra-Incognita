@@ -564,15 +564,15 @@ def processHistory(userID):
 	app.db_user_collection.update({ "_id": ObjectId(userID)}, { "$set" : {"history-pre-installation":historyItems}})
 
 	# then start text queue for each item
-	for historyObject in historyItems:
+	'''for historyObject in historyItems:
 		historyObject["userID"] = userID;
 		historyObject["preinstallation"] = "true"
 		count = app.db_user_history_collection.find({ "userID" : userID, "url":historyObject["url"], "lastVisitTime": historyObject["lastVisitTime"] }).count()
 		if count == 0:
 			args = (historyObject, config, False);
-			start_text_processing_queue.delay(*args)
+			start_text_processing_queue(*args)'''
 	
-	return 'Celery is processing ' + str(len(historyItems)) + ' history items'
+	return 'Processing ' + str(len(historyItems)) + ' history items'
 
 #Login/Logout page AND change username
 @app.route('/login/', methods=['GET', 'POST'])
