@@ -1,5 +1,5 @@
 #This script runs nightly to process users' preinstall history
-
+from bson.objectid import ObjectId
 import ConfigParser
 import os
 from text_processing.tasks import start_text_processing_queue
