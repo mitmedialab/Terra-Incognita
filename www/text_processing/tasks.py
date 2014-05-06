@@ -47,7 +47,7 @@ def start_text_processing_queue(*args,**kwargs):
 
 			if "geodata" not in doc or ("geodata" in doc and "primaryCities" not in doc["geodata"]):
 				print "No prior geodata, moving to geoparse"
-				doc["geodata"] = geoparseSingleText(doc["extractedText"], config.get('geoparser','geoserver_url'), doc["geodata"])
+				doc["geodata"] = geoparseSingleText(doc["extractedText"], config.get('geoparser','geoserver_url'))
 			else:
 				print "skipping geoparsing because doc already has geodata"
 
