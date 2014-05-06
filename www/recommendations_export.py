@@ -1,9 +1,9 @@
 import ConfigParser
 import os
-from text_processing.tasks import start_text_processing_queue
 from pymongo import MongoClient
 import csv
 
+# For printing to file the contents of the MongoDB recommendations collection
 
 class DictUnicodeProxy(object):
     def __init__(self, d):

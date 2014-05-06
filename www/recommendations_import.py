@@ -14,7 +14,7 @@ from os.path import isfile, join
 SOURCE = "Instapaper"
 CONFIG_FILENAME = 'app.config'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-IMPORT_DIR = os.path.join(BASE_DIR, "static", "import")
+IMPORT_DIR = os.path.join(BASE_DIR, "static", "import", "instapaper")
 
 # read in app config
 config = ConfigParser.ConfigParser()

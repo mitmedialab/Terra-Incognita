@@ -35,7 +35,8 @@ def addCityGeoDataToDoc(doc):
 	return doc
 
 			
-#pull out geodata for single text from CLIFF_CLAVIN
+# pull out geodata for single text from CLIFF_CLAVIN
+# optionall merge with existing geodata
 def geoparseSingleText(text,geoserver):
 	result = {}
 	try:
@@ -68,6 +69,7 @@ def geoparseSingleText(text,geoserver):
 		print "ERROR RequestException " + str(e)
 
 	return result
+
 
 # function to match primaryCountry capitals as primaryCities
 def lookupCountryCapitalCity(geodata):

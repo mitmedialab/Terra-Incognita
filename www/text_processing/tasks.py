@@ -7,9 +7,9 @@ from cities_array import *
 
 
 def start_text_processing_queue(*args,**kwargs):
-
 	doc = args[0]
 	print "starting text processing queue for " + doc['url']
+
 	config = args[1]	
 	isRecommendation = args[2]
 
@@ -43,8 +43,14 @@ def start_text_processing_queue(*args,**kwargs):
 			db_collection.save(doc)
 		else:
 			# Geoparsing
-			doc["geodata"] = geoparseSingleText(doc["extractedText"], config.get('geoparser','geoserver_url'))
-			
+			# Only geoparses if there is not already geodata in the doc
+
+			if "geodata" not in doc or ("geodata" in doc and "primaryCities" not in doc["geodata"]):
+				print "No prior geodata, moving to geoparse"
+				doc["geodata"] = geoparseSingleText(doc["extractedText"], config.get('geoparser','geoserver_url'), doc["geodata"])
+			else:
+				print "skipping geoparsing because doc already has geodata"
+
 			# Chance that the geodata might come from the recommendation database instead of geoparser
 			# i.e. user submitted video recommendation
 			# try that as a second shot at geodata
