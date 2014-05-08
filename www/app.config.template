@@ -14,3 +14,6 @@ user_city_clicks_collection: user_city_clicks
 
 [geoparser]
 geoserver_url:http://localhost:8080/parse
+
+[extractor]
+extractor_url:http://localhost:8080/extractor/text

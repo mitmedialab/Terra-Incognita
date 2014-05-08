@@ -1,6 +1,6 @@
 import ConfigParser
 import os
-from text_processing.tasks import start_text_processing_queue
+from text_processing.textprocessing import start_text_processing_queue
 from pymongo import MongoClient
 import time
 import csv

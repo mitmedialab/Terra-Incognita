@@ -102,6 +102,11 @@ mvn compile
 mvn package
 Copy the WAR file 
 
+TOMCAT ON OSX
+-----------------------------------------------------------
+Manager: http://localhost:8080/manager/
+catalina run/stop
+
 TOMCAT ON CIVICDEV
 -----------------------------------------------------------
 sudo service tomcat7 restart/stop/start

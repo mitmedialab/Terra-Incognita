@@ -1,4 +1,3 @@
-
 from bson.objectid import ObjectId
 from bson import BSON
 from bson import json_util
@@ -17,12 +16,10 @@ import pprint
 import pymongo
 import requests
 import requests.exceptions
-from text_processing.geoprocessing import *
-from text_processing.tasks import start_text_processing_queue
+from text_processing.textprocessing import *
 from cities_array import *
 import logging
 from random import shuffle,randint
-from text_processing.content_extraction import *
 import datetime
 
 
@@ -308,12 +305,11 @@ def recommend(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
 		url = "http://" + url
 	doc = {}
 	doc["url"] = url
-	newDoc = extractSingleURL(doc)
-	if newDoc:
-		doc = newDoc
+	text = extractSingleURL(url, config.get('extractor','extractor_url'))
+	if text is not None and text != "":
+		doc["extractedText"] = text
 	else:
 		doc["title"] = url
-
 	
 	doc["source"] = "user"
 	doc["userID"] = userID
