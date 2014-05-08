@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
+        <title>Terra Incognita</title>
+        <meta name="generator" content="Bootply" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+        
+        <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+
+
+
+        <!-- CSS code from Bootply.com editor -->
+        
+        <style type="text/css">
+            /* -- custom css for Bootstrap 3.x --*/
+
+/* move special fonts to HTML head for better performance */
+@import url(http://fonts.googleapis.com/css?family=Fondamento);
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-family:Arial,sans-serif;
+}
+
+/* fix bs3 horizontal scrollbar bug */
+.row { margin: 0; padding: 0 }
+
+
+/* use special fonts in certain elements */
+h1,h2,h3,h4,.lead {
+  text-transform:uppercase;
+  font-family:'Fondamento',Arial,sans-serif;
+  letter-spacing:2px;
+}
+
+h1 {
+  font-size:50px;
+}
+
+/* make images gray */
+img.grayscale {
+    filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 10+, Firefox on Android */
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
+}
+
+.icon-bar {
+   background-color:#fff;
+}
+
+.form-text {
+   color:#333;
+}
+
+.scroll-down a, .scroll-top a {
+   color:#ffffff;
+}
+
+.scroll-down {
+   position:fixed;
+   bottom:20%;
+   right:0%;
+   color:#f9f9f9;
+}
+
+.scroll-top {
+  background-color:#dbdbdb;
+}
+
+.vert {
+  vertical-align: middle;
+  width:100%;
+  padding-top:4%;
+  text-align:center;
+}
+
+.header .btn-lg {
+   font-size:28px;
+   padding:15px;
+   background-color:#da383a;
+   border-color:#da383a;
+   color:#ffffff;
+}
+
+.header .btn-lg:hover {
+   background-color:#da383a;
+   color:#fff;
+   border-color:#eeeeee;
+}
+
+.navbar a {
+  color:#1c751a;
+  font-size:16px;
+  font-weight: bold;
+}
+
+.navbar-bold.affix {
+  background-color:#CDB380;
+}
+
+.navbar-bold {
+  background-color:#CDB380;
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+    
+.header h1 {
+  font-size:80px;
+  -webkit-text-stroke: 1px rgba(f,f,f,0.1);
+  color:#031634;
+  margin-left:-5px;
+  margin-bottom:5px;
+  text-transform:uppercase;
+}
+
+.header .lead {
+  color:#031634;
+  font-size:25px;
+}
+
+.header {
+  height: 75%;
+  background: url('img/sand.png') fixed center center repeat;
+}
+
+/* use alt in navbar and header for different color */
+
+.alt {
+  background: url('img/sand.png') fixed center center repeat;
+}
+
+.alt .lead {
+  color: #031634;
+}
+
+.alt.affix {
+  background-color:#a4ddd7;
+}
+
+.blurb {
+  padding: 120px 0;
+  background-color:#fefefe;
+}
+
+.blurb .panel {
+  background-color:transparent;
+}
+
+.bright {
+  background: #dbdbdb url('http://www.bootply.com/assets/example/pt_topo.png') repeat center center fixed; 
+  color:#777;
+}
+
+.featurette {
+  background: #222334;
+  padding: 50px 0;
+  color: #ffffff;
+}
+
+.featurette-item {
+  margin-bottom: 15px;
+}
+
+.featurette-item > i {
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  display: inline-block;
+  font-size: 56px;
+  width: 140px;
+  height: 140px;
+  line-height: 136px;
+  vertical-align: middle; 
+  text-align: center;
+}
+
+.screenshot-text {
+   text-align: left;
+}
+
+.featurette-item > i:hover {
+  font-size: 68px;
+}
+
+.callout {
+  color: #ffffff;
+  padding-top:7%;
+  height: 100%;
+  width: 100%;
+  background: url('http://www.bootply.com/assets/example/bg_suburb.jpg') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.gallery {
+  padding: 50px 0;
+}
+
+.call-to-action {
+  background: #eeeeee;
+  padding: 50px 0;
+}
+
+.call-to-action .btn {
+  margin: 10px;
+}
+
+.btn {
+   color: #000;
+   border-color: #000;
+   background-color: #fff;
+}
+
+footer {
+  padding: 100px 0;
+  background: #222334;
+  color: #fff;
+}
+
+/* -- end custom css for Bootstrap 3.x --*/
+
+        </style>
+    </head>
+    
+    <!-- HTML code from Bootply.com editor -->
+    
+    <body  >
+        
+        
+<div class="navbar navbar-fixed-top alt" data-spy="affix" data-offset-top="1000">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="#" class="navbar-brand">Home</a>
+      <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav">
+        <li><a href="#sec1">Read the World</a></li>
+        <li><a href="#sec2">Screenshot</a></li>
+<!--        <li><a href="#sec3">Adopt a Region</a></li> -->
+        <li><a href="#sec4">Code</a></li>
+      </ul>
+    </div>
+   </div>
+</div>
+
+<div class="header alt vert">
+  <div class="container">
+    <h1>Terra Incognita</h1>
+      <p class="lead">1000 Cities of the World</p>
+      <div><p>If you care about global news, international coverage and media bias, this one's for you.</p><p>We're looking for users to help pilot <em>Terra Incognita: 1000 Cities of the World</em> for a research study about news and geographic diversity.<br>Participating in the user study means installing a Chrome browser extension and using the Chrome browser for at least 30 days.</p></div>
+      <p>&nbsp;</p>
+      <p>
+      <a href="https://chrome.google.com/webstore/detail/terra-incognita-1000-citi/hpiijgedgifmfegahhaaoamckbliijih?hl=en&gl=US&authuser=1" class="btn btn-default btn-lg">Get early access</a></p>
+  </div>
+</div>
+
+<div id="sec1" class="blurb">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-7">
+        <h1>Read the World</h1>
+        <p class="lead">A global news game and recommendation system</p>
+        <p>Terra Incognita helps you discover interesting news and personal connections to cities that you haven't read about. Whereas many recommendation systems connect you on the basis of "similarity", Terra Incognita connects you to global news on the basis of serendipity. Each time you open the application, Terra Incognita shows you a city that you have not yet read about and gives you options for reading about it. Chelyabinsk (Russia), Hiroshima (Japan), Hagåtña (Guam) and Dhaka (Bangladesh) are a few of the places where you might end up.</p>
+      </div>
+      <div class="col-md-5">
+        <h1 class="pull-right"><img src="img/globe.png"></h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="featurette" id="sec2">
+  <div class="container">
+
+      <div class="col-md-12 text-center">
+        <p><h1>Screenshot</h1></p><p>&nbsp;</p>
+        <div><p><img src="img/screenshot.png"></p></div>
+      <div class="screenshot-text col-md-12"><p>When you open a new tab, you'll be invited to explore a new city.</p><p>When you read news about any of the 1,000 Terra Incognita cities, you'll be credited for exploring that place.</p>
+    </div>
+    </div>
+
+<div></div>
+    
+    
+  </div>
+</div>
+
+<!--
+<div class="callout" id="sec3">
+    <div class="col-md-12 text-center"><h1>Adopt a Region</h1></div>
+    <div><p>&nbsp;</p></div>
+    <div class="col-md-8 col-md-offset-2 text-center">
+      <div class="row hidden-xs">
+<div><p>Many important cities in India, China, Brazil, and elsewhere are unrepresented in English-language media.<br>Want to help us connect people to high-quality content about these places?</p><p>Sign up to curate articles for a country or region you know well:</p></div></div>
+
+<div class="form-text">     
+<?php
+// display form if user has not clicked submit
+if (!isset($_POST["submit"])) {
+  ?>
+  <form method="post" action="<?php echo $_SERVER["PHP_SELF"];?>">
+  <input type="text" maxlength="40" name="email" placeholder="Your email"><br>
+  <input type="text" maxlength="60" name="country" placeholder="Which country / region?"><br>
+  <input type="submit" class="btn" name="submit" value="Sign up">
+  </form>
+  <?php 
+} else {    // the user has submitted the form
+  // Check if the "from" input field is filled out
+  if (isset($_POST["email"])) {
+    $email = $_POST["email"]; // sender
+    $country = $_POST["country"];
+    // send mail
+    mail("matt27884@gmail.com",$email,$country);
+    echo "Thank you for sending us feedback";
+  }
+}
+?>
+
+</div>
+  </div>
+</div>
+
+-->
+<div id="sec4" class="blurb">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-7">
+        <h1>Code</h1>
+        <p><p>Want to see the underlying code? Want to help develop this global news game?</p><p><a href="https://github.com/c4fcm/Terra-Incognita"><strong>Check out our repo on Github.</strong></a></p>
+</p>
+      </div>
+      <div class="col-md-5">
+        <h1 class="pull-right"><img src="img/github.png"></h1>
+      </div>
+    </div>
+  </div>
+</div>
+  
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 text-center">
+<!--        <ul class="list-inline">
+          <li><i class="icon-facebook icon-2x"></i></li>
+          <li><i class="icon-twitter icon-2x"></i></li>
+          <li><i class="icon-google-plus icon-2x"></i></li>
+          <li><i class="icon-pinterest icon-2x"></i></li>
+        </ul> -->
+        <hr>
+        <p>Built by Catherine D'Ignazio with Matt Stempeck and Ethan Zuckerman.</p><p>An MIT <a href="http://civic.mit.edu">Center for Civic Media</a> project.</p><p><em>Globe icon by <a href="http://thenounproject.com/hivernoir/">Claire Jones</a>. Sand photo by <a href="https://www.flickr.com/photos/sometoast/3343247807">Rob Marquardt</a>.</em></p><p>CC-BY 2014</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+        
+        <script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+
+        <script type='text/javascript' src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+        
+    </body>
+</html>
