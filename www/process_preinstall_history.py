@@ -1,4 +1,5 @@
-#This script runs nightly to process users' preinstall history
+# This script runs nightly to process users' preinstall history
+# no it doesn't, you liar
 from bson.objectid import ObjectId
 import ConfigParser
 import os
