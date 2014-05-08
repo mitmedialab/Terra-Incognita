@@ -119,7 +119,7 @@ browser_id.init_app(app)
 @app.route('/index.html')
 @app.route('/index.htm')
 def hello():
-	return app.send_static_file('googleForm.html')
+	return app.send_static_file('index.html')
 
 #Index test 
 @app.route('/1000cities')

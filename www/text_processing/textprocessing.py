@@ -42,11 +42,8 @@ def map_topics(text):
 def extractSingleURL(url,extractorURL):
 	result = ""
 	try:
-		
 		params = {'url':url}
-		
 		r = requests.get(extractorURL, params=params)
-		print r
 		json = r.json()
 
 		if "results" in json.keys():
