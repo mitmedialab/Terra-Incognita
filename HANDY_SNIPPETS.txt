@@ -213,6 +213,10 @@ Match short domains for manual deleting if bad data
 Match things in parens
 \(([^\)]+)\)
 
+Match empty lines
+^(?:[\t ]*(?:\r?\n|\r))+
+
+
 
 Converting mediacloud csv to tld whitelist (possibly write scripte for this later)
 1. delete other columns in spreadsheet program
