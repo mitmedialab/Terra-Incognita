@@ -50,9 +50,12 @@ def extractSingleURL(url,extractorURL):
 
 			if "results" in json.keys():
 				json = json["results"]
-
-				title = json["title"]
-				text = json["text"]
+				title = ""
+				text = ""
+				if "title" in json:
+					title = json["title"]
+				if "text" in json:
+					text = json["text"]
 				return title + " " + text
 
 	except requests.exceptions.RequestException as e:
