@@ -73,25 +73,26 @@ def geoparseSingleText(text,geoserver):
 		
 		r = requests.post(geoserver, data=params)
 
-		json = r.json()
+		if r.status_code == 200:
+			json = r.json()
 
-		if "results" in json.keys():
-			json = json["results"]
+			if "results" in json.keys():
+				json = json["results"]
 
-			#store people for the moment in case we need it later
-			if "people" in json.keys():
-				result["people"] = json["people"]
+				#store people for the moment in case we need it later
+				if "people" in json.keys():
+					result["people"] = json["people"]
 
-			#map CLIFF format to TERRA format, drop place mentions because we don't need them
-			if "places" in json.keys() and "about" in json["places"].keys():
-				
-				json = json["places"]["about"]
-				if "cities" in json:
-					result["primaryCities"] = json["cities"]
-				if "states" in json:
-					result["primaryStates"] = json["states"]
-				if "countries" in json:
-					result["primaryCountries"] = json["countries"]
+				#map CLIFF format to TERRA format, drop place mentions because we don't need them
+				if "places" in json.keys() and "about" in json["places"].keys():
+					
+					json = json["places"]["about"]
+					if "cities" in json:
+						result["primaryCities"] = json["cities"]
+					if "states" in json:
+						result["primaryStates"] = json["states"]
+					if "countries" in json:
+						result["primaryCountries"] = json["countries"]
 
 	except requests.exceptions.RequestException as e:
 		print "ERROR RequestException " + str(e)
