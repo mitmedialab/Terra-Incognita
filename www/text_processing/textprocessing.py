@@ -44,14 +44,16 @@ def extractSingleURL(url,extractorURL):
 	try:
 		params = {'url':url}
 		r = requests.get(extractorURL, params=params)
-		json = r.json()
 
-		if "results" in json.keys():
-			json = json["results"]
+		if r.status_code == 200:
+			json = r.json()
 
-			title = json["title"]
-			text = json["text"]
-			return title + " " + text
+			if "results" in json.keys():
+				json = json["results"]
+
+				title = json["title"]
+				text = json["text"]
+				return title + " " + text
 
 	except requests.exceptions.RequestException as e:
 		print "ERROR RequestException " + str(e)
