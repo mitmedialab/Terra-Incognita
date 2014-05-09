@@ -38,8 +38,8 @@ def addCityGeoDataToDoc(doc):
 def map_topics(text):
 	return ""
 
-# pull out relevant text for url
-def extractSingleURL(url,extractorURL):
+# pull out relevant text for url, set title
+def extractSingleURL(doc, url,extractorURL):
 	result = ""
 	try:
 		params = {'url':url}
@@ -53,10 +53,10 @@ def extractSingleURL(url,extractorURL):
 				title = ""
 				text = ""
 				if "title" in json:
-					title = json["title"]
+					doc["title"] = json["title"]
 				if "text" in json:
-					text = json["text"]
-				return title + " " + text
+					doc["extractedText"] = json["text"]
+				return doc
 
 	except requests.exceptions.RequestException as e:
 		print "ERROR RequestException " + str(e)
@@ -236,7 +236,7 @@ def start_text_processing_queue(*args,**kwargs):
 		print "This document is not in the DB"
 
 		# Content Extraction
-		doc["extractedText"] = extractSingleURL(doc["url"], config.get('extractor','extractor_url'))
+		doc = extractSingleURL(doc, doc["url"], config.get('extractor','extractor_url'))
 
 		if (doc["extractedText"] is None or doc["extractedText"] == "") and not isRecommendation:
 			print "No extracted Text returned, but saving to DB for user metrics"

@@ -305,10 +305,8 @@ def recommend(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
 		url = "http://" + url
 	doc = {}
 	doc["url"] = url
-	text = extractSingleURL(url, config.get('extractor','extractor_url'))
-	if text is not None and text != "":
-		doc["extractedText"] = text
-	else:
+	doc = extractSingleURL(doc, url, config.get('extractor','extractor_url'))
+	if not "extractedText" in doc:
 		doc["title"] = url
 	
 	doc["source"] = "user"
