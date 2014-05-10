@@ -238,7 +238,7 @@ def start_text_processing_queue(*args,**kwargs):
 		# Content Extraction
 		doc = extractSingleURL(doc, doc["url"], config.get('extractor','extractor_url'))
 
-		if (doc["extractedText"] is None or doc["extractedText"] == "") and not isRecommendation:
+		if ("extractedText" not in doc or doc["extractedText"] == "") and not isRecommendation:
 			print "No extracted Text returned, but saving to DB for user metrics"
 			doc["extractedText"] = ""
 			db_collection.save(doc)
