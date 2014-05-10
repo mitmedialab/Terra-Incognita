@@ -40,7 +40,7 @@ def map_topics(text):
 
 # pull out relevant text for url, set title
 def extractSingleURL(doc, url,extractorURL):
-	result = ""
+	
 	try:
 		params = {'url':url}
 		r = requests.get(extractorURL, params=params)
@@ -61,7 +61,7 @@ def extractSingleURL(doc, url,extractorURL):
 	except requests.exceptions.RequestException as e:
 		print "ERROR RequestException " + str(e)
 
-	return result
+	return doc
 
 # pull out geodata for single text from CLIFF_CLAVIN
 # optionall merge with existing geodata
