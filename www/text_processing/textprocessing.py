@@ -242,7 +242,7 @@ def start_text_processing_queue(*args,**kwargs):
 			print "No extracted Text returned, but saving to DB for user metrics"
 			doc["extractedText"] = ""
 			db_collection.save(doc)
-		else:
+		elif "extractedText" in doc:
 			# Geoparsing
 			# Only geoparses if there is not already geodata in the doc
 
