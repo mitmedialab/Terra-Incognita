@@ -1,4 +1,3 @@
-
 from bson.objectid import ObjectId
 from bson import BSON
 from bson import json_util
@@ -17,12 +16,10 @@ import pprint
 import pymongo
 import requests
 import requests.exceptions
-from text_processing.geoprocessing import *
-from text_processing.tasks import start_text_processing_queue
+from text_processing.textprocessing import *
 from cities_array import *
 import logging
 from random import shuffle,randint
-from text_processing.content_extraction import *
 import datetime
 
 
@@ -122,7 +119,7 @@ browser_id.init_app(app)
 @app.route('/index.html')
 @app.route('/index.htm')
 def hello():
-	return app.send_static_file('googleForm.html')
+	return app.send_static_file('index.html')
 
 #Index test 
 @app.route('/1000cities')
@@ -243,7 +240,56 @@ def user(userID='52dbeee6bd028634678cd069'):
 
 		return json.dumps(userData, sort_keys=True, indent=4, default=json_util.default) 
 	else:
-		return jsonify(error='No user ID specified');
+		return jsonify(error='No user ID specified')
+
+@app.route('/report/<userID>')
+@app.route('/report/')
+def report(userID='5340168960de7dd9d8394aa7'):
+	
+	
+	#USER_NO_GEO_COUNT_BY_DAY
+	#USER_GEO_AND_CITIES_COUNT_BY_DAY
+	'''USER_GEO_COUNT_BY_DAY = [
+		{ "$match" : { "userID": userID, "geodata":{"$exists":1} }},	
+		{ "$group": {"lastVisitTime": {
+			"year" : { "$year" : "$lastVisitTime" },        
+			"month" : { "$month" : "$lastVisitTime" },        
+			"day" : { "$dayOfMonth" : "$lastVisitTime" },
+		}, "count": {"$sum": 1}}},
+	]'''
+	'''BLARG = [
+		{"$project":{"_id":0,
+					 "y":{"$subtract":[{"$year":"$lastVisitTime"}, 2014]},
+				   "d":{"$subtract":[{"$dayOfYear":"$lastVisitTime"},1]}, 
+				   "jan1":{"$add":datetime.datetime(2014,1,1)}
+				   #"jan1":{"$add":"ISODate('2014-01-01T00:00:00')"}
+		 } },
+		 {"$project":{"tsDate":{"$add":[
+					   "$jan1",
+					   {"$multiply":["$y", 365*24*60*60*1000]},
+					   {"$multiply":["$d", 24*60*60*1000]}
+		 ] } } }
+
+	]'''
+	#OK so I should have been storing the lastTimeVisited as a DATE type instead of number (UTC time)
+	#So now when I query, I will get user's entire history 3 ways (no geo, city geo, geo no cities) and sort using python into day bins 
+	result = {}
+	cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY } }, {"lastVisitTime":1,"preinstallation":1, "geodata.primaryCities":1}).sort([("lastVisitTime",-1)])
+	result["historyWithGeoWithCities"] = list( record for record in cursor)
+	result["count_historyWithGeoWithCities"] = len(result["historyWithGeoWithCities"])
+
+	cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities.id": { "$nin": THE1000CITIES_IDS_ARRAY }, "geodata.primaryCountries": { "$exists": 1 } }, {"lastVisitTime":1,"preinstallation":1, "geodata":1}).sort([("lastVisitTime",-1)])
+	result["historyWithGeoWithoutCities"] = list( record for record in cursor)
+	result["count_historyWithGeoWithoutCities"] = len(result["historyWithGeoWithoutCities"])
+
+	cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCountries": { "$exists": 0 } }, {"lastVisitTime":1,"preinstallation":1, "geodata":1}).sort([("lastVisitTime",-1)])
+	result["historyNoGeo"] = list( record for record in cursor)
+	result["count_historyNoGeo"] = len(result["historyNoGeo"])
+		
+	if result:
+		return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
+	else:
+		return jsonify(error='Erreur. That is French.')
 
 @app.route('/readinglist/<userID>/<cityID>')
 @app.route('/readinglist/')
@@ -308,12 +354,9 @@ def recommend(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
 		url = "http://" + url
 	doc = {}
 	doc["url"] = url
-	newDoc = extractSingleURL(doc)
-	if newDoc:
-		doc = newDoc
-	else:
+	doc = extractSingleURL(doc, url, config.get('extractor','extractor_url'))
+	if not "extractedText" in doc:
 		doc["title"] = url
-
 	
 	doc["source"] = "user"
 	doc["userID"] = userID

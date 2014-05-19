@@ -9,18 +9,9 @@ Configuration
 
 Dependencies:
 
-You will need an instance of the Clavin-Server to speak with over http: https://github.com/c4fcm/CLAVIN-Server
-
-You need to install: 
-- python-boilerpipe from my fork - https://github.com/kanarinka/python-boilerpipe -for content extraction. This is a python wrapper around boilerpipe - https://code.google.com/p/boilerpipe/.
-
-- jpype (for using python-boilerpipe for content extraction). I used @originell's fork on github that makes it easier for installing on MacOSX: https://github.com/originell/jpype.
-
 - MongoDB
 
 Through PIP or easy_install:
-
-- charade (for using python-boilerpipe for content extraction)
 
 - tld (utility for extracting top level domain names)
 
@@ -30,19 +21,19 @@ Through PIP or easy_install:
 
 - Bitly Python API - https://github.com/bitly/bitly-api-python
 
-- Set your BITLY_ACCESS_TOKEN as an environment variable
+Services:
+
+- An instance of CLIFF for geoparsing: https://github.com/c4fcm/CLAVIN-Server
+
+- An instance of Boilerpipe-Server for content extraction - https://github.com/c4fcm/Boilerplate-Server
+
 
 What needs to be running for Terra Incognita to do its work
 =====
 - Apache Server
 - Flask Server
 - MongoDB
-- CLIFF CLAVIN (CLAVIN-Server) - accessed over http
-- Topic Mapping service - accessed over http
+- CLIFF CLAVIN - accessed over http
+- Boilerpipe Server - accessed over http
 
-Usage
-=====
-To run scripts for individual's data (temporary) -
-- change db to their db name
-- run test_batch_extraction.py, test_batch_geocoding.py, test_metadata_generator.py
 

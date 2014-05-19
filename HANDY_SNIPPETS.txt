@@ -102,6 +102,11 @@ mvn compile
 mvn package
 Copy the WAR file 
 
+TOMCAT ON OSX
+-----------------------------------------------------------
+Manager: http://localhost:8080/manager/
+catalina run/stop
+
 TOMCAT ON CIVICDEV
 -----------------------------------------------------------
 sudo service tomcat7 restart/stop/start
@@ -207,6 +212,10 @@ Match short domains for manual deleting if bad data
 
 Match things in parens
 \(([^\)]+)\)
+
+Match empty lines
+^(?:[\t ]*(?:\r?\n|\r))+
+
 
 
 Converting mediacloud csv to tld whitelist (possibly write scripte for this later)

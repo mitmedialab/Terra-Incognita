@@ -1,8 +1,9 @@
-#This script runs nightly to process users' preinstall history
+# This script runs nightly to process users' preinstall history
+# no it doesn't, you liar
 from bson.objectid import ObjectId
 import ConfigParser
 import os
-from text_processing.tasks import start_text_processing_queue
+from text_processing.textprocessing import start_text_processing_queue
 from pymongo import MongoClient
 import time
 from os import listdir
