@@ -252,7 +252,7 @@ def export():
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
 	csvwriter.writeheader()
 
-	cursor = app.db_user_history_collection.find({}, {"_id":1,"lastVisitTime":1,"preinstallation":1, "geodata.primaryCities.id":1, "geodata.primaryCountries":1}).sort([("lastVisitTime",-1)])
+	cursor = app.db_user_history_collection.find({}, {"_id":1,"lastVisitTime":1,"preinstallation":1, "geodata.primaryCities.id":1, "geodata.primaryCountries":1})
 	for record in cursor:
 		if "lastVisitTime" not in record:
 			continue
