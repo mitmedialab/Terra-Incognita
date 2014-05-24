@@ -47,3 +47,7 @@ www/celery1.pid
 www/celery2.pid
 
 www/celery2.pid
+
+www/exportUserHistoryCount.csv
+
+www/static/data/exportUserHistoryCount.csv

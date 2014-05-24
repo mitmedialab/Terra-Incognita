@@ -1,7 +1,7 @@
 from bson.objectid import ObjectId
 from bson import BSON
 from bson import json_util
-from flask import Flask, redirect, session, render_template, json, jsonify, request
+from flask import Flask, Response, redirect, session, render_template, json, jsonify, request, make_response
 from flask.ext.browserid import BrowserID
 from flask.ext.login import LoginManager
 from pymongo import MongoClient
@@ -21,6 +21,7 @@ from cities_array import *
 import logging
 from random import shuffle,randint
 import datetime
+import csv
 
 
 # constants
@@ -241,6 +242,40 @@ def user(userID='52dbeee6bd028634678cd069'):
 		return json.dumps(userData, sort_keys=True, indent=4, default=json_util.default) 
 	else:
 		return jsonify(error='No user ID specified')
+
+#exports all user history records for counting and operating on
+@app.route('/export/')
+def export():
+	
+	test_file = open('static/data/exportUserHistoryCount.csv','wb')
+	fieldnames = ["userID","datetime", "humanDate", "hasGeo", "preinstallation"]
+	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
+	csvwriter.writeheader()
+
+	cursor = app.db_user_history_collection.find({}, {"_id":1,"lastVisitTime":1,"preinstallation":1, "geodata.primaryCities.id":1, "geodata.primaryCountries":1}).sort([("lastVisitTime",-1)])
+	for record in cursor:
+		if "lastVisitTime" not in record:
+			continue
+		new_row = {}
+		new_row["userID"] = record["_id"]
+
+		new_row["datetime"] = record["lastVisitTime"]
+
+		date = datetime.datetime.fromtimestamp( record["lastVisitTime"]/1000 )
+		new_row["humanDate"] = date.strftime('%m/%d/%Y')
+		if "preinstallation" in record:
+			new_row["preinstallation"] =1
+		else:
+			new_row["preinstallation"] =0
+
+		if "geodata" in record and ("primaryCities" in record["geodata"] or "primaryCountries" in record["geodata"]):
+			new_row["hasGeo"] =1
+		else:
+			new_row["hasGeo"] =0
+		csvwriter.writerow(new_row)
+		
+ 	return app.send_static_file('data/exportUserHistoryCount.csv')
+
 
 @app.route('/report/<userID>')
 @app.route('/report/')
