@@ -245,47 +245,46 @@ def user(userID='52dbeee6bd028634678cd069'):
 @app.route('/report/<userID>')
 @app.route('/report/')
 def report(userID='5340168960de7dd9d8394aa7'):
-	
-	
-	#USER_NO_GEO_COUNT_BY_DAY
-	#USER_GEO_AND_CITIES_COUNT_BY_DAY
-	'''USER_GEO_COUNT_BY_DAY = [
-		{ "$match" : { "userID": userID, "geodata":{"$exists":1} }},	
-		{ "$group": {"lastVisitTime": {
-			"year" : { "$year" : "$lastVisitTime" },        
-			"month" : { "$month" : "$lastVisitTime" },        
-			"day" : { "$dayOfMonth" : "$lastVisitTime" },
-		}, "count": {"$sum": 1}}},
-	]'''
-	'''BLARG = [
-		{"$project":{"_id":0,
-					 "y":{"$subtract":[{"$year":"$lastVisitTime"}, 2014]},
-				   "d":{"$subtract":[{"$dayOfYear":"$lastVisitTime"},1]}, 
-				   "jan1":{"$add":datetime.datetime(2014,1,1)}
-				   #"jan1":{"$add":"ISODate('2014-01-01T00:00:00')"}
-		 } },
-		 {"$project":{"tsDate":{"$add":[
-					   "$jan1",
-					   {"$multiply":["$y", 365*24*60*60*1000]},
-					   {"$multiply":["$d", 24*60*60*1000]}
-		 ] } } }
 
-	]'''
 	#OK so I should have been storing the lastTimeVisited as a DATE type instead of number (UTC time)
-	#So now when I query, I will get user's entire history 3 ways (no geo, city geo, geo no cities) and sort using python into day bins 
+	#So now when I query, I will get user's entire history 2 ways (no geo & geo) and sort using python into day bins 
 	result = {}
-	
-	
-	cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY } }, {"lastVisitTime":1,"preinstallation":1, "geodata.primaryCities":1}).sort([("lastVisitTime",-1)])
-	result["historyWithGeo"] = list( record for record in cursor)
-	result["count_historyWithGeo"] = len(result["historyWithGeo"])
+	firstLogin = app.db_user_collection.find({"_id":ObjectId(userID)},{"firstLoginDate":1}).next()["firstLoginDate"]
 
+	result["installDate"] = datetime.datetime.fromtimestamp( firstLogin/1000 ).strftime('%m/%d/%Y')
+	
+	# HISTORY WITH GEO
+	cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY } }, {"lastVisitTime":1,"preinstallation":1}).sort([("lastVisitTime",-1)])
+	result["count_historyWithGeo"] = cursor.count()
 
+	historyWithGeo = dict()
+	for record in cursor:
+		date = datetime.datetime.fromtimestamp( record["lastVisitTime"]/1000 )
+		dateKey = date.strftime('%m/%d/%Y')
+		if dateKey in historyWithGeo:
+			historyWithGeo[dateKey] = historyWithGeo[dateKey] + 1
+		else:
+			historyWithGeo[dateKey] = 1
+	result["historyWithGeo"] = historyWithGeo
+	
+
+	
+	# HISTORY WITHOUT GEO
 	cursor = app.db_user_history_collection.find({"userID":userID, "$or" : 
 								[ {"geodata.primaryCountries": { "$exists": 0 }}, {"geodata.primaryCities.id": { "$nin": THE1000CITIES_IDS_ARRAY }} ] 
 								}, {"lastVisitTime":1,"preinstallation":1}).sort([("lastVisitTime",-1)])
-	result["historyNoGeo"] = list( datetime.datetime.fromtimestamp( record["lastVisitTime"] * 1000) for record in cursor)
-	result["count_historyNoGeo"] = len(result["historyNoGeo"])
+	
+	result["count_historyNoGeo"] = cursor.count()
+	historyNoGeo = dict()
+	for record in cursor:
+		date = datetime.datetime.fromtimestamp( record["lastVisitTime"]/1000 )
+		dateKey = date.strftime('%m/%d/%Y')
+		if dateKey in historyNoGeo:
+			historyNoGeo[dateKey] = historyNoGeo[dateKey] + 1
+		else:
+			historyNoGeo[dateKey] = 1
+	result["historyNoGeo"] = historyNoGeo
+	
 
 	totalCount = app.db_user_history_collection.find({"userID":userID}).count()
 	result["count_total"]=totalCount
