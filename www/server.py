@@ -247,7 +247,7 @@ def user(userID='52dbeee6bd028634678cd069'):
 @app.route('/export/')
 def export():
 	
-	test_file = open('static/data/exportUserHistoryCount.csv','wb')
+	test_file = open(app.static_folder + '/data/exportUserHistoryCount.csv','wb')
 	fieldnames = ["userID","datetime", "humanDate", "hasGeo", "preinstallation"]
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
 	csvwriter.writeheader()
