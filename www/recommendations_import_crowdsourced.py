@@ -73,8 +73,10 @@ for myFile in files_to_import:
 							primaryCity["countryCode"] = city["country_code"]
 							doc["geodata"]["primaryCities"].append(primaryCity)
 
-							db_recommendation_collection.remove({"url": doc["url"]})
-							print "removed " + doc["url"]
+							#This was for deleting URLS bc were imported wrong
+							#db_recommendation_collection.remove({"url": doc["url"]})
+							#print "removed " + doc["url"]
+							
 							#check for url already in recommendations DB
 							if db_recommendation_collection.find({"url": doc["url"]}).skip(0).limit(1).count() == 0: 
 								doc["source"]=SOURCE

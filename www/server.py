@@ -274,18 +274,22 @@ def report(userID='5340168960de7dd9d8394aa7'):
 	#OK so I should have been storing the lastTimeVisited as a DATE type instead of number (UTC time)
 	#So now when I query, I will get user's entire history 3 ways (no geo, city geo, geo no cities) and sort using python into day bins 
 	result = {}
+	
+	
 	cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY } }, {"lastVisitTime":1,"preinstallation":1, "geodata.primaryCities":1}).sort([("lastVisitTime",-1)])
-	result["historyWithGeoWithCities"] = list( record for record in cursor)
-	result["count_historyWithGeoWithCities"] = len(result["historyWithGeoWithCities"])
+	result["historyWithGeo"] = list( record for record in cursor)
+	result["count_historyWithGeo"] = len(result["historyWithGeo"])
 
-	cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities.id": { "$nin": THE1000CITIES_IDS_ARRAY }, "geodata.primaryCountries": { "$exists": 1 } }, {"lastVisitTime":1,"preinstallation":1, "geodata":1}).sort([("lastVisitTime",-1)])
-	result["historyWithGeoWithoutCities"] = list( record for record in cursor)
-	result["count_historyWithGeoWithoutCities"] = len(result["historyWithGeoWithoutCities"])
 
-	cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCountries": { "$exists": 0 } }, {"lastVisitTime":1,"preinstallation":1, "geodata":1}).sort([("lastVisitTime",-1)])
-	result["historyNoGeo"] = list( record for record in cursor)
+	cursor = app.db_user_history_collection.find({"userID":userID, "$or" : 
+								[ {"geodata.primaryCountries": { "$exists": 0 }}, {"geodata.primaryCities.id": { "$nin": THE1000CITIES_IDS_ARRAY }} ] 
+								}, {"lastVisitTime":1,"preinstallation":1}).sort([("lastVisitTime",-1)])
+	result["historyNoGeo"] = list( datetime.datetime.fromtimestamp( record["lastVisitTime"] * 1000) for record in cursor)
 	result["count_historyNoGeo"] = len(result["historyNoGeo"])
-		
+
+	totalCount = app.db_user_history_collection.find({"userID":userID}).count()
+	result["count_total"]=totalCount
+
 	if result:
 		return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
 	else:
