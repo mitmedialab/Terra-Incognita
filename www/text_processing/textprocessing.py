@@ -69,7 +69,7 @@ def geoparseSingleText(text,geoserver):
 	result = {}
 	try:
 		
-		params = {'q':text}
+		params = {'q':text,'replaceAllDemonyms':'true'}
 		
 		r = requests.post(geoserver, data=params)
 
