@@ -299,7 +299,7 @@ geonames_id,city_name,toponym_name,lat,lon,pop,country_name,country_code,un_coun
 7332364,Cixi,Cixi,31.11184,120.22466,0,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
 1814906,Chongqing,Chongqing,29.56278,106.55278,3967028,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
 2038067,Chifeng,Chifeng,42.26833,118.96361,346654,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
-1815286,Chengdu,Chengdu,30.66667,104.06667,3950437,China,CN,156,30,Eastern Asia,AS,Asia,1,,1,1,
+1815286,Chengdu,Chengdu,30.66667,104.06667,3950437,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
 1815456,Changzhou,Changzhou,31.77358,119.95401,949018,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
 7283386,Changshu City,Changshu City,31.64615,120.74221,1047700,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
 1815577,Changsha,Changsha,28.19874,112.97087,2073938,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
@@ -309,7 +309,7 @@ geonames_id,city_name,toponym_name,lat,lon,pop,country_name,country_code,un_coun
 1816336,Binzhou,Binzhou,37.36667,118.01667,115893,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
 2038300,Benxi,Benxi,41.28861,123.765,987717,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
 1816440,Bengbu,Bengbu,32.94083,117.36083,576648,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
-1816670,Beijing,Beijing,39.9075,116.39723,7480601,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
+1816670,Beijing,Beijing,39.9075,116.39723,7480601,China,CN,156,30,Eastern Asia,AS,Asia,1,,1,1,
 1816807,Bazhou,Bazhou,31.85372,106.7586,0,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
 2038432,Baotou,Baotou,40.65222,109.82222,1301768,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
 2038455,Baoji,Baoji,41.82861,121.87472,0,China,CN,156,30,Eastern Asia,AS,Asia,,,1,1,
@@ -592,8 +592,7 @@ geonames_id,city_name,toponym_name,lat,lon,pop,country_name,country_code,un_coun
 2454268,Koutiala,Koutiala,12.39173,-5.46421,99353,Mali,ML,466,11,Western Africa,AF,Africa,,,1,1,1
 2455518,Kayes,Kayes,14.44693,-11.44448,78406,Mali,ML,466,11,Western Africa,AF,Africa,,,1,1,1
 2460596,Bamako,Bamako,12.65,-8,1297281,Mali,ML,466,11,Western Africa,AF,Africa,1,,1,1,1
-2455914,"
-Kalaban Koro",Koulikoro,12.57329,-8.02907,23919,Mali,ML,466,11,Western Africa,AF,Africa,,,1,1,1
+2455914,"Kalaban Koro",Koulikoro,12.57329,-8.02907,23919,Mali,ML,466,11,Western Africa,AF,Africa,,,1,1,1
 2562305,Valletta,Valletta,35.89972,14.51472,6794,Malta,MT,470,39,Southern Europe,EU,Europe,1,1,,1,
 2562704,Mosta,Mosta,35.90917,14.42556,17789,Malta,MT,470,39,Southern Europe,EU,Europe,,1,,1,
 2563191,Birkirkara,Birkirkara,35.89722,14.46111,21676,Malta,MT,470,39,Southern Europe,EU,Europe,,1,,1,
