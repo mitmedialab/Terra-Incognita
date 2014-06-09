@@ -14,9 +14,11 @@ UPDATE BERYL WITH NEW CODE
 git fetch --all
 git reset --hard origin/master
 in /var/www/terra-incognita.co/Terra-Incognita
+sudo /etc/init.d/apache2 restart
 
-start/stop apache
-
+REMOVE FILES IN DIR
+-----------------------------------------------------------
+rm /path/to/directory/*.*
 
 SET PYTHON BREAKPOINT
 -----------------------------------------------------------
