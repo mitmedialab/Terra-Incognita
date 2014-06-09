@@ -12,8 +12,8 @@ result <- result[-1,]
 # read in data file from /export/
 df<-read.csv("TerraIncognitaExport_05252014.csv")
 
-#remove blank userid rows
-df<- df[!df$userID =="", ]
+#remove blank userid rows, remove Catherine & Matt user IDs
+df<- df[!df$userID =="" & df$userID !="53401d97c183f236b23d0d40" & df$userID !="5345c2f9c183f20b81e78eec", ]
 
 # get a list of user IDs
 users <- unique(df$userID)
@@ -92,7 +92,7 @@ df<-data.frame(label=rep("", 4),num=rep(NA, 4),stringsAsFactors=FALSE)
 df[1,]<-c("Percent of users who browsed more geographically-related news stories after installing Terra Incognita",nrow(greaterWithGeo)/total*100)
 df[2,]<-c("Percent of users who browsed more overall news stories without geography after installing Terra Incognita:",nrow(greaterWithoutGeo)/total*100)
 df[3,]<-c("Average increase in # of geo-related news stories people read per day after installing TI", mean(result$withGeoDifference))
-df[4,]<-c("Average increase in # of non-geo-related news stories people read per day after installing TI",mean(result$withGeoDifference))
+df[4,]<-c("Average increase in # of non-geo-related news stories people read per day after installing TI",mean(result$withoutGeoDifference))
 
 
 print(paste("Percent of users who browsed more geographically-related news stories after installing Terra Incognita:", nrow(greaterWithGeo)/total*100,"%"))

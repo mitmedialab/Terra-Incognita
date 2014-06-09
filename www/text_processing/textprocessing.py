@@ -5,6 +5,9 @@ import os
 from cities_array import *
 import httplib
 from pymongo import MongoClient
+from bson.objectid import ObjectId
+import time
+from random import randrange
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 reader = csv.DictReader(open(os.path.join(BASE_DIR,"geocodes.csv"),'rU'))
@@ -210,6 +213,7 @@ def invertGeodata(geodata, currentLevel):
 
 def start_text_processing_queue(*args,**kwargs):
 	doc = args[0]
+	
 	print "starting text processing queue for " + doc['url']
 
 	config = args[1]	
@@ -226,6 +230,10 @@ def start_text_processing_queue(*args,**kwargs):
 	else:
 		print "the doc is a user history item"
 		db_collection = db[config.get('db','user_history_item_collection')]
+
+		# set up manual ObjectId in ascending order
+		doc["_id"] = str(time.time()) + "_" + doc["userID"] + "_" + str(randrange(1, 100000))
+		print "new doc ID is " + doc["_id"]
 
 		# make sure doc doesn't already exist
 		alreadyAdded = db_collection.find({"userID":doc["userID"], "lastVisitTime":doc["lastVisitTime"], "url":doc["url"]}).count()

@@ -51,3 +51,9 @@ www/celery2.pid
 www/exportUserHistoryCount.csv
 
 www/static/data/exportUserHistoryCount.csv
+
+analysis/meanCountsByUser_summary.csv
+
+analysis/TerraIncognitaExport_05252014.csv
+
+analysis/meanCountsByUser.csv
