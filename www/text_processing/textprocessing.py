@@ -232,7 +232,7 @@ def start_text_processing_queue(*args,**kwargs):
 		db_collection = db[config.get('db','user_history_item_collection')]
 
 		# set up manual ObjectId in ascending order
-		doc["_id"] = str(time.time()) + "_" + doc["userID"] + "_" + str(randrange(1, 100000))
+		doc["_id"] = newID = str(int(doc["lastVisitTime"] * 1000)) + "_" + str(randrange(10000, 99999)) + "_" + doc["userID"]
 		print "new doc ID is " + doc["_id"]
 
 		# make sure doc doesn't already exist

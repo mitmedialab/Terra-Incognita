@@ -52,6 +52,9 @@ Drop DB:
 use <db name>
 db.dropDatabase()
 
+Copy Collection:
+db.user_history_items.find().forEach( function(x){db.user_history_items_BACKUP.insert(x)} );
+
 GITHUB HARD RESET
 -----------------------------------------------------------
 For resetting git working dir
