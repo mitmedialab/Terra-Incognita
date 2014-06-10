@@ -24,26 +24,33 @@ App.MapView = Backbone.View.extend({
 		
 		var that = this;
 		this.userModel.on("change:userCityVisits", function() {
-			if (that.cityZoomedView){
-					that.cityZoomedView.clearAll();
+				/*if (that.cityZoomedView){
+						that.cityZoomedView.clearAll();
+				}*/
+			//Only render if city zoomed view hasn't been set up already
+			//This is to try to patch the loading 3x bug
+			if (!that.cityZoomedView){
+				var cityID ="";
+				var isRandomCity = true;
+				if (that.options.cityID && that.options.cityID !=""){
+					cityID = that.options.cityID;
+					isRandomCity = that.options.isRandomCity;
+				}
+				else{
+					cityID = that.userModel.getUnvisitedCityID();
+					isRandomCity = true;
+				}
+			    that.cityZoomedView = new App.CityZoomedView(
+					{	
+						model: that.cityCollection.getCityModel(cityID),
+						isRandomCity:isRandomCity
+					});
+			    // Create sub-views
+				this.render();
 			}
-			var cityID ="";
-			var isRandomCity = true;
-			if (that.options.cityID && that.options.cityID !=""){
-				cityID = that.options.cityID;
-				isRandomCity = that.options.isRandomCity;
-			}else{
-				cityID = that.userModel.getUnvisitedCityID();
-				isRandomCity = true;
-			}
-		    that.cityZoomedView = new App.CityZoomedView(
-				{	
-					model: that.cityCollection.getCityModel(cityID),
-					isRandomCity:isRandomCity
-				});
-		    })
-		// Create sub-views
-		this.render();
+		})
+				
+			
 	},
 	
 	render: function () {
