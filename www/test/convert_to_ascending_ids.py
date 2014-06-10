@@ -19,11 +19,10 @@ db_user_history_collection = db[config.get('db','user_history_item_collection')]
 
 #update each ID with a new scheme - lastVisitTime + randomNumber + userID
 for doc in db_user_history_collection.find():
-	if "lastVisitTime" not in doc:
-		time = time.time()
-		print "Using time instead of lastVisitTime"
-	else:	
-		time = doc["lastVisitTime"]
-	doc["_id"] = str(int(time * 1000)) + "_" + str(randrange(10000, 99999)) + "_" + doc["userID"]
 	
+	theTime = time.time()
+	doc["_id"] = str(int(theTime * 1000)) + "_" + str(randrange(10000, 99999)) 
+	if "userID" in doc:
+		doc["_id"] = doc["_id"] + "_" + doc["userID"]
+		
 	db_user_history_collection.save(doc)
