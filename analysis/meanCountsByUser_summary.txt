@@ -1,0 +1,6 @@
+77.5% of users browsed more geographically-related news stories after installing TI
+85% of users browsed more overall news stories without geography after installing TI
+8  is the average increase in # of geo-related news stories people read per day after installing TI
+20.2 is the average increase in # of non-geo-related news stories people read per day after installing TI
+NOTES: In these summary statistics we are filtering out user data for users who have less than 5 days in the system either pre or post installation. This could mean they did not use Chrome prior to installing the extension or else they haven't been in the system using it for more than 5 days.
+OTHER NOTES: In these summary statistics we are also filtering out user data for the creators of the tool (C.D'Ignazio and M. Stempeck) who are biased users.

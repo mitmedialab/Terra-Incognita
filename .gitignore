@@ -57,3 +57,8 @@ analysis/meanCountsByUser_summary.csv
 analysis/TerraIncognitaExport_05252014.csv
 
 analysis/meanCountsByUser.csv
+.Rproj.user
+
+*.Rproj
+
+analysis/TerraIncognitaExport_06102014.csv
