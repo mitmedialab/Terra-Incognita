@@ -233,8 +233,8 @@ def start_text_processing_queue(*args,**kwargs):
 
 		# set up manual ObjectId in ascending order
 		
-		time = time.time()
-		doc["_id"] = str(int(time * 1000)) + "_" + str(randrange(10000, 99999)) + "_" + doc["userID"]
+		theTime = time.time()
+		doc["_id"] = str(int(theTime * 1000)) + "_" + str(randrange(10000, 99999)) + "_" + doc["userID"]
 		print "new doc ID is " + doc["_id"]
 
 		# make sure doc doesn't already exist
