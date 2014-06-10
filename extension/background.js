@@ -8,11 +8,10 @@ var tabToCityMap ={};
 function checkLoggedIn(callback){
 	chrome.cookies.get({ url: COOKIE_PATH, name: USER_COOKIE },
 			function (cookie) {
-				if (cookie) {
+				if (cookie && cookie.value && !cookie.value=="") {
 						console.log("user logged in");
 						IS_LOGGED_IN = true;
 						USER_ID = cookie.value;
-						
 				}else{
 					console.log("user not logged in");
 					IS_LOGGED_IN = false;

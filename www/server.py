@@ -276,6 +276,15 @@ def export():
 		
  	return app.send_static_file('data/exportUserHistoryCount.csv')
 
+#exports all user history records for counting and operating on
+@app.route('/exportclicks/')
+def exportclicks():
+	test_file = open(app.static_folder + '/data/exportUserClicks.csv','wb')
+	fieldnames = ["userID","datetime", "humanDate", "hasGeo", "preinstallation"]
+	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
+	csvwriter.writeheader()
+
+	return app.send_static_file('data/exportUserClicks.csv')
 
 @app.route('/report/<userID>')
 @app.route('/report/')
