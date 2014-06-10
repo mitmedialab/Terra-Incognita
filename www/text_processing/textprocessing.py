@@ -235,7 +235,7 @@ def start_text_processing_queue(*args,**kwargs):
 		
 		theTime = time.time()
 		doc["_id"] = str(int(theTime * 1000)) + "_" + str(randrange(10000, 99999)) 
-		if "userID" in doc:
+		if "userID" in doc and doc["userID"] is not None:
 			doc["_id"] = doc["_id"] + "_" + doc["userID"]
 		
 		print "new doc ID is " + doc["_id"]
