@@ -232,12 +232,11 @@ def start_text_processing_queue(*args,**kwargs):
 		db_collection = db[config.get('db','user_history_item_collection')]
 
 		# set up manual ObjectId in ascending order
-		
+		# TODO: encapsulate this in its own module or class
 		theTime = time.time()
 		doc["_id"] = str(int(theTime * 1000)) + "_" + str(randrange(10000, 99999)) 
 		if "userID" in doc and doc["userID"] is not None:
 			doc["_id"] = doc["_id"] + "_" + doc["userID"]
-		
 		print "new doc ID is " + doc["_id"]
 
 		# make sure doc doesn't already exist
