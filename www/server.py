@@ -698,9 +698,12 @@ def loginpage():
 def processURL():
 	print "Receiving new URL"
 	historyObject = json.loads(request.form['logURL'])
-	args = (historyObject, config, False);
-	start_text_processing_queue(*args)
-	#start_text_processing_queue.delay(*args)
+	if "userID" in historyObject and historyObject["userID"] is not None:
+		args = (historyObject, config, False);
+		start_text_processing_queue(*args)
+	else:
+		print "Tried to log URL with no userID"	
+		
 	return 'We is processing your URL dude - ' + historyObject["url"]
 
 

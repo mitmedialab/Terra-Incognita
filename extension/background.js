@@ -284,16 +284,21 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 			urlMap[tabId] = false;
 			
 			checkLoggedIn(function(){
-				//retrieve latest URL from history so we get the metadata
-				chrome.history.search({text: '', maxResults:1}, function(results)
-				{
-					if (tab.url == results[0].url && keepURL(results[0].url)){
-						historyObject = results[0];
-						historyObject.userID = USER_ID;
-						console.log(historyObject)
-						postData('monitor/', {'logURL': JSON.stringify(historyObject)}, null);
-					}
-				});
+
+				// Only log URLs from people that are logged in, otherwise have no way of connecting people 
+				// to browsing
+				if (USER_ID){
+					//retrieve latest URL from history so we get the metadata
+					chrome.history.search({text: '', maxResults:1}, function(results)
+					{
+						if (tab.url == results[0].url && keepURL(results[0].url)){
+							historyObject = results[0];
+							historyObject.userID = USER_ID;
+							console.log(historyObject)
+							postData('monitor/', {'logURL': JSON.stringify(historyObject)}, null);
+						}
+					});
+				}
 			});
 		}
 });
