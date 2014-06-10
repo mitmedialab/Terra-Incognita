@@ -24,6 +24,8 @@ App.MapView = Backbone.View.extend({
 		
 		var that = this;
 		this.userModel.on("change:userCityVisits", function() {
+			that.citySelectorView.render() 
+
 				/*if (that.cityZoomedView){
 						that.cityZoomedView.clearAll();
 				}*/
@@ -46,8 +48,9 @@ App.MapView = Backbone.View.extend({
 						isRandomCity:isRandomCity
 					});
 			    // Create sub-views
-				this.render();
+				
 			}
+			that.render();
 		})
 				
 			
@@ -240,7 +243,7 @@ App.CitySelectorView = Backbone.View.extend({
 		App.debug('App.CitySelectorView.initialize()');
 		_.bindAll(this, 'render');
 		this.options = options || {};
-		this.model.on('change:userCityVisits', this.render,this);
+		//this.model.on('change:userCityVisits', this.render,this);
 		this.rawCitiesData = options.cityCollection.rawCitiesData;
 
 	    if(this.model.get("userCityVisits") && Object.keys(this.model.get("userCityVisits")).length != 0)	
@@ -249,6 +252,9 @@ App.CitySelectorView = Backbone.View.extend({
 	},
 	render: function () {
 		App.debug('App.CitySelectorView.render()');
+
+		console.log("RENDERING CITY SELECTOR")
+		console.log(this.model.get("userCityVisits"))
 
 		var html = this.template({ visitedCityCount : Object.keys(this.model.get("userCityVisits")).length });
 

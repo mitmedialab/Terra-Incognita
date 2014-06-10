@@ -702,8 +702,8 @@ def processURL():
 		args = (historyObject, config, False);
 		start_text_processing_queue(*args)
 	else:
-		print "Tried to log URL with no userID"	
-		
+		print "Was sent URL with no userID so I'm ignoring it"	
+
 	return 'We is processing your URL dude - ' + historyObject["url"]
 
 
