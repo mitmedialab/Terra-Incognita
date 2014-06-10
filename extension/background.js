@@ -298,9 +298,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 							postData('monitor/', {'logURL': JSON.stringify(historyObject)}, null);
 						}
 					});
-				} else{
-					console.log("No user ID, no monitoring")
-				}
+				} 
 			});
 		}
 });
