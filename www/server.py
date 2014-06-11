@@ -329,9 +329,11 @@ def exportgeo():
 			continue
 		result = result.next()
 		firstPreinstallHistoryItemDate = datetime.datetime.fromtimestamp(int(result["lastVisitTime"]/1000))
+		print "preinstall history item date is " + str(firstPreinstallHistoryItemDate)
+		print "firstlogin date is " + str(firstLoginDate)
 		dateDiff = firstLoginDate - firstPreinstallHistoryItemDate
 		preInstallDays = dateDiff.days
-		print str(preInstallDays) + " post install days"
+		print str(preInstallDays) + " pre install days"
 		if (preInstallDays <MINIMUM_DAYS_OF_DATA):
 			print "not enough preinstall days - " + str(preInstallDays)
 			continue
