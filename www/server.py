@@ -298,7 +298,7 @@ class DictUnicodeProxy(object):
 @app.route('/exportgeo/')
 def exportgeo():
 	test_file = open(app.static_folder + '/data/exportUserGeo.csv','wb')
-	fieldnames = ["userID","countrycode", "preinstallation.per.day", "postinstallation.per.day"]
+	fieldnames = ["userID","countrycode", "preinstallation.count", "preinstallation.days", "postinstallation.count", "postinstallation.days"]
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
 	csvwriter.writeheader()
 
@@ -308,8 +308,9 @@ def exportgeo():
 		if "firstLoginDate" not in user:
 			print "no firstLoginDate"
 			continue
-		userID = user["_id"]
+		userID = str(user["_id"])
 		print user["username"]
+		print userID
 		
 		# POSTINSTALL DAYS, FILTER IF THEY HAVEN"T BEEN IN THE SYSTEM A MIN #
 		firstLoginDate = datetime.datetime.fromtimestamp(int(user["firstLoginDate"]/1000))
@@ -323,7 +324,7 @@ def exportgeo():
 			continue
 
 		# PREINSTALL DAYS, FILTER IF THEY DONT HAVE CERTAIN # DAYS HISTORY #
-		result = app.db_user_history_collection.find({"userID":str(userID), "preinstallation":{"$exists":1}}, {"lastVisitTime":1}).sort([("lastVisitTime",-1)]).limit(1)
+		result = app.db_user_history_collection.find({"userID":str(userID), "preinstallation":{"$exists":1}}, {"lastVisitTime":1}).sort([("lastVisitTime",1)]).limit(1)
 		if result.count() == 0:
 			print "no preinstall days"
 			continue
@@ -349,27 +350,31 @@ def exportgeo():
 
 		COUNTRY_COUNT_PREINSTALL_PIPELINE = [
 		{ "$unwind" : "$geodata.primaryCountries" },
-		{ "$match" : { "userID":userID, "preinstallation":1 }},
+		{ "$match" : { "userID":userID, "preinstallation":{"$exists":1} }},
 		{ "$group": {"_id": {"countrycode":"$geodata.primaryCountries" }, "count": {"$sum": 1}}},
 		{ "$sort" : { "count" : -1 } }
 		]
 		
 		# Preinstall country counts
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_PREINSTALL_PIPELINE ) 
+		print q
 		for row in q["result"]:
 			new_row = {}
 			new_row["userID"] = userID
 			new_row["countrycode"] = row["_id"]["countrycode"]
-			new_row["preinstallation.per.day"] = row["count"]/preInstallDays
+			new_row["preinstallation.count"] = row["count"]
+			new_row["preinstallation.days"] = preInstallDays
 			csvwriter.writerow(DictUnicodeProxy(new_row))
 			
 		# Postinstall country counts
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_POSTINSTALL_PIPELINE ) 
+		print q
 		for row in q["result"]:
 			new_row = {}
 			new_row["userID"] = userID
 			new_row["countrycode"] = row["_id"]["countrycode"]
-			new_row["postinstallation.per.day"] = row["count"]/postInstallDays
+			new_row["postinstallation.count"] = row["count"]
+			new_row["postinstallation.days"] = postInstallDays
 			csvwriter.writerow(DictUnicodeProxy(new_row))
 
 		# File is a little messy but we will clean it up in R
@@ -720,8 +725,16 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 #Test function for various things
 @app.route('/testdb/')
 def testdb():
-	userID = "5340168960de7dd9d8394aa7"
-	app.db_user_collection.update({ "_id": ObjectId(userID)},{ "$set":{'signature':"boo"}})
+	userID = "5340173260de7dd9d8394aa8"
+	COUNTRY_COUNT_POSTINSTALL_PIPELINE = [
+		{ "$unwind" : "$geodata.primaryCountries" },
+		{ "$match" : { "userID":userID, "preinstallation":{"$exists":0} }},
+		{ "$group": {"_id": {"countrycode":"$geodata.primaryCountries" }, "count": {"$sum": 1}}},
+		{ "$sort" : { "count" : -1 } }
+		]
+	q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_POSTINSTALL_PIPELINE ) 
+	for row in q["result"]:
+		print row
 
 	return "Updated your user"
 
