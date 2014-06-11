@@ -275,7 +275,18 @@ def export():
 			new_row["hasGeo"] =0
 		csvwriter.writerow(new_row)
 		
- 	return app.send_static_file('data/exportUserHistoryCount.csv')
+	return app.send_static_file('data/exportUserHistoryCount.csv')
+
+class DictUnicodeProxy(object):
+	def __init__(self, d):
+		self.d = d
+	def __iter__(self):
+		return self.d.__iter__()
+	def get(self, item, default=None):
+		i = self.d.get(item, default)
+		if isinstance(i, unicode):
+			return i.encode('utf-8')
+		return i
 
 #exports all user clicks on recommendations
 @app.route('/exportclicks/')
@@ -299,7 +310,7 @@ def exportclicks():
 		for city in THE1000CITIES:
 			if int(city["geonames_id"]) == int(record["cityID"]):
 				new_row["city"] = city["city_name"]
-		csvwriter.writerow(new_row)
+		csvwriter.writerow(DictUnicodeProxy(new_row))
 	test_file.close()
 	return app.send_static_file('data/exportUserClicks.csv')
 
