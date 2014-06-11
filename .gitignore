@@ -74,3 +74,5 @@ analysis/TerraIncognitaExportClicks_06112014.csv
 analysis/TerraIncognitaTotalUsers.csv
 
 www/static/data/totalusers.csv
+
+www/static/data/exportUserGeo.csv

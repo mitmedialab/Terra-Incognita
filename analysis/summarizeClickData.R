@@ -58,3 +58,4 @@ print(paste("People clicked on cities chosen by the system", round(randomCityCli
 
 print("-----------------------------------")
 print("NOTES: Filtering out M.Stempeck and C.D'Ignazio user IDs")
+print("NOTES: Filtering out users with less than 5 days using the system")

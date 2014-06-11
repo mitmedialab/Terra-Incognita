@@ -292,6 +292,87 @@ class DictUnicodeProxy(object):
 			return i.encode('utf-8')
 		return i
 
+# exports user browsing geo to see if geo diversity goes up post-TI-install
+# excludes userIDs from creators of TI
+# excludes data from people who don't have at least 5 days of preinstall and postinstall history
+@app.route('/exportgeo/')
+def exportgeo():
+	test_file = open(app.static_folder + '/data/exportUserGeo.csv','wb')
+	fieldnames = ["userID","countrycode", "preinstallation.per.day", "postinstallation.per.day"]
+	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
+	csvwriter.writeheader()
+
+	# GET USERS, EXCLUDE M & C
+	users = app.db_user_collection.find({"$and": [{ "_id":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "userID":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}]},{"_id":1,"firstLoginDate":1})
+	for user in users:
+		if "firstLoginDate" not in user:
+			print "no firstLoginDate"
+			continue
+		userID = user["_id"]
+		print userID
+		
+		# POSTINSTALL DAYS, FILTER IF THEY HAVEN"T BEEN IN THE SYSTEM A MIN #
+		firstLoginDate = datetime.datetime.fromtimestamp(int(user["firstLoginDate"]/1000))
+		nowDate = datetime.datetime.now()
+		
+		dateDiff = nowDate - firstLoginDate
+		postInstallDays = dateDiff.days
+		
+		if (postInstallDays <MINIMUM_DAYS_OF_DATA):
+			print "not enough postinstall days"
+			continue
+
+		# PREINSTALL DAYS, FILTER IF THEY DONT HAVE CERTAIN # DAYS HISTORY #
+		result = app.db_user_history_collection.find({"userID":str(userID), "preinstallation":{"$exists":1}}, {"lastVisitTime":1}).sort([("lastVisitTime",-1)]).limit(1)
+		if result.count() == 0:
+			print "no preinstall days"
+			continue
+		result = result.next()
+		firstPreinstallHistoryItemDate = datetime.datetime.fromtimestamp(int(result["lastVisitTime"]/1000))
+		dateDiff = firstLoginDate - firstPreinstallHistoryItemDate
+		preInstallDays = dateDiff.days
+		if (preInstallDays <MINIMUM_DAYS_OF_DATA):
+			print "not enough preinstall days - " + str(preInstallDays)
+			continue
+
+		# OK, USER MEETS DATA REQUIREMENT, GET THEIR COUNTRY COUNTS #
+		COUNTRY_COUNT_POSTINSTALL_PIPELINE = [
+		{ "$unwind" : "$geodata.primaryCountries" },
+		{ "$match" : { "userID":userID, "preinstallation":{"$exists":0} }},
+		{ "$group": {"_id": {"countrycode":"$geodata.primaryCountries" }, "count": {"$sum": 1}}},
+		{ "$sort" : { "count" : -1 } }
+		]
+
+		COUNTRY_COUNT_PREINSTALL_PIPELINE = [
+		{ "$unwind" : "$geodata.primaryCountries" },
+		{ "$match" : { "userID":userID, "preinstallation":1 }},
+		{ "$group": {"_id": {"countrycode":"$geodata.primaryCountries" }, "count": {"$sum": 1}}},
+		{ "$sort" : { "count" : -1 } }
+		]
+		
+		# Preinstall country counts
+		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_PREINSTALL_PIPELINE ) 
+		for row in q["result"]:
+			new_row = {}
+			new_row["userID"] = userID
+			new_row["countrycode"] = row["_id"]["countrycode"]
+			new_row["preinstallation.per.day"] = row["count"]/preInstallDays
+			csvwriter.writerow(DictUnicodeProxy(new_row))
+			
+		# Postinstall country counts
+		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_POSTINSTALL_PIPELINE ) 
+		for row in q["result"]:
+			new_row = {}
+			new_row["userID"] = userID
+			new_row["countrycode"] = row["_id"]["countrycode"]
+			new_row["postinstallation.per.day"] = row["count"]/postInstallDays
+			csvwriter.writerow(DictUnicodeProxy(new_row))
+
+		# File is a little messy but we will clean it up in R
+
+	test_file.close()
+	return app.send_static_file('data/exportUserGeo.csv')
+
 # exports all user clicks on recommendations
 # excludes userIDs from creators of TI
 # excludes data from people who haven't been in the system for at least 5 days
