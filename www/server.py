@@ -29,6 +29,9 @@ CONFIG_FILENAME = 'app.config'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_DIR = os.path.join(BASE_DIR,'logs')
 
+# constant for data analysis
+MINIMUM_DAYS_OF_DATA = 5
+
 # read in app config
 config = ConfigParser.ConfigParser()
 config.read(os.path.join(BASE_DIR,CONFIG_FILENAME))
@@ -245,6 +248,7 @@ def user(userID='52dbeee6bd028634678cd069'):
 
 # exports all user history records for counting and operating on
 # filter records that have no userID - bug that they ended up there anyways 
+# excludes userIDs from creators of TI
 @app.route('/export/')
 def export():
 	
@@ -253,7 +257,7 @@ def export():
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
 	csvwriter.writeheader()
 
-	cursor = app.db_user_history_collection.find({"userID":{"$ne":null}}, {"userID":1,"lastVisitTime":1,"preinstallation":1, "geodata.primaryCities.id":1, "geodata.primaryCountries":1})
+	cursor = app.db_user_history_collection.find({"$and": [{ "_id":{"$ne":"53401d97c183f236b23d0d40"}}, { "userID":{"$ne":"5345c2f9c183f20b81e78eec"}}, { "userID":{"$ne":"null"}}]}, {"userID":1,"lastVisitTime":1,"preinstallation":1, "geodata.primaryCities.id":1, "geodata.primaryCountries":1})
 	for record in cursor:
 		if "lastVisitTime" not in record:
 			continue
@@ -288,41 +292,71 @@ class DictUnicodeProxy(object):
 			return i.encode('utf-8')
 		return i
 
-#exports all user clicks on recommendations
+# exports all user clicks on recommendations
+# excludes userIDs from creators of TI
+# excludes data from people who haven't been in the system for at least 5 days
 @app.route('/exportclicks/')
 def exportclicks():
 	test_file = open(app.static_folder + '/data/exportUserClicks.csv','wb')
 	fieldnames = ["recommendation_source","url", "userID", "city", "random_city","clicked_at","ui_source"]
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
 	csvwriter.writeheader()
-	cursor = app.db_user_behavior_collection.find()
+	cursor = app.db_user_behavior_collection.find({"$and": [{ "_id":{"$ne":"53401d97c183f236b23d0d40"}}, { "userID":{"$ne":"5345c2f9c183f20b81e78eec"}}, { "userID":{"$ne":"null"}}]})
 	for record in cursor:
-		new_row = {}
-		if "recommendation_source" in record:
-			new_row["recommendation_source"] = record["recommendation_source"]
-		new_row["url"] = record["url"]
-		new_row["userID"] = record["userID"]
+		userID = record["userID"]
+		result = app.db_user_collection.find({"_id":ObjectId(userID)},{"firstLoginDate":1}).next()
 		
-		new_row["random_city"] = record["random_city"]
-		new_row["clicked_at"] = record["clicked_at"]
-		new_row["ui_source"] = record["ui_source"]
+		firstLoginDate = datetime.datetime.fromtimestamp(int(result["firstLoginDate"]/1000))
+		nowDate = datetime.datetime.now()
+		dateDiff = nowDate - firstLoginDate
+		
+		if (dateDiff.days >=MINIMUM_DAYS_OF_DATA):
+			new_row = {}
+			if "recommendation_source" in record:
+				new_row["recommendation_source"] = record["recommendation_source"]
+			new_row["url"] = record["url"]
+			new_row["userID"] = record["userID"]
+			
+			new_row["random_city"] = record["random_city"]
+			new_row["clicked_at"] = record["clicked_at"]
+			new_row["ui_source"] = record["ui_source"]
 
-		for city in THE1000CITIES:
-			if int(city["geonames_id"]) == int(record["cityID"]):
-				new_row["city"] = city["city_name"]
-		csvwriter.writerow(DictUnicodeProxy(new_row))
+			for city in THE1000CITIES:
+				if int(city["geonames_id"]) == int(record["cityID"]):
+					new_row["city"] = city["city_name"]
+			csvwriter.writerow(DictUnicodeProxy(new_row))
 	test_file.close()
 	return app.send_static_file('data/exportUserClicks.csv')
 
-#exports total # of users in the system
+# exports total # of users in the system
+# excludes creators of TI
+# excludes data from people who haven't been in the system for at least 5 days
 @app.route('/totalusers/')
 def totalusers():
+	
 	test_file = open(app.static_folder + '/data/totalusers.csv','wb')
 	fieldnames = ["totalusers"]
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
 	csvwriter.writeheader()
 	new_row = {}
-	new_row["totalusers"] = app.db_user_collection.find().count()
+	total=0
+	users = app.db_user_collection.find({"$and": [{ "_id":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "userID":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}]},{"_id":1,"firstLoginDate":1})
+	
+	for user in users:
+		print user
+		if "firstLoginDate" not in user:
+			continue
+		userID = user["_id"]
+		firstLoginDate = datetime.datetime.fromtimestamp(int(user["firstLoginDate"]/1000))
+		
+		nowDate = datetime.datetime.now()
+		
+		dateDiff = nowDate - firstLoginDate
+		
+		if (dateDiff.days >=MINIMUM_DAYS_OF_DATA):
+			total=total+1
+
+	new_row["totalusers"] = total
 	csvwriter.writerow(DictUnicodeProxy(new_row))
 	test_file.close()
 	
