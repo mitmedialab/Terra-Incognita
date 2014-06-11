@@ -303,13 +303,13 @@ def exportgeo():
 	csvwriter.writeheader()
 
 	# GET USERS, EXCLUDE M & C
-	users = app.db_user_collection.find({"$and": [{ "_id":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "userID":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}]},{"_id":1,"firstLoginDate":1})
+	users = app.db_user_collection.find({"$and": [{ "_id":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "userID":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}]},{"_id":1,"firstLoginDate":1, "username":1})
 	for user in users:
 		if "firstLoginDate" not in user:
 			print "no firstLoginDate"
 			continue
 		userID = user["_id"]
-		print userID
+		print user["username"]
 		
 		# POSTINSTALL DAYS, FILTER IF THEY HAVEN"T BEEN IN THE SYSTEM A MIN #
 		firstLoginDate = datetime.datetime.fromtimestamp(int(user["firstLoginDate"]/1000))
@@ -317,7 +317,7 @@ def exportgeo():
 		
 		dateDiff = nowDate - firstLoginDate
 		postInstallDays = dateDiff.days
-		
+		print str(postInstallDays) + " post install days"
 		if (postInstallDays <MINIMUM_DAYS_OF_DATA):
 			print "not enough postinstall days"
 			continue
@@ -331,11 +331,13 @@ def exportgeo():
 		firstPreinstallHistoryItemDate = datetime.datetime.fromtimestamp(int(result["lastVisitTime"]/1000))
 		dateDiff = firstLoginDate - firstPreinstallHistoryItemDate
 		preInstallDays = dateDiff.days
+		print str(preInstallDays) + " post install days"
 		if (preInstallDays <MINIMUM_DAYS_OF_DATA):
 			print "not enough preinstall days - " + str(preInstallDays)
 			continue
 
 		# OK, USER MEETS DATA REQUIREMENT, GET THEIR COUNTRY COUNTS #
+		print "OK, USER MEETS DATA REQUIREMENT, GET THEIR COUNTRY COUNTS"
 		COUNTRY_COUNT_POSTINSTALL_PIPELINE = [
 		{ "$unwind" : "$geodata.primaryCountries" },
 		{ "$match" : { "userID":userID, "preinstallation":{"$exists":0} }},
