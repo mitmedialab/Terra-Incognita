@@ -66,3 +66,11 @@ analysis/TerraIncognitaExport_06102014.csv
 analysis/TerraIncognitaExportClicks_06102014.csv
 
 www/static/data/exportUserClicks.csv
+
+analysis/TerraIncognitaExportClicks.csv
+
+analysis/TerraIncognitaExportClicks_06112014.csv
+
+analysis/TerraIncognitaTotalUsers.csv
+
+www/static/data/totalusers.csv

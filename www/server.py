@@ -314,6 +314,20 @@ def exportclicks():
 	test_file.close()
 	return app.send_static_file('data/exportUserClicks.csv')
 
+#exports total # of users in the system
+@app.route('/totalusers/')
+def totalusers():
+	test_file = open(app.static_folder + '/data/totalusers.csv','wb')
+	fieldnames = ["totalusers"]
+	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
+	csvwriter.writeheader()
+	new_row = {}
+	new_row["totalusers"] = app.db_user_collection.find().count()
+	csvwriter.writerow(DictUnicodeProxy(new_row))
+	test_file.close()
+	
+	return app.send_static_file('data/totalusers.csv')
+
 @app.route('/report/<userID>')
 @app.route('/report/')
 def report(userID='5340168960de7dd9d8394aa7'):
