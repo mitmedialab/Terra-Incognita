@@ -329,8 +329,15 @@ def exportgeo():
 		if (preInstallDays <MINIMUM_DAYS_OF_DATA):
 			continue
 
+
 		# OK, USER MEETS DATA REQUIREMENT, GET THEIR COUNTRY COUNTS #
-		print "OK, USER MEETS DATA REQUIREMENT, GET THEIR COUNTRY COUNTS"
+		# Write a row with their pre and post install days #
+		new_row = {}
+		new_row["userID"] = userID
+		new_row["preinstallation.days"] = preInstallDays
+		new_row["postinstallation.days"] = postInstallDays
+		csvwriter.writerow(DictUnicodeProxy(new_row))
+
 		COUNTRY_COUNT_POSTINSTALL_PIPELINE = [
 		{ "$unwind" : "$geodata.primaryCountries" },
 		{ "$match" : { "userID":userID, "preinstallation":{"$exists":0} }},
