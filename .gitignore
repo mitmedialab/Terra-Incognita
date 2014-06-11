@@ -62,3 +62,7 @@ analysis/meanCountsByUser.csv
 *.Rproj
 
 analysis/TerraIncognitaExport_06102014.csv
+
+analysis/TerraIncognitaExportClicks_06102014.csv
+
+www/static/data/exportUserClicks.csv

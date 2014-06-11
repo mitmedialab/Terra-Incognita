@@ -243,7 +243,8 @@ def user(userID='52dbeee6bd028634678cd069'):
 	else:
 		return jsonify(error='No user ID specified')
 
-#exports all user history records for counting and operating on
+# exports all user history records for counting and operating on
+# filter records that have no userID - bug that they ended up there anyways 
 @app.route('/export/')
 def export():
 	
@@ -252,7 +253,7 @@ def export():
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
 	csvwriter.writeheader()
 
-	cursor = app.db_user_history_collection.find({}, {"userID":1,"lastVisitTime":1,"preinstallation":1, "geodata.primaryCities.id":1, "geodata.primaryCountries":1})
+	cursor = app.db_user_history_collection.find({"userID":{"$ne":null}}, {"userID":1,"lastVisitTime":1,"preinstallation":1, "geodata.primaryCities.id":1, "geodata.primaryCountries":1})
 	for record in cursor:
 		if "lastVisitTime" not in record:
 			continue
@@ -276,14 +277,30 @@ def export():
 		
  	return app.send_static_file('data/exportUserHistoryCount.csv')
 
-#exports all user history records for counting and operating on
+#exports all user clicks on recommendations
 @app.route('/exportclicks/')
 def exportclicks():
 	test_file = open(app.static_folder + '/data/exportUserClicks.csv','wb')
-	fieldnames = ["userID","datetime", "humanDate", "hasGeo", "preinstallation"]
+	fieldnames = ["recommendation_source","url", "userID", "city", "random_city","clicked_at","ui_source"]
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
 	csvwriter.writeheader()
+	cursor = app.db_user_behavior_collection.find()
+	for record in cursor:
+		new_row = {}
+		if "recommendation_source" in record:
+			new_row["recommendation_source"] = record["recommendation_source"]
+		new_row["url"] = record["url"]
+		new_row["userID"] = record["userID"]
+		
+		new_row["random_city"] = record["random_city"]
+		new_row["clicked_at"] = record["clicked_at"]
+		new_row["ui_source"] = record["ui_source"]
 
+		for city in THE1000CITIES:
+			if int(city["geonames_id"]) == int(record["cityID"]):
+				new_row["city"] = city["city_name"]
+		csvwriter.writerow(new_row)
+	test_file.close()
 	return app.send_static_file('data/exportUserClicks.csv')
 
 @app.route('/report/<userID>')
