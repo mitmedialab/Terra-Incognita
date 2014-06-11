@@ -304,7 +304,11 @@ def exportclicks():
 	cursor = app.db_user_behavior_collection.find({"$and": [{ "_id":{"$ne":"53401d97c183f236b23d0d40"}}, { "userID":{"$ne":"5345c2f9c183f20b81e78eec"}}, { "userID":{"$ne":"null"}}]})
 	for record in cursor:
 		userID = record["userID"]
-		result = app.db_user_collection.find({"_id":ObjectId(userID)},{"firstLoginDate":1}).next()
+		result = app.db_user_collection.find({"_id":ObjectId(userID)},{"firstLoginDate":1})
+		if result.count() == 0:
+			continue
+		else:
+			result =result.next()
 		
 		firstLoginDate = datetime.datetime.fromtimestamp(int(result["firstLoginDate"]/1000))
 		nowDate = datetime.datetime.now()

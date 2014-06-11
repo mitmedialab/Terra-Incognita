@@ -1,5 +1,4 @@
-DOWNLOAD=FALSE
-REMOVE_USERIDS=c("53401d97c183f236b23d0d40","5345c2f9c183f20b81e78eec")
+DOWNLOAD=TRUE
 
 # Download files
 if (DOWNLOAD){
@@ -10,13 +9,12 @@ if (DOWNLOAD){
 # Get total Users #
 totalUsersDF<-read.csv("TerraIncognitaTotalUsers.csv")
 totalUsers=totalUsersDF[1,1]
-totalUsers=totalUsers-length(REMOVE_USERIDS)
 
 # Read in click data
 df<-read.csv("TerraIncognitaExportClicks.csv")
 
-# Remove Catherine & Matt, Remove blank and null userID rows
-df<- df[!df$userID =="" & !df$userID =="null" & df$userID !="53401d97c183f236b23d0d40" & df$userID !="5345c2f9c183f20b81e78eec", ]
+# Remove blank and null userID rows
+df<- df[!df$userID =="" & !df$userID =="null", ]
 
 # SUMMARY
 # % who clicked at all
