@@ -306,11 +306,8 @@ def exportgeo():
 	users = app.db_user_collection.find({"$and": [{ "_id":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "userID":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}]},{"_id":1,"firstLoginDate":1, "username":1})
 	for user in users:
 		if "firstLoginDate" not in user:
-			print "no firstLoginDate"
 			continue
 		userID = str(user["_id"])
-		print user["username"]
-		print userID
 		
 		# POSTINSTALL DAYS, FILTER IF THEY HAVEN"T BEEN IN THE SYSTEM A MIN #
 		firstLoginDate = datetime.datetime.fromtimestamp(int(user["firstLoginDate"]/1000))
@@ -318,25 +315,18 @@ def exportgeo():
 		
 		dateDiff = nowDate - firstLoginDate
 		postInstallDays = dateDiff.days
-		print str(postInstallDays) + " post install days"
 		if (postInstallDays <MINIMUM_DAYS_OF_DATA):
-			print "not enough postinstall days"
 			continue
 
 		# PREINSTALL DAYS, FILTER IF THEY DONT HAVE CERTAIN # DAYS HISTORY #
 		result = app.db_user_history_collection.find({"userID":str(userID), "preinstallation":{"$exists":1}}, {"lastVisitTime":1}).sort([("lastVisitTime",1)]).limit(1)
 		if result.count() == 0:
-			print "no preinstall days"
 			continue
 		result = result.next()
 		firstPreinstallHistoryItemDate = datetime.datetime.fromtimestamp(int(result["lastVisitTime"]/1000))
-		print "preinstall history item date is " + str(firstPreinstallHistoryItemDate)
-		print "firstlogin date is " + str(firstLoginDate)
 		dateDiff = firstLoginDate - firstPreinstallHistoryItemDate
 		preInstallDays = dateDiff.days
-		print str(preInstallDays) + " pre install days"
 		if (preInstallDays <MINIMUM_DAYS_OF_DATA):
-			print "not enough preinstall days - " + str(preInstallDays)
 			continue
 
 		# OK, USER MEETS DATA REQUIREMENT, GET THEIR COUNTRY COUNTS #
@@ -357,7 +347,6 @@ def exportgeo():
 		
 		# Preinstall country counts
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_PREINSTALL_PIPELINE ) 
-		print q
 		for row in q["result"]:
 			new_row = {}
 			new_row["userID"] = userID
@@ -368,7 +357,6 @@ def exportgeo():
 			
 		# Postinstall country counts
 		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_POSTINSTALL_PIPELINE ) 
-		print q
 		for row in q["result"]:
 			new_row = {}
 			new_row["userID"] = userID
