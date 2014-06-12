@@ -253,11 +253,35 @@ def user(userID='52dbeee6bd028634678cd069'):
 def export():
 	
 	test_file = open(app.static_folder + '/data/exportUserHistoryCount.csv','wb')
-	fieldnames = ["userID","datetime", "humanDate", "hasGeo", "preinstallation"]
+	fieldnames = ["userID","datetime", "humanDate", "hasGeo", "preinstallation","preinstallation.days","postinstallation.days"]
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
 	csvwriter.writeheader()
 
-	cursor = app.db_user_history_collection.find({"$and": [{ "_id":{"$ne":"53401d97c183f236b23d0d40"}}, { "userID":{"$ne":"5345c2f9c183f20b81e78eec"}}, { "userID":{"$ne":"null"}}]}, {"userID":1,"lastVisitTime":1,"preinstallation":1, "geodata.primaryCities.id":1, "geodata.primaryCountries":1})
+	# GET USERS, EXCLUDE M & C
+	users = getUsersFilterCreators()
+	userIDs = []
+	for user in users:
+		userID = str(user["_id"])
+		days=getPreinstallAndPostinstallDays(user)
+		
+		if (days["postinstallation.days"] <MINIMUM_DAYS_OF_DATA):
+			continue
+
+		if (days["preinstallation.days"] <MINIMUM_DAYS_OF_DATA):
+			continue
+
+		# OK, USER MEETS DATA REQUIREMENT, GET THEIR USER HISTORY #
+		# Write a row with their pre and post install days for later tallying #
+		new_row = {}
+		new_row["userID"] = userID
+		new_row["preinstallation.days"] = days["preinstallation.days"]
+		new_row["postinstallation.days"] = days["postinstallation.days"]
+		csvwriter.writerow(DictUnicodeProxy(new_row))
+
+		#user IDs to keep
+		userIDs.append(userID)
+
+	cursor = app.db_user_history_collection.find({"userID" : {"$in": userIDs}}, {"userID":1,"lastVisitTime":1,"preinstallation":1, "geodata.primaryCities.id":1, "geodata.primaryCountries":1})
 	for record in cursor:
 		if "lastVisitTime" not in record:
 			continue
@@ -292,6 +316,38 @@ class DictUnicodeProxy(object):
 			return i.encode('utf-8')
 		return i
 
+def getUsersFilterCreators():
+	return app.db_user_collection.find({"$and": [{ "_id":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "userID":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}]},{"_id":1,"firstLoginDate":1, "username":1})
+	
+def getPreinstallAndPostinstallDays(userDoc):
+	userID = str(userDoc["_id"])
+	userDaysResult = dict()
+
+	# IF NO LOGIN DATE THEN WE CANT FIGURE ANYTHING OUT
+	if "firstLoginDate" not in userDoc:
+		userDaysResult["preinstallation.days"]=0
+		userDaysResult["postinstallation.days"]=0
+		return userDaysResult 
+
+	# POSTINSTALL DAYS
+	firstLoginDate = datetime.datetime.fromtimestamp(int(userDoc["firstLoginDate"]/1000))
+	nowDate = datetime.datetime.now()
+	
+	dateDiff = nowDate - firstLoginDate
+	userDaysResult["postinstallation.days"] = dateDiff.days
+
+	# PREINSTALL DAYS
+	result = app.db_user_history_collection.find({"userID":str(userID), "preinstallation":{"$exists":1}}, {"lastVisitTime":1}).sort([("lastVisitTime",1)]).limit(1)
+	if result.count() == 0:
+		userDaysResult["preinstallation.days"] = 0
+	else:
+		result = result.next()
+		firstPreinstallHistoryItemDate = datetime.datetime.fromtimestamp(int(result["lastVisitTime"]/1000))
+		dateDiff = firstLoginDate - firstPreinstallHistoryItemDate
+		userDaysResult["preinstallation.days"] = dateDiff.days
+
+	return userDaysResult
+
 # exports user browsing geo to see if geo diversity goes up post-TI-install
 # excludes userIDs from creators of TI
 # excludes data from people who don't have at least 5 days of preinstall and postinstall history
@@ -303,39 +359,23 @@ def exportgeo():
 	csvwriter.writeheader()
 
 	# GET USERS, EXCLUDE M & C
-	users = app.db_user_collection.find({"$and": [{ "_id":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "userID":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}]},{"_id":1,"firstLoginDate":1, "username":1})
+	users = getUsersFilterCreators()
 	for user in users:
-		if "firstLoginDate" not in user:
-			continue
 		userID = str(user["_id"])
+		days=getPreinstallAndPostinstallDays(user)
 		
-		# POSTINSTALL DAYS, FILTER IF THEY HAVEN"T BEEN IN THE SYSTEM A MIN #
-		firstLoginDate = datetime.datetime.fromtimestamp(int(user["firstLoginDate"]/1000))
-		nowDate = datetime.datetime.now()
-		
-		dateDiff = nowDate - firstLoginDate
-		postInstallDays = dateDiff.days
-		if (postInstallDays <MINIMUM_DAYS_OF_DATA):
+		if (days["postinstallation.days"] <MINIMUM_DAYS_OF_DATA):
 			continue
 
-		# PREINSTALL DAYS, FILTER IF THEY DONT HAVE CERTAIN # DAYS HISTORY #
-		result = app.db_user_history_collection.find({"userID":str(userID), "preinstallation":{"$exists":1}}, {"lastVisitTime":1}).sort([("lastVisitTime",1)]).limit(1)
-		if result.count() == 0:
+		if (days["preinstallation.days"] <MINIMUM_DAYS_OF_DATA):
 			continue
-		result = result.next()
-		firstPreinstallHistoryItemDate = datetime.datetime.fromtimestamp(int(result["lastVisitTime"]/1000))
-		dateDiff = firstLoginDate - firstPreinstallHistoryItemDate
-		preInstallDays = dateDiff.days
-		if (preInstallDays <MINIMUM_DAYS_OF_DATA):
-			continue
-
 
 		# OK, USER MEETS DATA REQUIREMENT, GET THEIR COUNTRY COUNTS #
 		# Write a row with their pre and post install days #
 		new_row = {}
 		new_row["userID"] = userID
-		new_row["preinstallation.days"] = preInstallDays
-		new_row["postinstallation.days"] = postInstallDays
+		new_row["preinstallation.days"] = days["preinstallation.days"]
+		new_row["postinstallation.days"] = days["postinstallation.days"]
 		csvwriter.writerow(DictUnicodeProxy(new_row))
 
 		COUNTRY_COUNT_POSTINSTALL_PIPELINE = [

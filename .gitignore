@@ -80,3 +80,5 @@ www/static/data/exportUserGeo.csv
 analysis/TerraIncognitaExportGeo_06112014.csv
 
 analysis/userGeographyCounts.csv
+
+analysis/userHHI.csv
