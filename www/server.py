@@ -219,7 +219,7 @@ def presurvey(userID):
 def user(userID='52dbeee6bd028634678cd069'):
 	CITY_COUNT_PIPELINE = [
 		{ "$unwind" : "$geodata.primaryCities" },
-		{ "$match" : { "userID":userID, "preinstallation":{"$exists":0} }},
+		{ "$match" : { "userID":userID, "preinstallation":{"$exists":0}, "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY } }},
 		{ "$group": {"_id": {"geonames_id":"$geodata.primaryCities.id" }, "count": {"$sum": 1}}},
 		{ "$sort" : { "count" : -1 } }
 	]
@@ -774,8 +774,15 @@ def testdb():
 	return "Updated your user"
 
 def getUsername(userID):
-	doc = app.db_user_collection.find({"_id": ObjectId(userID)}, {"username":1}).skip(0).limit(1).next()
-	return doc["username"]
+	cursor = app.db_user_collection.find({"_id": ObjectId(userID)}, {"username":1}).skip(0).limit(1)
+	if cursor.count() >0:
+		doc= cursor.next()
+		if "username" in doc:
+			return doc["username"]
+		else:
+			return None
+	else:
+		return None
 
 
 # Metrics: Log when a user clicks on a story in the app
