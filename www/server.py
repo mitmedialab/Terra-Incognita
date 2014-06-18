@@ -560,7 +560,10 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 	]
 	q = app.db_user_history_collection.aggregate(USER_CITY_HISTORY_PIPELINE)
 	for row in q["result"]:
-		result["userHistoryItemCollection"].append({ "title": row["_id"]["title"], "url":row["_id"]["url"], "recommended":row["recommended"]})
+		if next((x for x in result["userHistoryItemCollection"] if "title" in x and "title" in row["_id"] and x["title"] == row["_id"]["title"]), None):
+			continue
+		else: 
+			result["userHistoryItemCollection"].append({ "title": row["_id"]["title"], "url":row["_id"]["url"], "recommended":row["recommended"]})
 	
 	
 	SYSTEM_CITY_HISTORY_PIPELINE = [
@@ -572,11 +575,15 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 		
 	]
 	q = app.db_user_history_collection.aggregate(SYSTEM_CITY_HISTORY_PIPELINE)
-	#systemHistoryItemCollection = list(row["_id"] for row in q["result"])
 	systemHistoryItemCollection = []
-	for row in q["result"]:
-		systemHistoryItemCollection.append({ "title": row["_id"]["title"], "url":row["_id"]["url"], "recommended":row["recommended"]})
 	
+	for row in q["result"]:
+	
+		#quick fix for duplicate titles showing up, really this should be done at DB level
+		if next((x for x in systemHistoryItemCollection if x["title"] == row["_id"]["title"]), None):
+			continue
+		systemHistoryItemCollection.append({ "title": row["_id"]["title"], "url":row["_id"]["url"], "recommended":row["recommended"]})
+		
 	# If not much in the way of system history, then grab recommendations from the recs DB
 	# then shuffle it -- randomize access so doesn't always show the top 20
 	if len(systemHistoryItemCollection) < 10:
@@ -587,8 +594,12 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 			{ "$limit" : 20 },
 		]
 		q = app.db_recommendation_collection.aggregate(RECOMMENDATION_PIPELINE)
-
-		systemHistoryItemCollection.extend(list(row["_id"] for row in q["result"]))
+		for row in q["result"]:
+			if next((x for x in systemHistoryItemCollection if "title" in x and "title" in row["_id"] and x["title"] == row["_id"]["title"]), None):
+				continue
+			else: 
+				systemHistoryItemCollection.append(row["_id"])
+		#systemHistoryItemCollection.extend(list(row["_id"] for row in q["result"]))
 		shuffle(systemHistoryItemCollection)
 	result["systemHistoryItemCollection"] = systemHistoryItemCollection
 	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
