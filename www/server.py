@@ -264,10 +264,7 @@ def export():
 		userID = str(user["_id"])
 		days=getPreinstallAndPostinstallDays(user)
 		
-		if (days["postinstallation.days"] <MINIMUM_DAYS_OF_DATA):
-			continue
-
-		if (days["preinstallation.days"] <MINIMUM_DAYS_OF_DATA):
+		if (excludeUserFromStudyData(days)):
 			continue
 
 		# OK, USER MEETS DATA REQUIREMENT, GET THEIR USER HISTORY #
@@ -318,7 +315,18 @@ class DictUnicodeProxy(object):
 
 def getUsersFilterCreators():
 	return app.db_user_collection.find({"$and": [{ "_id":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "userID":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}]},{"_id":1,"firstLoginDate":1, "username":1})
-	
+
+def excludeUserFromStudyData(userDaysResult):
+	if (userDaysResult["postinstallation.days"] <MINIMUM_DAYS_OF_DATA):
+		return True
+	if (userDaysResult["preinstallation.days"] <MINIMUM_DAYS_OF_DATA):
+		return True
+	if (userDaysResult["postinstallation.count"] <MINIMUM_HISTORY_COUNT):
+		return True
+	if (userDaysResult["preinstallation.count"] <MINIMUM_HISTORY_COUNT):
+		return True
+	return False
+
 def getPreinstallAndPostinstallDays(userDoc):
 	userID = str(userDoc["_id"])
 	userDaysResult = dict()
@@ -346,6 +354,14 @@ def getPreinstallAndPostinstallDays(userDoc):
 		dateDiff = firstLoginDate - firstPreinstallHistoryItemDate
 		userDaysResult["preinstallation.days"] = dateDiff.days
 
+	# POST INSTALL COUNT
+	result = app.db_user_history_collection.find({"userID":str(userID), "preinstallation":{"$exists":0}}).count()
+	userDaysResult["postinstallation.count"] = result
+	
+	#PRE INSTALL COUNT
+	result = app.db_user_history_collection.find({"userID":str(userID), "preinstallation":{"$exists":1}}).count()
+	userDaysResult["preinstallation.count"] = result
+	
 	return userDaysResult
 
 # exports user browsing geo to see if geo diversity goes up post-TI-install
@@ -364,10 +380,7 @@ def exportgeo():
 		userID = str(user["_id"])
 		days=getPreinstallAndPostinstallDays(user)
 		
-		if (days["postinstallation.days"] <MINIMUM_DAYS_OF_DATA):
-			continue
-
-		if (days["preinstallation.days"] <MINIMUM_DAYS_OF_DATA):
+		if (excludeUserFromStudyData(days)):
 			continue
 
 		# OK, USER MEETS DATA REQUIREMENT, GET THEIR COUNTRY COUNTS #

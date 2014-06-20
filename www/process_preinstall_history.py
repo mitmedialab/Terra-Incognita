@@ -25,7 +25,7 @@ db_user_history_collection = db[config.get('db','user_history_item_collection')]
 db_user_collection = db[config.get('db','user_collection')]
 
 #find users who have preinstall history
-users = db_user_collection.find({ "history-pre-installation": {"$exists":1}, "history-pre-installation-processed": {"$exists":0} }, {"history-pre-installation":1, "_id":1, "username":1}).limit(1)
+users = db_user_collection.find({ "history-pre-installation": {"$exists":1}, "history-pre-installation-processed": {"$exists":0} }, {"history-pre-installation":1, "_id":1, "username":1})
 
 for user in users:
 	print "Processing browser history for " + user["username"]
