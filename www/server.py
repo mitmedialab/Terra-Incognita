@@ -495,13 +495,15 @@ def totalusers():
 	total=0
 
 	users = getUsersFilterCreators()
+	print "user count is " + str(users.count())
 	for user in users:
-		userID = str(user["_id"])
 		days=getPreinstallAndPostinstallDays(user)
 		
 		if (excludeUserFromStudyData(days)):
+			print "EXCLUDING USER" 
 			continue
 		total=total+1
+		print "ADDING USER"
 
 	new_row["totalusers"] = total
 	csvwriter.writerow(DictUnicodeProxy(new_row))
