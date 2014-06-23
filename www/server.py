@@ -23,7 +23,6 @@ from random import shuffle,randint
 import datetime
 import csv
 
-
 # constants
 CONFIG_FILENAME = 'app.config'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -956,4 +955,4 @@ def processURL():
 if __name__ == '__main__':
 	app.debug = True
 	app.run(host='0.0.0.0')
-	print "Started Server"
+	print "Started Server Now"
