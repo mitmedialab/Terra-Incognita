@@ -257,6 +257,6 @@ edit .profile or .bash-profile to set up BITLY_ACCESS_TOKEN=<YOUR TOKEN HERE>
 
 DATA ANALYSIS
 -----------------------------------------------------------
-/export/
+/export/ ----------
 /exportgeo/
 /exportclicks/

@@ -413,7 +413,7 @@ def exportgeo():
 			new_row["userID"] = userID
 			new_row["countrycode"] = row["_id"]["countrycode"]
 			new_row["preinstallation.count"] = row["count"]
-			new_row["preinstallation.days"] = preInstallDays
+			new_row["preinstallation.days"] = days["preinstallation.days"]
 			csvwriter.writerow(DictUnicodeProxy(new_row))
 			
 		# Postinstall country counts
@@ -423,7 +423,7 @@ def exportgeo():
 			new_row["userID"] = userID
 			new_row["countrycode"] = row["_id"]["countrycode"]
 			new_row["postinstallation.count"] = row["count"]
-			new_row["postinstallation.days"] = postInstallDays
+			new_row["postinstallation.days"] = days["postinstallation.days"]
 			csvwriter.writerow(DictUnicodeProxy(new_row))
 
 		# File is a little messy but we will clean it up in R
