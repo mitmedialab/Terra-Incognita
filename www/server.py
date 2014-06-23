@@ -23,6 +23,7 @@ from random import shuffle,randint
 import datetime
 import csv
 
+
 # constants
 CONFIG_FILENAME = 'app.config'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -439,7 +440,21 @@ def exportclicks():
 	fieldnames = ["recommendation_source","url", "userID", "city", "random_city","clicked_at","ui_source"]
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
 	csvwriter.writeheader()
-	cursor = app.db_user_behavior_collection.find({"$and": [{ "_id":{"$ne":"53401d97c183f236b23d0d40"}}, { "userID":{"$ne":"5345c2f9c183f20b81e78eec"}}, { "userID":{"$ne":"null"}}]})
+
+	userIDs = []
+	users = getUsersFilterCreators()
+	for user in users:
+		userID = str(user["_id"])
+		days=getPreinstallAndPostinstallDays(user)
+		
+		if (excludeUserFromStudyData(days)):
+			continue
+		userIDs.append(ObjectId(userID))
+
+	print str(len(userIDs)) + " users meet the criteria"
+	
+	cursor = app.db_user_behavior_collection.find({ "_id":{"$in":userIDs}})
+
 	for record in cursor:
 		userID = record["userID"]
 		result = app.db_user_collection.find({"_id":ObjectId(userID)},{"firstLoginDate":1})
@@ -448,25 +463,21 @@ def exportclicks():
 		else:
 			result =result.next()
 		
-		firstLoginDate = datetime.datetime.fromtimestamp(int(result["firstLoginDate"]/1000))
-		nowDate = datetime.datetime.now()
-		dateDiff = nowDate - firstLoginDate
+		new_row = {}
+		if "recommendation_source" in record:
+			new_row["recommendation_source"] = record["recommendation_source"]
+		new_row["url"] = record["url"]
+		new_row["userID"] = record["userID"]
 		
-		if (dateDiff.days >=MINIMUM_DAYS_OF_DATA):
-			new_row = {}
-			if "recommendation_source" in record:
-				new_row["recommendation_source"] = record["recommendation_source"]
-			new_row["url"] = record["url"]
-			new_row["userID"] = record["userID"]
-			
-			new_row["random_city"] = record["random_city"]
-			new_row["clicked_at"] = record["clicked_at"]
-			new_row["ui_source"] = record["ui_source"]
+		new_row["random_city"] = record["random_city"]
+		new_row["clicked_at"] = record["clicked_at"]
+		new_row["ui_source"] = record["ui_source"]
 
-			for city in THE1000CITIES:
-				if int(city["geonames_id"]) == int(record["cityID"]):
-					new_row["city"] = city["city_name"]
-			csvwriter.writerow(DictUnicodeProxy(new_row))
+		for city in THE1000CITIES:
+			if int(city["geonames_id"]) == int(record["cityID"]):
+				new_row["city"] = city["city_name"]
+		csvwriter.writerow(DictUnicodeProxy(new_row))
+
 	test_file.close()
 	return app.send_static_file('data/exportUserClicks.csv')
 
@@ -482,21 +493,15 @@ def totalusers():
 	csvwriter.writeheader()
 	new_row = {}
 	total=0
-	users = app.db_user_collection.find({"$and": [{ "_id":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "userID":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}]},{"_id":1,"firstLoginDate":1})
-	
+
+	users = getUsersFilterCreators()
 	for user in users:
-		print user
-		if "firstLoginDate" not in user:
+		userID = str(user["_id"])
+		days=getPreinstallAndPostinstallDays(user)
+		
+		if (excludeUserFromStudyData(days)):
 			continue
-		userID = user["_id"]
-		firstLoginDate = datetime.datetime.fromtimestamp(int(user["firstLoginDate"]/1000))
-		
-		nowDate = datetime.datetime.now()
-		
-		dateDiff = nowDate - firstLoginDate
-		
-		if (dateDiff.days >=MINIMUM_DAYS_OF_DATA):
-			total=total+1
+		total=total+1
 
 	new_row["totalusers"] = total
 	csvwriter.writerow(DictUnicodeProxy(new_row))
@@ -955,4 +960,4 @@ def processURL():
 if __name__ == '__main__':
 	app.debug = True
 	app.run(host='0.0.0.0')
-	print "Started Server Now"
+	print "Started Server"

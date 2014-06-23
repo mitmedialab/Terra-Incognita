@@ -1,7 +1,7 @@
-
+library("plyr")
 
 # read in data file from /export/
-df<-read.csv("TerraIncognitaExport_06122014.csv",colClasses=c("character","numeric","character",rep("numeric",4)))
+df<-read.csv("TerraIncognitaExport_06232014.csv",colClasses=c("character","numeric","character",rep("numeric",4)))
 
 # subset if userID isn't the right length (one weird val in there)
 df<-df[nchar(df$userID) == nchar("538d8b62c183f2213b8864e3"),]
