@@ -30,7 +30,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_DIR = os.path.join(BASE_DIR,'logs')
 
 # constant for data analysis
-MINIMUM_DAYS_OF_DATA = 5
+MINIMUM_DAYS_OF_DATA = 5 	#user must have at least 5 days of data pre and post installation
+MINIMUM_HISTORY_COUNT = 10 #user must have at least 10 items pre and post installation
 
 # read in app config
 config = ConfigParser.ConfigParser()

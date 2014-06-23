@@ -254,3 +254,9 @@ ACCESS TOKEN FOR BITLY API
 curl -u "username:pwd" -X POST "https://api-ssl.bitly.com/oauth/access_token"
 
 edit .profile or .bash-profile to set up BITLY_ACCESS_TOKEN=<YOUR TOKEN HERE>
+
+DATA ANALYSIS
+-----------------------------------------------------------
+/export/
+/exportgeo/
+/exportclicks/
