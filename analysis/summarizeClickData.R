@@ -1,4 +1,4 @@
-DOWNLOAD=TRUE
+DOWNLOAD=FALSE
 
 # Download files
 if (DOWNLOAD){

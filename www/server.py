@@ -449,11 +449,11 @@ def exportclicks():
 		
 		if (excludeUserFromStudyData(days)):
 			continue
-		userIDs.append(ObjectId(userID))
+		userIDs.append(userID)
 
 	print str(len(userIDs)) + " users meet the criteria"
 	
-	cursor = app.db_user_behavior_collection.find({ "_id":{"$in":userIDs}})
+	cursor = app.db_user_behavior_collection.find({ "userID":{"$in":userIDs}})
 
 	for record in cursor:
 		userID = record["userID"]
