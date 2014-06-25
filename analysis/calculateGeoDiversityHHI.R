@@ -6,7 +6,7 @@ DOWNLOAD=FALSE
 if (DOWNLOAD){
     download.file("https://terra-incognita.co/exportgeo/", method="curl", destfile="TerraIncognitaExportGeo.csv")
 }
-df<-read.csv("TerraIncognitaExportGeo_06112014.csv")
+df<-read.csv("TerraIncognitaExportGeo_062314.csv")
 
 #replace NA country code with NAM
 #df[df$countrycode,]<-df[df$countrycode=="NAM"]

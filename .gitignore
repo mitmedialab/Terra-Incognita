@@ -96,3 +96,7 @@ analysis/TerraIncognitaExportGeo_062314.csv
 www/server2.py
 
 analysis/TerraIncognitaExport_06232014.csv
+
+analysis/.RData
+
+analysis/.Rhistory

@@ -247,6 +247,27 @@ def user(userID='52dbeee6bd028634678cd069'):
 	else:
 		return jsonify(error='No user ID specified')
 
+# exports all city clicks as counts
+# exclude developers
+@app.route('/exportcityclicks/')
+def exportcities():
+	result=[]
+	CITY_CLICK_COUNT_PIPELINE = [
+		{ "$match" : {"$and": [{ "userID":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "userID":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}] }},
+		{ "$group": {"_id": {"cityID":"$cityID" }, "count": {"$sum": 1}}},
+		{ "$sort" : { "count" : -1 } }
+	]
+	q = app.db.command('aggregate', config.get('db','user_city_clicks_collection'), pipeline=CITY_CLICK_COUNT_PIPELINE ) 
+	for row in q["result"]:
+		cityID=row["_id"]["cityID"]
+		for city in THE1000CITIES:
+			if int(city["geonames_id"]) == int(cityID):
+				cityname = city["city_name"]
+				result.append({"name":cityname, "count":row["count"]})
+		print cityID
+
+	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default)
+
 # exports all user history records for counting and operating on
 # filter records that have no userID - bug that they ended up there anyways 
 # excludes userIDs from creators of TI
@@ -315,7 +336,7 @@ class DictUnicodeProxy(object):
 		return i
 
 def getUsersFilterCreators():
-	return app.db_user_collection.find({"$and": [{ "_id":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "userID":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}]},{"_id":1,"firstLoginDate":1, "username":1})
+	return app.db_user_collection.find({"$and": [{ "userID":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "userID":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}]},{"_id":1,"firstLoginDate":1, "username":1})
 
 def excludeUserFromStudyData(userDaysResult):
 	if (userDaysResult["postinstallation.days"] <MINIMUM_DAYS_OF_DATA):
