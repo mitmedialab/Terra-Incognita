@@ -246,6 +246,12 @@ def user(userID='52dbeee6bd028634678cd069'):
 		return json.dumps(userData, sort_keys=True, indent=4, default=json_util.default) 
 	else:
 		return jsonify(error='No user ID specified')
+# exports all city clicks as counts
+# exclude developers
+@app.route('/totalusercount/')
+def totalusercount():
+	count = app.db_user_collection.find({}).count()
+	return json.dumps({"count":count}, sort_keys=True, indent=4, default=json_util.default) 
 
 # exports all city clicks as counts
 # exclude developers
