@@ -251,7 +251,7 @@ def user(userID='52dbeee6bd028634678cd069'):
 @app.route('/totalusercount/')
 def totalusercount():
 	count = app.db_user_collection.find({}).count()
-	preinstallneedsprocessing = app.db_user_collection.find({"history-pre-installation-processed":{"$exists":0}}).count()
+	preinstallneedsprocessing = app.db_user_collection.find({ "history-pre-installation": {"$exists":1}, "history-pre-installation-processed":{"$exists":0}}).count()
 	return json.dumps({"count":count, "preinstallneedsprocessing":preinstallneedsprocessing}, sort_keys=True, indent=4, default=json_util.default) 
 
 # exports all city clicks as counts
