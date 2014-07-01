@@ -312,15 +312,9 @@
 
         <h2 class="bg-info">Your Rankings</h2>
         
-        {% set Q18 = "Q18rankings_explain" %}
-        <div class="form-group" {% if error[Q18] == 1 %} style="color:red"{% endif %}>
-            <label for="{{Q18}}"><span class="badge alert-danger">{{cityCount}} cities</span> It looks like you read about {{cityCount}} of Terra Incognita's 1000 cities. How do you explain that number? Why not more or less cities than {{cityCount}}?</label>
-            <input type="text" class="form-control" name="{{Q18}}" placeholder="" value="{{responses[Q18]}}">
-        </div>        
-
         {% set Q19 = "Q19improverankings" %}
         <div class="form-group" {% if error[Q19] == 1 %} style="color:red"{% endif %}>
-            <label for="{{Q19}}"><span class="badge alert-danger">#{{ranking}}</span> You are currently ranked {{ranking}} out of {{totalUserCount}} total users of Terra Incognita for the number of cities you have read about. If you had known that while you were using it, would you have tried to improve your standing?</label>
+            <label for="{{Q19}}"><span class="badge alert-danger">#{{ranking}}</span> <span class="badge alert-danger">{{cityCount}} cities</span> You are currently ranked #{{ranking}} out of {{totalUserCount}} total users of Terra Incognita for reading about {{cityCount}} cities. If you had known that while you were using it, would you have tried to improve your standing?</label>
              <div>
               <label class="radio-inline">
                 <input type="radio" name="{{Q19}}" value="yes" {% if responses[Q19] == "yes" %}checked {% endif %}>
@@ -332,6 +326,31 @@
               </label>
             </div>
           </div>  
+        {% set Q18 = "Q18rankings_explain" %}
+        <div class="form-group" {% if error[Q18] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q18}}"> How do you explain your ranking (#{{ranking}}) and your city count ({{cityCount}})? Why aren't they higher or lower?</label>
+            <input type="text" class="form-control" name="{{Q18}}" placeholder="" value="{{responses[Q18]}}">
+        </div> 
+
+        {% set Q23 = "Q23seeleaderboard" %}
+        <div class="form-group" {% if error[Q23] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q23}}">Do you wish you could see a leaderboard with the top 10 users in the system?</label>
+             <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q23}}" value="yes" {% if responses[Q23] == "yes" %}checked {% endif %}>
+                Yes
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q23}}" value="no" {% if responses[Q23] == "no" %}checked {% endif %}>
+                No
+              </label>
+            </div>
+          </div> 
+
+               
+        
+
+        
 
         <h2 class="bg-info">Overall</h2>
 

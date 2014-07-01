@@ -215,7 +215,8 @@ def postsurvey(userID):
 						'Q19improverankings',
 						'Q20feelings_explain',
 						'Q21anythingelse_explain',
-						'Q22contactyou'
+						'Q22contactyou',
+						'Q23seeleaderboard'
 					]
 		for field in fields:
 
