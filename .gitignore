@@ -104,3 +104,5 @@ analysis/.Rhistory
 www/static/data/exportpresurvey.csv
 
 analysis/exportpresurvey.csv
+
+*.csv

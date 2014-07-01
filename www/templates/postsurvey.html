@@ -1,0 +1,371 @@
+<html>
+    <head>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        .form-group, h5{
+            margin-bottom: 40px;
+        }
+        h1{
+          border-bottom: 5px solid red;
+          padding:10px 5px;
+        }
+        h2{
+          padding:10px 5px;
+          margin-top:80px;
+          border-bottom: 5px solid #428bca;
+        }
+        label{
+          font-size:16px;
+          font-weight:500;
+        }
+        p{
+          font-size:16px;
+        }
+        .alert-danger {
+          background-color: #d9534f;
+          border-color: #d9534f;
+          color: white;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+        <h1 class="bg-warning">Terra Incognita Post-Study Survey</h1>
+        <p>Thank you so much for your participation in our research. Please complete this short final survey for research purposes and then you may return to using Terra Incognita as before. 
+         Contact <a href="mailto:dignazio@mit.edu">Catherine D'Ignazio</a> with questions</p>
+         <p><em>Estimated time to complete: 3-5 minutes.</em></p>
+        
+        {% if errorCount %}
+            <h3 style="color:red">Please fill out the {{errorCount}} missing questions in red below.</h3>
+        {% endif %}
+        <form role="form" action="/postsurvey/{{userID}}" method="POST">
+        
+        
+        
+        
+        <h2 class="bg-info">About You</h2>
+        {% set Q1 = "Q1chromeprimarybefore" %}
+
+          <div class="form-group" {% if error[Q1] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q1}}">Was Chrome your primary browser before installing Terra Incognita?</label>
+            <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q1}}" value="yes" {% if responses[Q1] == "yes" %}checked {% endif %}>
+                Yes
+              </label>
+            
+              <label class="radio-inline">
+                <input type="radio" name="{{Q1}}" value="no" {% if responses[Q1] == "no" %}checked {% endif %}>
+                No
+              </label>
+            </div>
+          </div>
+          
+          {% set Q2 = "Q2chromeprimaryafter" %}
+
+          <div class="form-group" {% if error[Q2] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q2}}">Was Chrome your primary browser after installing Terra Incognita?</label>
+            <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q2}}" value="yes" {% if responses[Q2] == "yes" %}checked {% endif %}>
+                Yes
+              </label>
+            
+              <label class="radio-inline">
+                <input type="radio" name="{{Q2}}" value="no" {% if responses[Q2] == "no" %}checked {% endif %}>
+                No
+              </label>
+            </div>
+          </div>
+
+          {% set Q3 = "Q3globalnewsimportanttowork" %}
+
+          <div class="form-group" {% if error[Q3] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q3}}">Reading global news is important to my work.</label>
+            <div>
+              
+              <label class="radio-inline">
+                <input type="radio" name="{{Q3}}" value="stronglydisagree" {% if responses[Q3] == "stronglydisagree" %}checked {% endif %}>
+                Strongly Disagree
+              </label>
+            
+              <label class="radio-inline">
+                <input type="radio" name="{{Q3}}" value="disagree" {% if responses[Q3] == "disagree" %}checked {% endif %}>
+                Disagree
+              </label>
+            
+              <label class="radio-inline">
+                <input type="radio" name="{{Q3}}" value="neutral" {% if responses[Q3] == "neutral" %}checked {% endif %}>
+                Neutral
+              </label>
+            
+              <label class="radio-inline">
+                <input type="radio" name="{{Q3}}" value="agree" {% if responses[Q3] == "agree" %}checked {% endif %}>
+                Agree
+              </label>
+
+              <label class="radio-inline">
+                <input type="radio" name="{{Q3}}" value="stronglyagree" {% if responses[Q3] == "stronglyagree" %}checked {% endif %}>
+                Strongly Agree
+              </label>
+            </div>
+          </div>
+
+
+          <h2 class="bg-info">Interactions</h2>
+          
+
+          {% set Q4 = "Q4raterecommendations" %}
+          
+
+          <div class="form-group" {% if error[Q4] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q4}}">How would you rate Terra Incognita's news recommendations (1=bad, 5=good)?</label>
+             <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q4}}" value="1" {% if responses[Q4] == "1" %}checked {% endif %}>
+                1 <em>(bad)</em>
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q4}}" value="2" {% if responses[Q4] == "2" %}checked {% endif %}>
+                2
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q4}}" value="3" {% if responses[Q4] == "3" %}checked {% endif %}>
+                3
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q4}}" value="4" {% if responses[Q4] == "4" %}checked {% endif %}>
+                4
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q4}}" value="5" {% if responses[Q4] == "5" %}checked {% endif %}>
+                5 <em>(good)</em>
+              </label>
+            </div>
+            
+          </div>
+
+          {% set Q5 = "Q5topreaderorrecommender" %}
+          
+          <div class="form-group" {% if error[Q5] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q5}}">Were you ever a Top Reader or Top Recommender for any city?</label>
+             <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q5}}" value="yes" {% if responses[Q5] == "yes" %}checked {% endif %}>
+                Yes
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q5}}" value="no" {% if responses[Q5] == "no" %}checked {% endif %}>
+                No
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q5}}" value="idontknow" {% if responses[Q5] == "idontknow" %}checked {% endif %}>
+                I don't know
+              </label>
+            </div>
+          </div>
+
+          {% set Q6 = "Q6searchtobecometopreader" %}
+          
+          <div class="form-group" {% if error[Q6] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q6}}">Did you ever go out searching for articles about a city so that you could become a Top Reader or Top Recommender for it?</label>
+             <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q6}}" value="yes" {% if responses[Q6] == "yes" %}checked {% endif %}>
+                Yes
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q6}}" value="no" {% if responses[Q6] == "no" %}checked {% endif %}>
+                No
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q6}}" value="idontknowwhatthatis" {% if responses[Q7] == "idontknowwhatthatis" %}checked {% endif %}>
+                I don't know what that means
+              </label>
+            </div>
+          </div>
+
+          {% set Q7 = "Q7searchtocollectmorecities" %}
+          
+          <div class="form-group" {% if error[Q7] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q7}}">Did you ever go out searching for articles about a city in order to increment your city count?</label>
+             <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q7}}" value="yes" {% if responses[Q7] == "yes" %}checked {% endif %}>
+                Yes
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q7}}" value="no" {% if responses[Q7] == "no" %}checked {% endif %}>
+                No
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q7}}" value="idontknowwhatthatis" {% if responses[Q7] == "idontknowwhatthatis" %}checked {% endif %}>
+                I don't know what that means
+              </label>
+            </div>
+          </div>
+
+          {% set Q8 = "Q8share" %}
+          
+          <div class="form-group" {% if error[Q8] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q8}}">Did you ever share an article that you learned about through Terra Incognita?</label>
+             <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q8}}" value="morethanonce" {% if responses[Q8] == "morethanonce" %}checked {% endif %}>
+                More than once
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q8}}" value="atleastonce" {% if responses[Q8] == "atleastonce" %}checked {% endif %}>
+                At least once
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q8}}" value="never" {% if responses[Q8] == "never" %}checked {% endif %}>
+                Never
+              </label>
+            </div>
+          </div>
+
+        <h2 class="bg-info">Learning &amp; Reflection</h2>
+
+        {% set Q9 = "Q9reflect" %}
+        {% set Q10 = "Q10reflect_explain" %}
+          <div class="form-group" {% if error[Q9] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q9}}">Did you reflect more on the geography of your news reading after you installed Terra Incognita?</label>
+             <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q9}}" value="yes" {% if responses[Q9] == "yes" %}checked {% endif %}>
+                Yes
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q9}}" value="no" {% if responses[Q9] == "no" %}checked {% endif %}>
+                No
+              </label>
+
+                <input type="text" class="form-control" name="{{Q10}}" style="float:right;width:90%" placeholder="Explain (optional)" value="{{responses[Q10]}}">
+            </div>
+          </div>
+
+        {% set Q11 = "Q11newplace" %}
+        {% set Q12 = "Q12newplace_explain" %}
+          <div class="form-group" {% if error[Q11] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q11}}">Do you feel that you learned something about a new place from using Terra Incognita?</label>
+             <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q11}}" value="yes" {% if responses[Q11] == "yes" %}checked {% endif %}>
+                Yes
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q11}}" value="no" {% if responses[Q11] == "no" %}checked {% endif %}>
+                No
+              </label>
+
+                <input type="text" class="form-control" name="{{Q12}}" style="float:right;width:90%" placeholder="Explain (optional)" value="{{responses[Q12]}}">
+            </div>
+          </div>
+
+        <h2 class="bg-info">News Recommendations</h2>
+
+        {% set Q13 = "Q13badarticles" %}
+        {% set Q14 = "Q14badarticles_explain" %}
+          <div class="form-group" {% if error[Q13] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q13}}">Do you remember any particularly bad or irrelevant articles that you discovered from Terra Incognita?</label>
+             <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q13}}" value="yes" {% if responses[Q13] == "yes" %}checked {% endif %}>
+                Yes
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q13}}" value="no" {% if responses[Q13] == "no" %}checked {% endif %}>
+                No
+              </label>
+
+                <input type="text" class="form-control" name="{{Q14}}" style="float:right;width:90%" placeholder="Explain (optional)" value="{{responses[Q14]}}">
+            </div>
+          </div>
+
+        {% set Q15 = "Q15goodarticles" %}
+        {% set Q16 = "Q16goodarticles_explain" %}
+          <div class="form-group" {% if error[Q15] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q15}}">Do you remember any particularly good articles that you discovered from Terra Incognita?</label>
+             <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q15}}" value="yes" {% if responses[Q15] == "yes" %}checked {% endif %}>
+                Yes
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q15}}" value="no" {% if responses[Q15] == "no" %}checked {% endif %}>
+                No
+              </label>
+
+                <input type="text" class="form-control" name="{{Q16}}" style="float:right;width:90%" placeholder="Explain (optional)" value="{{responses[Q16]}}">
+            </div>
+          </div>
+
+        {% set Q17 = "Q17improverecommendations" %}
+        <div class="form-group" {% if error[Q4] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q17}}">What would make Terra Incognita's news recommendations better?</label>
+            <input type="text" class="form-control" name="{{Q17}}" placeholder="" value="{{responses[Q17]}}">
+        </div>
+
+        <h2 class="bg-info">Your Rankings</h2>
+        
+        {% set Q18 = "Q18rankings_explain" %}
+        <div class="form-group" {% if error[Q18] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q18}}"><span class="badge alert-danger">{{cityCount}} cities</span> It looks like you read about {{cityCount}} of Terra Incognita's 1000 cities. How do you explain that number? Why not more or less cities than {{cityCount}}?</label>
+            <input type="text" class="form-control" name="{{Q18}}" placeholder="" value="{{responses[Q18]}}">
+        </div>        
+
+        {% set Q19 = "Q19improverankings" %}
+        <div class="form-group" {% if error[Q19] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q19}}"><span class="badge alert-danger">#{{ranking}}</span> You are currently ranked {{ranking}} out of {{totalUserCount}} total users of Terra Incognita for the number of cities you have read about. If you had known that while you were using it, would you have tried to improve your standing?</label>
+             <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q19}}" value="yes" {% if responses[Q19] == "yes" %}checked {% endif %}>
+                Yes
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q19}}" value="no" {% if responses[Q19] == "no" %}checked {% endif %}>
+                No
+              </label>
+            </div>
+          </div>  
+
+        <h2 class="bg-info">Overall</h2>
+
+        {% set Q20 = "Q20feelings_explain" %}
+        <div class="form-group" {% if error[Q20] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q20}}">How did Terra Incognita make you feel?</label>
+            <textarea class="form-control" name="{{Q20}}" rows="2">{{responses[Q20]}}</textarea>
+        </div> 
+
+        {% set Q21 = "Q21anythingelse_explain" %}
+        <div class="form-group" {% if error[Q21] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q21}}">Do you have other feedback, desired features or suggestions about any aspect of the experience?</label>
+            <textarea class="form-control" name="{{Q21}}" rows="2">{{responses[Q21]}}</textarea>
+        </div>
+
+        {% set Q22 = "Q22contactyou" %}
+        <div class="form-group" {% if error[Q22] == 1 %} style="color:red"{% endif %}>
+            <label for="{{Q22}}">Could Catherine D'Ignazio contact you via email to do a short, post-study interview over phone or Skype?</label>
+             <div>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q22}}" value="yes" {% if responses[Q22] == "yes" %}checked {% endif %}>
+                Yes
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="{{Q22}}" value="no" {% if responses[Q22] == "no" %}checked {% endif %}>
+                No thanks
+              </label>
+            </div>
+          </div>
+
+
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    
+    </body>
+</html>

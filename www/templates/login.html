@@ -39,6 +39,15 @@
             {% else %}
                 Thanks - you completed the pre-study survey.
             {% endif %}
+        <hr>
+            <h3>Post-Study Survey</h3>
+            {% if not hasCompletedPostSurvey %}
+            <p>
+               <a href="/postsurvey/{{ current_user.get_id() }}">Please complete the post-study survey. </a> You have to complete the exit survey before continuing to use the software.
+            </p>  
+            {% else %}
+                Thanks - you completed the post-study survey.
+            {% endif %}
         
             <hr>
             <h3>About Usernames</h3>

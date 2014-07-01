@@ -176,6 +176,65 @@ def formsfilledout(userID):
 	hasCompletedPreSurvey = app.db_user_collection.find({ "_id": ObjectId(userID),"filled_out_presurvey":1}).count()
 	return json.dumps({"hasSignedConsentForm":hasSignedConsentForm, "hasCompletedPreSurvey":hasCompletedPreSurvey}, sort_keys=True, indent=4, default=json_util.default) 
 
+@app.route('/postsurvey/<userID>', methods=['GET', 'POST'])
+def postsurvey(userID):
+	error={}
+	errorCount = 0
+	responses={}
+	
+	userCities = getAllUserCityCounts()
+	totalUserCount = len(userCities)
+
+	ranking = 1
+	for row in userCities:
+		if userID == str(row["_id"]["userID"]):
+			cityCount = row["totalcitiesvisited"]
+			break
+		ranking=ranking+1
+
+	if request.method == 'POST':
+		user = app.db_user_collection.find({ "_id": ObjectId(userID)}).next()
+		fields = 	[	'Q1chromeprimarybefore',
+						'Q2chromeprimaryafter',
+						'Q3globalnewsimportanttowork',
+						'Q4raterecommendations',
+						'Q5topreaderorrecommender',
+						'Q6searchtobecometopreader',
+						'Q7searchtocollectmorecities',
+						'Q8share',
+						'Q9reflect',
+						'Q10reflect_explain',
+						'Q11newplace',
+						'Q12newplace_explain',
+						'Q13badarticles',	
+						'Q14badarticles_explain',
+						'Q15goodarticles',
+						'Q16goodarticles_explain',
+						'Q17improverecommendations',
+						'Q18rankings_explain',
+						'Q19improverankings',
+						'Q20feelings_explain',
+						'Q21anythingelse_explain',
+						'Q22contactyou'
+					]
+		for field in fields:
+
+			if (field in request.form and len(request.form[field]) > 0) or (field in request.form and len(request.form[field]) == 0 and "_explain" in field):
+				user[field]=request.form[field]
+				error[field]=0
+			else:
+				error[field]=1
+				errorCount+=1
+		if errorCount==0:
+			user["filled_out_postsurvey"] =1
+			app.db_user_collection.save(user)
+			return redirect('/login')
+		else:
+			responses=request.form
+		print error
+
+	return render_template('postsurvey.html', userID=userID, error=error,errorCount=errorCount, responses=responses, cityCount=cityCount, totalUserCount=totalUserCount, ranking=ranking)
+
 @app.route('/presurvey/<userID>', methods=['GET', 'POST'])
 def presurvey(userID):
 	error={}
@@ -214,18 +273,36 @@ def presurvey(userID):
 	return render_template('presurvey.html', userID=userID, error=error,errorCount=errorCount, responses=responses)
 
 
-
-#Send user their city data
-#consider storing 1000 cities data in localstorage for faster retrieval later
-@app.route('/user/<userID>')
-@app.route('/user/')
-def user(userID='52dbeee6bd028634678cd069'):
+# queries for user visits by city
+def getUserCityCounts(userID):
 	CITY_COUNT_PIPELINE = [
 		{ "$unwind" : "$geodata.primaryCities" },
 		{ "$match" : { "userID":userID, "preinstallation":{"$exists":0}, "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY } }},
 		{ "$group": {"_id": {"geonames_id":"$geodata.primaryCities.id" }, "count": {"$sum": 1}}},
 		{ "$sort" : { "count" : -1 } }
 	]
+	q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CITY_COUNT_PIPELINE ) 
+	return q["result"]
+
+# queries for all user visits by city
+def getAllUserCityCounts():
+	ALL_USERS_CITY_COUNT_PIPELINE = [
+		{ "$unwind" : "$geodata.primaryCities" },
+		{ "$match" : { "preinstallation":{"$exists":0}, "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY } }},
+		{ "$group": {"_id": {"userID":"$userID", "geonames_id":"$geodata.primaryCities.id" }, "count": {"$sum": 1}}},
+		
+		{ "$group": {"_id": {"userID":"$_id.userID"}, "totalcitiesvisited": {"$sum": 1}}},
+		{ "$sort" : { "totalcitiesvisited" : -1 } }
+	]
+	q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=ALL_USERS_CITY_COUNT_PIPELINE ) 
+	return q["result"]
+
+#Send user their city data
+#consider storing 1000 cities data in localstorage for faster retrieval later
+@app.route('/user/<userID>')
+@app.route('/user/')
+def user(userID='52dbeee6bd028634678cd069'):
+	
 	if (userID is not None):
 		
 		userData = {"userID":userID,"username":getUsername(userID), "cities":[]}
@@ -236,8 +313,9 @@ def user(userID='52dbeee6bd028634678cd069'):
 		#userData["last10HistoryItems"] = last10HistoryItems
 		
 		cities = {}
-		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CITY_COUNT_PIPELINE ) 
-		for row in q["result"]:
+		
+		result = getUserCityCounts(userID)
+		for row in result:
 			geonames_id = row["_id"]["geonames_id"]
 			count = row["count"]
 			cities[geonames_id] = count
@@ -856,14 +934,16 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 #Test function for various things
 @app.route('/testdb/')
 def testdb():
-	userID = "5340173260de7dd9d8394aa8"
-	COUNTRY_COUNT_POSTINSTALL_PIPELINE = [
-		{ "$unwind" : "$geodata.primaryCountries" },
-		{ "$match" : { "userID":userID, "preinstallation":{"$exists":0} }},
-		{ "$group": {"_id": {"countrycode":"$geodata.primaryCountries" }, "count": {"$sum": 1}}},
-		{ "$sort" : { "count" : -1 } }
-		]
-	q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_POSTINSTALL_PIPELINE ) 
+	
+	ALL_USERS_CITY_COUNT_PIPELINE = [
+		{ "$unwind" : "$geodata.primaryCities" },
+		{ "$match" : { "preinstallation":{"$exists":0}, "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY } }},
+		{ "$group": {"_id": {"userID":"$userID", "geonames_id":"$geodata.primaryCities.id" }, "count": {"$sum": 1}}},
+		
+		{ "$group": {"_id": {"userID":"$_id.userID"}, "totalcitiesvisited": {"$sum": 1}}},
+		{ "$sort" : { "totalcitiesvisited" : -1 } }
+	]
+	q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=ALL_USERS_CITY_COUNT_PIPELINE ) 
 	for row in q["result"]:
 		print row
 
@@ -987,11 +1067,14 @@ def loginpage():
 	userID = ""
 	hasSignedConsentForm = False
 	hasCompletedPreSurvey = False
+	hasCompletedPostSurvey = False
+	
 	if "user_id" in session:
 		userID = session['user_id']
 	if userID != "":
 		hasSignedConsentForm = app.db_user_collection.find({ "_id": ObjectId(userID), "signed_consent":1}).count() >=1
 		hasCompletedPreSurvey = app.db_user_collection.find({ "_id": ObjectId(userID), "filled_out_presurvey":1}).count() >=1
+		hasCompletedPostSurvey = app.db_user_collection.find({ "_id": ObjectId(userID), "filled_out_postsurvey":1}).count() >=1
 
 	if request.method == 'POST':
 		oldusername = request.form['oldusername']
@@ -1006,7 +1089,7 @@ def loginpage():
 			r = app.db_user_collection.update(	{ "_id": ObjectId(userID)}, 
 												{ "$set" : {"username":newusername}})
 			
-	return render_template('login.html', error=error, hasSignedConsentForm=hasSignedConsentForm,hasCompletedPreSurvey=hasCompletedPreSurvey)
+	return render_template('login.html', error=error, hasSignedConsentForm=hasSignedConsentForm,hasCompletedPreSurvey=hasCompletedPreSurvey,hasCompletedPostSurvey=hasCompletedPostSurvey)
 
 
 # Receives a single URL object from user and logs it through the text processing queue
