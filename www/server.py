@@ -181,7 +181,7 @@ def postsurvey(userID):
 	error={}
 	errorCount = 0
 	responses={}
-	
+	postsurvey={}
 	userCities = getAllUserCityCounts()
 	totalUserCount = len(userCities)
 
@@ -221,13 +221,14 @@ def postsurvey(userID):
 		for field in fields:
 
 			if (field in request.form and len(request.form[field]) > 0) or (field in request.form and len(request.form[field]) == 0 and "_explain" in field):
-				user[field]=request.form[field]
+				postsurvey[field]=request.form[field]
 				error[field]=0
 			else:
 				error[field]=1
 				errorCount+=1
 		if errorCount==0:
 			user["filled_out_postsurvey"] =1
+			user["postsurvey"]=postsurvey
 			app.db_user_collection.save(user)
 			return redirect('/login')
 		else:
