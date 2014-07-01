@@ -102,3 +102,5 @@ analysis/.RData
 analysis/.Rhistory
 
 www/static/data/exportpresurvey.csv
+
+analysis/exportpresurvey.csv
