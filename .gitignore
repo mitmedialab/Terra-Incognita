@@ -100,3 +100,5 @@ analysis/TerraIncognitaExport_06232014.csv
 analysis/.RData
 
 analysis/.Rhistory
+
+www/static/data/exportpresurvey.csv
