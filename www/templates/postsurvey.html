@@ -328,7 +328,7 @@
           </div>  
         {% set Q18 = "Q18rankings_explain" %}
         <div class="form-group" {% if error[Q18] == 1 %} style="color:red"{% endif %}>
-            <label for="{{Q18}}"> How do you explain your ranking (#{{ranking}}) and your city count ({{cityCount}})? Why aren't they higher or lower?</label>
+            <label for="{{Q18}}"> How do you explain your ranking <span class="badge alert-danger">#{{ranking}}</span> and your city count <span class="badge alert-danger">{{cityCount}} cities</span>? Why aren't they higher or lower?</label>
             <input type="text" class="form-control" name="{{Q18}}" placeholder="" value="{{responses[Q18]}}">
         </div> 
 
