@@ -314,7 +314,7 @@
         
         {% set Q19 = "Q19improverankings" %}
         <div class="form-group" {% if error[Q19] == 1 %} style="color:red"{% endif %}>
-            <label for="{{Q19}}"><span class="badge alert-danger">#{{ranking}}</span> <span class="badge alert-danger">{{cityCount}} cities</span> You are currently ranked #{{ranking}} out of {{totalUserCount}} total users of Terra Incognita for reading about {{cityCount}} cities. If you had known that while you were using it, would you have tried to improve your standing?</label>
+            <label for="{{Q19}}"><span class="badge alert-danger"><span class="ranking"><em>loading</em></span></span> <span class="badge alert-danger"><span class="cityCount"><em>loading</em></span> cities</span> You are currently ranked <span class="ranking"><em>loading</em></span> out of <span class="totalUserCount"><em>loading</em></span> total users of Terra Incognita for reading about <span class="cityCount"><em>loading</em></span> cities. If you had known that while you were using it, would you have tried to improve your standing?</label>
              <div>
               <label class="radio-inline">
                 <input type="radio" name="{{Q19}}" value="yes" {% if responses[Q19] == "yes" %}checked {% endif %}>
@@ -328,7 +328,7 @@
           </div>  
         {% set Q18 = "Q18rankings_explain" %}
         <div class="form-group" {% if error[Q18] == 1 %} style="color:red"{% endif %}>
-            <label for="{{Q18}}"> How do you explain your ranking <span class="badge alert-danger">#{{ranking}}</span> and your city count <span class="badge alert-danger">{{cityCount}} cities</span>? Why aren't they higher or lower?</label>
+            <label for="{{Q18}}"> How do you explain your ranking <span class="badge alert-danger"><span class="ranking"><em>loading</em></span></span> and your city count <span class="badge alert-danger"><span class="cityCount"><em>loading</em></span> cities</span>? Why aren't they higher or lower?</label>
             <input type="text" class="form-control" name="{{Q18}}" placeholder="" value="{{responses[Q18]}}">
         </div> 
 
@@ -382,4 +382,22 @@
         </form>
     
     </body>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+    function getRankings(userID) {
+          
+          $.ajax({
+                    url:"/postsurveyrankings/{{userID}}",
+                    type: "GET",
+                    dataType: "json"
+          }).done(function( data ) {
+            $(".ranking").html("#" + data["ranking"])
+            $(".cityCount").html(data["cityCount"])
+            $(".totalUserCount").html(data["totalUserCount"])
+          });
+    }
+    //Call function when doc has loaded
+    $(getRankings());
+    
+    </script>
 </html>

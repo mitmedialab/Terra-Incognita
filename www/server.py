@@ -197,13 +197,8 @@ def formsfilledout(userID):
 
 	return json.dumps({"needsToDoPostSurvey":needsToDoPostSurvey,"hasSignedConsentForm":hasSignedConsentForm, "hasCompletedPreSurvey":hasCompletedPreSurvey}, sort_keys=True, indent=4, default=json_util.default) 
 
-
-@app.route('/postsurvey/<userID>', methods=['GET', 'POST'])
-def postsurvey(userID):
-	error={}
-	errorCount = 0
-	responses={}
-	postsurvey={}
+@app.route('/postsurveyrankings/<userID>', methods=['GET', 'POST'])
+def postsurveyrankings(userID):
 	userCities = getAllUserCityCounts()
 	totalUserCount = app.db_user_collection.count()
 
@@ -213,6 +208,16 @@ def postsurvey(userID):
 			cityCount = row["totalcitiesvisited"]
 			break
 		ranking=ranking+1
+	
+	return json.dumps({"cityCount":cityCount,"totalUserCount":totalUserCount, "ranking":ranking}, sort_keys=True, indent=4, default=json_util.default) 
+
+@app.route('/postsurvey/<userID>', methods=['GET', 'POST'])
+def postsurvey(userID):
+	error={}
+	errorCount = 0
+	responses={}
+	postsurvey={}
+	
 
 	if request.method == 'POST':
 		user = app.db_user_collection.find({ "_id": ObjectId(userID)}).next()
@@ -257,7 +262,7 @@ def postsurvey(userID):
 			responses=request.form
 		print error
 
-	return render_template('postsurvey.html', userID=userID, error=error,errorCount=errorCount, responses=responses, cityCount=cityCount, totalUserCount=totalUserCount, ranking=ranking)
+	return render_template('postsurvey.html', userID=userID, error=error,errorCount=errorCount, responses=responses)
 
 @app.route('/presurvey/<userID>', methods=['GET', 'POST'])
 def presurvey(userID):
