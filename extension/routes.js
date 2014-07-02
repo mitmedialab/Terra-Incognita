@@ -41,7 +41,7 @@ App.Router = Backbone.Router.extend({
 				if (request.user){
 					sendResponse({msg: "thanks for the JSON dodohead"});
 					App.debug('Received User Data');
-					console.log(request.user)
+					//console.log(request.user)
 					that.userModel.loadUser(request.user);
 					
 				}

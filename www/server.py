@@ -172,9 +172,31 @@ def consentForm(userID):
 @app.route('/formsfilledout/<userID>/')
 @app.route('/formsfilledout/<userID>')
 def formsfilledout(userID):
-	hasSignedConsentForm = app.db_user_collection.find({ "_id": ObjectId(userID),"signed_consent":1}).count()
-	hasCompletedPreSurvey = app.db_user_collection.find({ "_id": ObjectId(userID),"filled_out_presurvey":1}).count()
-	return json.dumps({"hasSignedConsentForm":hasSignedConsentForm, "hasCompletedPreSurvey":hasCompletedPreSurvey}, sort_keys=True, indent=4, default=json_util.default) 
+	
+
+	needsToDoPostSurvey = 0
+	userDoc = app.db_user_collection.find({ "_id": ObjectId(userID)},{"history-pre-installation":0}).next()
+	
+	hasSignedConsentForm = 1 if "signed_consent" in userDoc and int(userDoc["signed_consent"]) == 1 else 0
+	hasCompletedPreSurvey = 1 if "filled_out_presurvey" in userDoc and int(userDoc["filled_out_presurvey"]) == 1 else 0
+
+	# check if they've already completed it
+	# they can't complete postsurvey without already having filled out other forms
+	hasCompletedPostSurvey = int(userDoc["filled_out_postsurvey"])
+	if (hasCompletedPostSurvey > 0 or not hasCompletedPreSurvey or not hasSignedConsentForm):
+		needsToDoPostSurvey = 0
+	
+	# check for having been in system at least 30 days
+	else:
+		firstLoginDate = datetime.datetime.fromtimestamp(int(userDoc["firstLoginDate"]/1000))
+		nowDate = datetime.datetime.now()
+	
+		dateDiff = nowDate - firstLoginDate
+		if ( dateDiff.days >= 30):
+			needsToDoPostSurvey = 1
+
+	return json.dumps({"needsToDoPostSurvey":needsToDoPostSurvey,"hasSignedConsentForm":hasSignedConsentForm, "hasCompletedPreSurvey":hasCompletedPreSurvey}, sort_keys=True, indent=4, default=json_util.default) 
+
 
 @app.route('/postsurvey/<userID>', methods=['GET', 'POST'])
 def postsurvey(userID):
@@ -183,7 +205,7 @@ def postsurvey(userID):
 	responses={}
 	postsurvey={}
 	userCities = getAllUserCityCounts()
-	totalUserCount = len(userCities)
+	totalUserCount = app.db_user_collection.count()
 
 	ranking = 1
 	for row in userCities:

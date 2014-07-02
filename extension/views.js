@@ -74,10 +74,11 @@ App.MapView = Backbone.View.extend({
 	},
 	renderFormsNotification: function(){
 		App.debug('App.MapView.renderFormsNotification()')
-		if ( this.userModel.get('hasSignedConsentForm') != null && (!this.userModel.get('hasSignedConsentForm') || !this.userModel.get('hasCompletedPreSurvey'))){
+		if ( (this.userModel.get('needsToDoPostSurvey') != null && this.userModel.get('needsToDoPostSurvey')) || (this.userModel.get('hasSignedConsentForm') != null && (!this.userModel.get('hasSignedConsentForm') || !this.userModel.get('hasCompletedPreSurvey')))){
 			this.formsNotificationView = new App.FormsNotificationView({ model: this.userModel });
 		}
 	},
+	
 	/*
 		Fun! getting random lat longs
 		lon range is -180 to +180
@@ -253,9 +254,6 @@ App.CitySelectorView = Backbone.View.extend({
 	render: function () {
 		App.debug('App.CitySelectorView.render()');
 
-		console.log("RENDERING CITY SELECTOR")
-		console.log(this.model.get("userCityVisits"))
-
 		var html = this.template({ visitedCityCount : Object.keys(this.model.get("userCityVisits")).length });
 
 		this.$el.html(html);
@@ -402,16 +400,18 @@ App.FormsNotificationView = Backbone.View.extend({
 	render: function () {
 		App.debug('App.FormsNotificationView.render()');
 		var linkURL = this.model.get("serverURL");
+		
 		if (this.model.get("hasSignedConsentForm") == 0){
 			linkURL = linkURL + "consent/" + this.model.get("userID")
-		} else {
+		} 
+		else if (this.model.get("hasCompletedPreSurvey") ==0){
 			linkURL = linkURL + "presurvey/" + this.model.get("userID")
+		} 
+		else if(this.model.get("needsToDoPostSurvey") != null && this.model.get("needsToDoPostSurvey") == 1){
+			linkURL = linkURL + "postsurvey/" + this.model.get("userID")
 		}
-		var html = this.template({ linkURL : linkURL, hasSignedConsentForm : this.model.get("hasSignedConsentForm"), hasCompletedPreSurvey : this.model.get("hasCompletedPreSurvey") });
+		var html = this.template({ linkURL : linkURL, needsToDoPostSurvey : this.model.get("needsToDoPostSurvey"), hasSignedConsentForm : this.model.get("hasSignedConsentForm"), hasCompletedPreSurvey : this.model.get("hasCompletedPreSurvey") });
 		this.$el.html(html);
-		
-		//call window into being
-		
 
 		this.$el.find('#forms-modal').modal();
 		$('#forms-modal').on('hidden.bs.modal', function (e) {

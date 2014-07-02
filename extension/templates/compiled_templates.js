@@ -20,15 +20,25 @@ return __p;
 TEMPLATES['forms-modal-template']=function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='\n  <div id="forms-modal" class="modal fade">\n    <div class="modal-dialog">\n      <div class="modal-content">\n        <div class="modal-header">\n          \n          <h4 class="modal-title">Incomplete Forms</h4>\n        </div>\n        <div class="modal-body">\n          ';
+__p+='\n  <div id="forms-modal" class="modal fade">\n    <div class="modal-dialog">\n      <div class="modal-content">\n        <div class="modal-header">\n          \n          \n          ';
  if (hasSignedConsentForm == "0") { 
-__p+='\n          <p>Sorry! You cannot use Terra Incognita until you fill out the user consent form and a short survey. </p>\n          ';
- } else { 
-__p+='\n            <p>Sorry! You need to fill out a short survey before using Terra Incognita. It will take about 2 minutes.</p>\n          ';
- } 
+__p+='\n          <h4 class="modal-title">User Consent Form</h4>\n          ';
+ } else if (hasCompletedPreSurvey == "0"){ 
+__p+='\n            <h4 class="modal-title">Short Pre-Study Survey</h4>\n          ';
+} else if (needsToDoPostSurvey == "1") { 
+__p+='\n            <h4 class="modal-title">Short Final Survey</h4>\n            ';
+}
+__p+='\n        </div>\n        <div class="modal-body">\n          \n          ';
+ if (hasSignedConsentForm == "0") { 
+__p+='\n          <p>Sorry for the interruption! You cannot use Terra Incognita until you fill out the user consent form. </p>\n          ';
+ } else if (hasCompletedPreSurvey == "0"){ 
+__p+='\n            <p>Sorry for the interruption! You need to fill out a short survey before using Terra Incognita. It will take about 2 minutes.</p>\n          ';
+} else if (needsToDoPostSurvey == "1") { 
+__p+='\n            <p>Please fill out a short, final survey about your experience with Terra Incognita. The survey will also show you your rankings.</p>\n\n            <p><em>Estimated time: 5 minutes</em></p>\n            ';
+}
 __p+='\n        </div>\n        <div class="modal-footer">\n          \n          <a role="button" class="btn btn-primary" href="'+
 ((__t=( linkURL ))==null?'':__t)+
-'">Click here to complete your form.</a>\n        </div>\n      </div>\n    </div>\n  </div>\n';
+'">Click here to complete</a>\n        </div>\n      </div>\n    </div>\n  </div>\n';
 }
 return __p;
 }
@@ -177,4 +187,4 @@ __p+='\n              <h4 class="submit-recommendation">Submit a recommendation 
 __p+='\n          </div>\n        \n\n\n        </div>\n        \n        \n';
 }
 return __p;
-}
+} 

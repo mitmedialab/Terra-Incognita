@@ -53,13 +53,12 @@ chrome.runtime.onMessage.addListener(
 						forms = JSON.parse(xhr.responseText);
 						console.log(forms);
 						
-						sendResponse({hasSignedConsentForm: forms["hasSignedConsentForm"], hasCompletedPreSurvey: forms["hasCompletedPreSurvey"]});
+						sendResponse({needsToDoPostSurvey: forms["needsToDoPostSurvey"],hasSignedConsentForm: forms["hasSignedConsentForm"], hasCompletedPreSurvey: forms["hasCompletedPreSurvey"]});
 					}
 				}
 				xhr.send();
 				return true;
-		}
-		
+		}		
 		else if (request.msg == "loadReadingLists")
 		{
 				var xhr = new XMLHttpRequest();

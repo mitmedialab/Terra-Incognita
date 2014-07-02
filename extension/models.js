@@ -59,8 +59,7 @@ App.UserModel = Backbone.Model.extend({
 	},
 	logUserForms: function(response){
 		App.debug('App.UserModel.logUserForms()');
-		this.set({"hasSignedConsentForm": response["hasSignedConsentForm"], "hasCompletedPreSurvey":response["hasCompletedPreSurvey"]});
-
+		this.set({"needsToDoPostSurvey": response["needsToDoPostSurvey"], "hasSignedConsentForm": response["hasSignedConsentForm"], "hasCompletedPreSurvey":response["hasCompletedPreSurvey"]});
 	},
 	getCityVisitCount: function(geonames_id){
 		var userCityVisits = this.get("userCityVisits");

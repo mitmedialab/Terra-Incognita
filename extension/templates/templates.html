@@ -28,18 +28,30 @@
       <div class="modal-content">
         <div class="modal-header">
           
-          <h4 class="modal-title">Incomplete Forms</h4>
+          
+          <% if (hasSignedConsentForm == "0") { %>
+          <h4 class="modal-title">User Consent Form</h4>
+          <% } else if (hasCompletedPreSurvey == "0"){ %>
+            <h4 class="modal-title">Short Pre-Study Survey</h4>
+          <%} else if (needsToDoPostSurvey == "1") { %>
+            <h4 class="modal-title">Short Final Survey</h4>
+            <%}%>
         </div>
         <div class="modal-body">
+          
           <% if (hasSignedConsentForm == "0") { %>
-          <p>Sorry! You cannot use Terra Incognita until you fill out the user consent form and a short survey. </p>
-          <% } else { %>
-            <p>Sorry! You need to fill out a short survey before using Terra Incognita. It will take about 2 minutes.</p>
-          <% } %>
+          <p>Sorry for the interruption! You cannot use Terra Incognita until you fill out the user consent form. </p>
+          <% } else if (hasCompletedPreSurvey == "0"){ %>
+            <p>Sorry for the interruption! You need to fill out a short survey before using Terra Incognita. It will take about 2 minutes.</p>
+          <%} else if (needsToDoPostSurvey == "1") { %>
+            <p>Please fill out a short, final survey about your experience with Terra Incognita. The survey will also show you your rankings.</p>
+
+            <p><em>Estimated time: 5 minutes</em></p>
+            <%}%>
         </div>
         <div class="modal-footer">
           
-          <a role="button" class="btn btn-primary" href="<%= linkURL %>">Click here to complete your form.</a>
+          <a role="button" class="btn btn-primary" href="<%= linkURL %>">Click here to complete</a>
         </div>
       </div>
     </div>
