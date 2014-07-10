@@ -419,6 +419,20 @@ def exportpresurvey():
 	test_file.close()
 	return app.send_static_file('data/exportpresurvey.csv')
 
+# exports email addresses who haven't filled out post survey
+# and who have been in system for more than 30 days
+# and who have been using app
+@app.route('/exportemailsforpostsurvey/')
+def exportemailsforpostsurvey():
+	emails=[]
+	users = app.db_user_collection.find({"signed_consent":1,"filled_out_presurvey":1,"filled_out_postsurvey":{"$exists":0}},{"history-pre-installation":0})
+	for user in users:
+		userID = str(user["_id"])
+		days=getPreinstallAndPostinstallDays(user)
+		if days["postinstallation.days"] >= 30:
+			emails.append(user["email"])
+	return json.dumps(emails, sort_keys=True, indent=4, default=json_util.default) 
+	
 # exports all user history records for counting and operating on
 # filter records that have no userID - bug that they ended up there anyways 
 # excludes userIDs from creators of TI
