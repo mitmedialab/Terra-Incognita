@@ -12,9 +12,16 @@
         {% if current_user.is_authenticated() %}
         <h1>Terra Incognita Dashboard</h1>
         
+        {% if hasSignedConsentForm and hasCompletedPreSurvey and not hasCompletedPostSurvey %}
+            <p style="margin:50px">
+               <a href="/postsurvey/{{ current_user.get_id() }}" class="btn btn-danger btn-lg active" role="button">Complete Post-Study Survey Now</a>.  
+            </p>  
+       
+        {% endif %}
+
         {% if hasSignedConsentForm and hasCompletedPreSurvey %}
         <hr>
-        <h3>You are ready to launch Terra Incognita!</h3>
+        <h3>How to launch Terra Incognita</h3>
         <p>Open a new tab in your browser with Cmd-T or Ctrl-T.</p>
         
         {% endif %}
@@ -78,6 +85,9 @@
             </script>
             <button id="browserid-login">Login</button>
         {% endif %}
+        <hr>
+            <h3>Help</h3>
+            <p>If you have any questions, concerns or feedback, please email Catherine D'Ignazio at <a href="mailto:dignazio@media.mit.edu">dignazio@media.mit.edu</a>.</p>
     </div>
     </body>
 </html>
