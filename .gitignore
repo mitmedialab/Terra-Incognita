@@ -106,3 +106,5 @@ www/static/data/exportpresurvey.csv
 analysis/exportpresurvey.csv
 
 *.csv
+
+analysis/Download_ExportCityClicks_07162014,json

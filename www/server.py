@@ -182,7 +182,7 @@ def formsfilledout(userID):
 
 	# check if they've already completed it
 	# they can't complete postsurvey without already having filled out other forms
-	hasCompletedPostSurvey = int(userDoc["filled_out_postsurvey"])
+	hasCompletedPostSurvey = 1 if "filled_out_postsurvey" in userDoc and int(userDoc["filled_out_postsurvey"]) == 1 else 0
 	if (hasCompletedPostSurvey > 0 or not hasCompletedPreSurvey or not hasSignedConsentForm):
 		needsToDoPostSurvey = 0
 	
