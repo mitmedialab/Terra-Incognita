@@ -540,8 +540,8 @@ def getPreinstallAndPostinstallDays(userDoc):
 	daysOfHistory = {}
 	result = app.db_user_history_collection.find({"userID":str(userID), "preinstallation":{"$exists":0}}, {"lastVisitTime":1})
 	userDaysResult["postinstallation.count"] = result.count()
-	while (result.next()):
-		visitDate = datetime.datetime.fromtimestamp(int(result["lastVisitTime"]/1000))
+	for record in result:
+		visitDate = datetime.datetime.fromtimestamp(int(record["lastVisitTime"]/1000))
 		daysOfHistory[visitDate.strftime("%Y-%m-%d")] = 1
 
 	userDaysResult["postinstallation.days"] = len(daysOfHistory)
