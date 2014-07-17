@@ -412,62 +412,41 @@ def exportpresurvey():
 @app.route('/exportpostsurvey')
 def exportpostsurvey():
 	test_file = open(app.static_folder + '/data/exportpostsurvey.csv','wb')
-	fieldnames = ["userID","username", "postsurvey",'postsurvey.Q1chromeprimarybefore',
-						'postsurvey.Q2chromeprimaryafter',
-						'postsurvey.Q3globalnewsimportanttowork',
-						'postsurvey.Q4raterecommendations',
-						'postsurvey.Q5topreaderorrecommender',
-						'postsurvey.Q6searchtobecometopreader',
-						'postsurvey.Q7searchtocollectmorecities',
-						'postsurvey.Q8share',
-						'postsurvey.Q9reflect',
-						'postsurvey.Q10reflect_explain',
-						'postsurvey.Q11newplace',
-						'postsurvey.Q12newplace_explain',
-						'postsurvey.Q13badarticles',	
-						'postsurvey.Q14badarticles_explain',
-						'postsurvey.Q15goodarticles',
-						'postsurvey.Q16goodarticles_explain',
-						'postsurvey.Q17improverecommendations',
-						'postsurvey.Q18rankings_explain',
-						'postsurvey.Q19improverankings',
-						'postsurvey.Q20feelings_explain',
-						'postsurvey.Q21anythingelse_explain',
-						'postsurvey.Q22contactyou',
-						'postsurvey.Q23seeleaderboard']
+	fieldnames = ["userID","username", 'Q1chromeprimarybefore',
+						'Q2chromeprimaryafter',
+						'Q3globalnewsimportanttowork',
+						'Q4raterecommendations',
+						'Q5topreaderorrecommender',
+						'Q6searchtobecometopreader',
+						'Q7searchtocollectmorecities',
+						'Q8share',
+						'Q9reflect',
+						'Q10reflect_explain',
+						'Q11newplace',
+						'Q12newplace_explain',
+						'Q13badarticles',	
+						'Q14badarticles_explain',
+						'Q15goodarticles',
+						'Q16goodarticles_explain',
+						'Q17improverecommendations',
+						'Q18rankings_explain',
+						'Q19improverankings',
+						'Q20feelings_explain',
+						'Q21anythingelse_explain',
+						'Q22contactyou',
+						'Q23seeleaderboard']
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
 	csvwriter.writeheader()
 
-	cursor = app.db_user_collection.find({"filled_out_postsurvey":{"$exists":1}, "postsurvey":{"$exists":1}},{"username":1, 'postsurvey.Q1chromeprimarybefore' : 1,
-						'postsurvey.Q2chromeprimaryafter' : 1,
-						'postsurvey.Q3globalnewsimportanttowork' : 1,
-						'postsurvey.Q4raterecommendations' : 1,
-						'postsurvey.Q5topreaderorrecommender' : 1,
-						'postsurvey.Q6searchtobecometopreader' : 1,
-						'postsurvey.Q7searchtocollectmorecities' : 1,
-						'postsurvey.Q8share' : 1,
-						'postsurvey.Q9reflect' : 1,
-						'postsurvey.Q10reflect_explain' : 1,
-						'postsurvey.Q11newplace' : 1,
-						'postsurvey.Q12newplace_explain' : 1,
-						'postsurvey.Q13badarticles' : 1,	
-						'postsurvey.Q14badarticles_explain' : 1,
-						'postsurvey.Q15goodarticles' : 1,
-						'postsurvey.Q16goodarticles_explain' : 1,
-						'postsurvey.Q17improverecommendations' : 1,
-						'postsurvey.Q18rankings_explain' : 1,
-						'postsurvey.Q19improverankings' : 1,
-						'postsurvey.Q20feelings_explain' : 1,
-						'postsurvey.Q21anythingelse_explain' : 1,
-						'postsurvey.Q22contactyou' : 1,
-						'postsurvey.Q23seeleaderboard' : 1})
+	cursor = app.db_user_collection.find({"filled_out_postsurvey":{"$exists":1}, "postsurvey":{"$exists":1}},{"username":1, 'postsurvey' : 1})
 	for record in cursor:
 
 		new_row = {}
 		new_row["userID"] = str(record["_id"])
-		for key in record:
+		postsurvey = record["postsurvey"]
+		for key in postsurvey:
 			if key != "_id":
-				new_row[key]=record[key]
+				new_row[key]=postsurvey[key]
 		
 		csvwriter.writerow(DictUnicodeProxy(new_row))
 
