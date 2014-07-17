@@ -410,7 +410,7 @@ def exportpresurvey():
 # Export postsurvey data to CSV
 # not currently filtering for days in system or creator IDs
 @app.route('/exportpostsurvey')
-def exportpresurvey():
+def exportpostsurvey():
 	test_file = open(app.static_folder + '/data/exportpostsurvey.csv','wb')
 	fieldnames = ["userID","username", "Q1gender", "Q2country", "Q3fair", "Q4profession", "Q5language", "Q6newsreading", "Q7newsimportance", "Q8family", "Q9friendsabroad", "Q10foreignfriends", "Q11travel", "Q12liveabroad"]
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
