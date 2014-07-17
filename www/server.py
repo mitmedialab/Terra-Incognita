@@ -401,19 +401,30 @@ def exportpresurvey():
 		for key in record:
 			if key != "_id":
 				new_row[key]=record[key]
-		'''new_row["username"] = record["username"]
-		new_row["Q1gender"] = record["Q1gender"]
-		new_row["Q2country"] = record["Q2country"]
-		new_row["Q3fair"] = record["Q3fair"]
-		new_row["Q4profession"] = record["Q4profession"]
-		new_row["Q5language"] = record["Q5language"]
-		new_row["Q6newsreading"] = record["Q6newsreading"]
-		new_row["Q7newsimportance"] = record["Q7newsimportance"]
-		new_row["Q8family"] = record["Q8family"]
-		new_row["Q9friendsabroad"] = record["Q9friendsabroad"]
-		new_row["Q10foreignfriends"] = record["Q10foreignfriends"]
-		new_row["Q11travel"] = record["Q11travel"]
-		new_row["Q12liveabroad"] = record["Q12liveabroad"]'''
+		
+		csvwriter.writerow(DictUnicodeProxy(new_row))
+
+	test_file.close()
+	return app.send_static_file('data/exportpresurvey.csv')
+
+# Export postsurvey data to CSV
+# not currently filtering for days in system or creator IDs
+@app.route('/exportpostsurvey')
+def exportpresurvey():
+	test_file = open(app.static_folder + '/data/exportpostsurvey.csv','wb')
+	fieldnames = ["userID","username", "Q1gender", "Q2country", "Q3fair", "Q4profession", "Q5language", "Q6newsreading", "Q7newsimportance", "Q8family", "Q9friendsabroad", "Q10foreignfriends", "Q11travel", "Q12liveabroad"]
+	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
+	csvwriter.writeheader()
+
+	cursor = app.db_user_collection.find({},{"username":1, "Q1gender":1, "Q2country":1, "Q3fair":1, "Q4profession":1, "Q5language":1, "Q6newsreading":1, "Q7newsimportance":1, "Q8family":1, "Q9friendsabroad":1, "Q10foreignfriends":1, "Q11travel":1, "Q12liveabroad":1})
+	for record in cursor:
+
+		new_row = {}
+		new_row["userID"] = str(record["_id"])
+		for key in record:
+			if key != "_id":
+				new_row[key]=record[key]
+		
 		csvwriter.writerow(DictUnicodeProxy(new_row))
 
 	test_file.close()
@@ -451,8 +462,8 @@ def export():
 		userID = str(user["_id"])
 		days=getPreinstallAndPostinstallDays(user)
 		
-		if (excludeUserFromStudyData(days)):
-			continue
+		#if (excludeUserFromStudyData(days)):
+		#	continue
 
 		# OK, USER MEETS DATA REQUIREMENT, GET THEIR USER HISTORY #
 		# Write a row with their pre and post install days for later tallying #
