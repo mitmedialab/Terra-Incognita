@@ -1,7 +1,7 @@
 library("plyr")
 
 # read in data file from /export/
-df<-read.csv("Download_Export_07172014.csv",colClasses=c("character","numeric","character",rep("numeric",4)))
+df<-read.csv("Download_Export_07172014_DatesRevised.csv",colClasses=c("character","numeric","character",rep("numeric",4)))
 
 # subset if userID isn't the right length (one weird val in there)
 df<-df[nchar(df$userID) == nchar("538d8b62c183f2213b8864e3"),]
@@ -17,11 +17,6 @@ historyTable<-df[(is.na(df$preinstallation.days) & is.na(df$postinstallation.day
 userHistoryCounts <- ddply(historyTable, c("userID", "hasGeo", "preinstallation"), function(x) c(count=nrow(x)))
 
 userIDs <- unique(userHistoryCounts$userID)
-
-#
-# NOTE NEED TO NORMALIZE BY DAYS ALSO!!!
-#
-#
 
 result <- daysTable
 
@@ -61,7 +56,7 @@ print( paste(round(nrow(result[result$nogeo.daily.difference>0,])/nrow(result) *
 print(paste("For users who increased their geographically-related news, they read on average",round(mean(result[result$geo.daily.difference>0,"geo.daily.difference"]), 1), "more articles per day after installing TI" ))
 print(paste("For users who increased their non-geographically-related news, they read on average",round(mean(result[result$nogeo.daily.difference>0,"nogeo.daily.difference"]), 1), "more articles per day after installing TI" ))
 
-print(paste("Across all users reading geographically-related news, they read on average",round(mean(result[,"geo.daily.difference"]), 1), "more articles per day after installing TI" ))
-print(paste("Across all users reading non-geographically-related news, they read on average",round(mean(result[,"nogeo.daily.difference"]), 1), "more articles per day after installing TI" ))
+print(paste("Across all users reading geographically-related news, they read on median",round(median(result[,"geo.daily.difference"]), 1), "more articles per day after installing TI" ))
+print(paste("Across all users reading non-geographically-related news, they read on median",round(median(result[,"nogeo.daily.difference"]), 1), "more articles per day after installing TI" ))
 
 write.csv(result, "meanCountsByUser.csv",quote=FALSE)

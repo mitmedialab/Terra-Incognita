@@ -369,7 +369,7 @@ def totalusercount():
 def exportcities():
 	result=[]
 	CITY_CLICK_COUNT_PIPELINE = [
-		{ "$match" : {"$and": [{ "userID":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "userID":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}] }},
+		{ "$match" : {"$and": [{ "userID":{"$ne":"53401d97c183f236b23d0d40"}}, { "userID":{"$ne":"5345c2f9c183f20b81e78eec"}}] }},
 		{ "$group": {"_id": {"cityID":"$cityID" }, "count": {"$sum": 1}}},
 		{ "$sort" : { "count" : -1 } }
 	]
@@ -597,7 +597,7 @@ def getPreinstallAndPostinstallDays(userDoc):
 	# POST INSTALL COUNT
 	result = app.db_user_history_collection.find({"userID":str(userID), "preinstallation":{"$exists":0}}).count()
 	userDaysResult["postinstallation.count"] = result
-	
+
 	#PRE INSTALL COUNT
 	result = app.db_user_history_collection.find({"userID":str(userID), "preinstallation":{"$exists":1}}).count()
 	userDaysResult["preinstallation.count"] = result
