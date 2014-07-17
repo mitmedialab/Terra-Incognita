@@ -412,11 +412,55 @@ def exportpresurvey():
 @app.route('/exportpostsurvey')
 def exportpostsurvey():
 	test_file = open(app.static_folder + '/data/exportpostsurvey.csv','wb')
-	fieldnames = ["userID","username", "Q1gender", "Q2country", "Q3fair", "Q4profession", "Q5language", "Q6newsreading", "Q7newsimportance", "Q8family", "Q9friendsabroad", "Q10foreignfriends", "Q11travel", "Q12liveabroad"]
+	fieldnames = ["userID","username", 'Q1chromeprimarybefore',
+						'Q2chromeprimaryafter',
+						'Q3globalnewsimportanttowork',
+						'Q4raterecommendations',
+						'Q5topreaderorrecommender',
+						'Q6searchtobecometopreader',
+						'Q7searchtocollectmorecities',
+						'Q8share',
+						'Q9reflect',
+						'Q10reflect_explain',
+						'Q11newplace',
+						'Q12newplace_explain',
+						'Q13badarticles',	
+						'Q14badarticles_explain',
+						'Q15goodarticles',
+						'Q16goodarticles_explain',
+						'Q17improverecommendations',
+						'Q18rankings_explain',
+						'Q19improverankings',
+						'Q20feelings_explain',
+						'Q21anythingelse_explain',
+						'Q22contactyou',
+						'Q23seeleaderboard']
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
 	csvwriter.writeheader()
 
-	cursor = app.db_user_collection.find({},{"username":1, "Q1gender":1, "Q2country":1, "Q3fair":1, "Q4profession":1, "Q5language":1, "Q6newsreading":1, "Q7newsimportance":1, "Q8family":1, "Q9friendsabroad":1, "Q10foreignfriends":1, "Q11travel":1, "Q12liveabroad":1})
+	cursor = app.db_user_collection.find({"filled_out_postsurvey":{"$exists":1}},{"username":1, 'Q1chromeprimarybefore' : 1,
+						'Q2chromeprimaryafter' : 1,
+						'Q3globalnewsimportanttowork' : 1,
+						'Q4raterecommendations' : 1,
+						'Q5topreaderorrecommender' : 1,
+						'Q6searchtobecometopreader' : 1,
+						'Q7searchtocollectmorecities' : 1,
+						'Q8share' : 1,
+						'Q9reflect' : 1,
+						'Q10reflect_explain' : 1,
+						'Q11newplace' : 1,
+						'Q12newplace_explain' : 1,
+						'Q13badarticles' : 1,	
+						'Q14badarticles_explain' : 1,
+						'Q15goodarticles' : 1,
+						'Q16goodarticles_explain' : 1,
+						'Q17improverecommendations' : 1,
+						'Q18rankings_explain' : 1,
+						'Q19improverankings' : 1,
+						'Q20feelings_explain' : 1,
+						'Q21anythingelse_explain' : 1,
+						'Q22contactyou' : 1,
+						'Q23seeleaderboard' : 1})
 	for record in cursor:
 
 		new_row = {}
@@ -428,7 +472,7 @@ def exportpostsurvey():
 		csvwriter.writerow(DictUnicodeProxy(new_row))
 
 	test_file.close()
-	return app.send_static_file('data/exportpresurvey.csv')
+	return app.send_static_file('data/exportpostsurvey.csv')
 
 # exports email addresses who haven't filled out post survey
 # and who have been in system for more than 30 days
@@ -536,7 +580,7 @@ def getPreinstallAndPostinstallDays(userDoc):
 		return userDaysResult 
 
 	firstLoginDate = datetime.datetime.fromtimestamp(int(userDoc["firstLoginDate"]/1000))
-	
+
 	# POSTINSTALL DAYS
 	# OMG THIS IS GOING TO BE SO SLOOOOOW
 	daysOfHistory = {}
