@@ -535,7 +535,11 @@ class DictUnicodeProxy(object):
 		return i
 
 def getUsersFilterCreators():
-	return app.db_user_collection.find({"$and": [{ "_id":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "_id":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}]},{"_id":1,"firstLoginDate":1, "username":1})
+	result = []
+	users = app.db_user_collection.find({"$and": [{ "_id":{"$ne":ObjectId("53401d97c183f236b23d0d40")}}, { "_id":{"$ne":ObjectId("5345c2f9c183f20b81e78eec")}}]},{"_id":1,"firstLoginDate":1, "username":1})
+	for user in users:
+		result.append(user)
+	return result
 
 def excludeUserFromStudyData(userDaysResult):
 	if (userDaysResult["postinstallation.days"] <MINIMUM_DAYS_OF_DATA):
