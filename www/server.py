@@ -535,6 +535,8 @@ def getPreinstallAndPostinstallDays(userDoc):
 		userDaysResult["postinstallation.days"]=0
 		return userDaysResult 
 
+	firstLoginDate = datetime.datetime.fromtimestamp(int(userDoc["firstLoginDate"]/1000))
+	
 	# POSTINSTALL DAYS
 	# OMG THIS IS GOING TO BE SO SLOOOOOW
 	daysOfHistory = {}
