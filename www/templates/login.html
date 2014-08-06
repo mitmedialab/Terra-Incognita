@@ -48,7 +48,7 @@
             {% endif %}
         <hr>
             <h3>Post-Study Survey</h3>
-            {% if not hasCompletedPostSurvey %}
+            {% if not hasCompletedPostSurvey and needsToDoPostSurvey %}
             <p>
                <a href="/postsurvey/{{ current_user.get_id() }}">Please complete the post-study survey</a>.  You have to complete the exit survey before continuing to use the software.
             </p>  
