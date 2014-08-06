@@ -1167,6 +1167,7 @@ def loginpage():
 	hasSignedConsentForm = False
 	hasCompletedPreSurvey = False
 	hasCompletedPostSurvey = False
+	needsToDoPostSurvey = False
 	
 	if "user_id" in session:
 		userID = session['user_id']
