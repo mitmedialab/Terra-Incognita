@@ -6,7 +6,7 @@ DOWNLOAD=FALSE
 if (DOWNLOAD){
     download.file("https://terra-incognita.co/exportgeo/", method="curl", destfile="TerraIncognitaExportGeo.csv")
 }
-df<-read.csv("TerraIncognitaExportGeo_062314.csv")
+df<-read.csv("Download_ExportGeo_07172014.csv")
 
 #replace NA country code with NAM
 #df[df$countrycode,]<-df[df$countrycode=="NAM"]
@@ -112,7 +112,7 @@ hhiDF$difference<-hhiDF$hhi.postinstallation-hhiDF$hhi.preinstallation
 write.csv(hhiDF,"userHHI.csv",quote=FALSE)
 
 # subset the ones whose diversity increased, THAT IS, whose HHI went DOWN because DOWN is more DIVERSE, OK? OK!
-print(paste(round(nrow(hhiDF[hhiDF$difference<0,])/nrow(hhiDF)*100, 1), "% of users showed an increase in geographic diversity of newsreading after installing Terra Incognita",sep=""))
-print(paste("For users who increased diversity,", round(mean(hhiDF[hhiDF$difference<0,"difference"],na.rm=TRUE), 1), "is the average amount of increased diversity on the Herfindahl–Hirschman Index scale of 1-10000 (lower = more diversity)"))
-print(paste("For users who increased diversity,", round(median(hhiDF[hhiDF$difference<0,"difference"],na.rm=TRUE), 1), "is the median amount of increased diversity on the Herfindahl–Hirschman Index scale of 1-10000 (lower = more diversity)"))
+print(paste(round(nrow(hhiDF[hhiDF$difference<0,])/nrow(hhiDF)*100, 2), "% of users showed an increase in geographic diversity of newsreading after installing Terra Incognita",sep=""))
+print(paste("For users who increased diversity,", round(mean(hhiDF[hhiDF$difference<0,"difference"],na.rm=TRUE), 2), "is the average amount of increased diversity on the Herfindahl–Hirschman Index scale of 1-10000 (lower = more diversity)"))
+print(paste("For users who increased diversity,", round(median(hhiDF[hhiDF$difference<0,"difference"],na.rm=TRUE), 2), "is the median amount of increased diversity on the Herfindahl–Hirschman Index scale of 1-10000 (lower = more diversity)"))
 

@@ -1171,9 +1171,26 @@ def loginpage():
 	if "user_id" in session:
 		userID = session['user_id']
 	if userID != "":
-		hasSignedConsentForm = app.db_user_collection.find({ "_id": ObjectId(userID), "signed_consent":1}).count() >=1
-		hasCompletedPreSurvey = app.db_user_collection.find({ "_id": ObjectId(userID), "filled_out_presurvey":1}).count() >=1
-		hasCompletedPostSurvey = app.db_user_collection.find({ "_id": ObjectId(userID), "filled_out_postsurvey":1}).count() >=1
+		needsToDoPostSurvey = 0
+		userDoc = app.db_user_collection.find({ "_id": ObjectId(userID)},{"history-pre-installation":0}).next()
+		
+		hasSignedConsentForm = 1 if "signed_consent" in userDoc and int(userDoc["signed_consent"]) == 1 else 0
+		hasCompletedPreSurvey = 1 if "filled_out_presurvey" in userDoc and int(userDoc["filled_out_presurvey"]) == 1 else 0
+
+		# check if they've already completed it
+		# they can't complete postsurvey without already having filled out other forms
+		hasCompletedPostSurvey = 1 if "filled_out_postsurvey" in userDoc and int(userDoc["filled_out_postsurvey"]) == 1 else 0
+		if (hasCompletedPostSurvey > 0 or not hasCompletedPreSurvey or not hasSignedConsentForm):
+			needsToDoPostSurvey = 0
+		
+		# check for having been in system at least 30 days
+		else:
+			firstLoginDate = datetime.datetime.fromtimestamp(int(userDoc["firstLoginDate"]/1000))
+			nowDate = datetime.datetime.now()
+		
+			dateDiff = nowDate - firstLoginDate
+			if ( dateDiff.days >= 30):
+				needsToDoPostSurvey = 1 
 
 	if request.method == 'POST':
 		oldusername = request.form['oldusername']
@@ -1188,7 +1205,7 @@ def loginpage():
 			r = app.db_user_collection.update(	{ "_id": ObjectId(userID)}, 
 												{ "$set" : {"username":newusername}})
 			
-	return render_template('login.html', error=error, hasSignedConsentForm=hasSignedConsentForm,hasCompletedPreSurvey=hasCompletedPreSurvey,hasCompletedPostSurvey=hasCompletedPostSurvey)
+	return render_template('login.html', error=error, needsToDoPostSurvey=needsToDoPostSurvey, hasSignedConsentForm=hasSignedConsentForm,hasCompletedPreSurvey=hasCompletedPreSurvey,hasCompletedPostSurvey=hasCompletedPostSurvey)
 
 
 # Receives a single URL object from user and logs it through the text processing queue

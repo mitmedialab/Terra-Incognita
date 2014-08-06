@@ -12,7 +12,7 @@
         {% if current_user.is_authenticated() %}
         <h1>Terra Incognita Dashboard</h1>
         
-        {% if hasSignedConsentForm and hasCompletedPreSurvey and not hasCompletedPostSurvey %}
+        {% if hasSignedConsentForm and hasCompletedPreSurvey and not hasCompletedPostSurvey and needsToDoPostSurvey %}
             <p style="margin:50px">
                <a href="/postsurvey/{{ current_user.get_id() }}" class="btn btn-danger btn-lg active" role="button">Complete Post-Study Survey Now</a>.  
             </p>  
