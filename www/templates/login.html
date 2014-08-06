@@ -52,7 +52,10 @@
             <p>
                <a href="/postsurvey/{{ current_user.get_id() }}">Please complete the post-study survey</a>.  You have to complete the exit survey before continuing to use the software.
             </p>  
+            {% elif not hasCompletedPostSurvey %}
+                The post-study survey will be available after 30 days of using the application.
             {% else %}
+            
                 Thanks - you completed the post-study survey.
             {% endif %}
         
