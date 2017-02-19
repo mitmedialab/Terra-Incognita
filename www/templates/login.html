@@ -62,7 +62,7 @@
             <p><strong>Your current username is {{ current_user.username }}.</strong></p>
             <p>In Terra Incognita, your username is associated with how many articles you have read and recommended about a particular city <a href="/images/usernames.jpg">like this</a>. Your username is displayed on city leaderboards with a count. Your username is not associated with any individual urls, i.e. users cannot see the individual news articles you have read about a place, only the number of articles you have read about a place. You can change your username at any time.</p>
             {% if error %}
-                <h3 style="color:red">{{ error }}</h3>
+                <h4 style="color:red">{{ error }}</h4>
             {% endif %}
             <h3>Change your username to: </h3>
                 <form action="/login/" method="POST">
@@ -81,6 +81,9 @@
             </script>
         {% else %}
             <h3>You are currently not logged in.</h3>
+            {% if error %}
+                <h4 style="color:red">{{ error }}</h4>
+            {% endif %}
             <script>
                 docCookies.removeItem('terra-incognita-id');
             </script>

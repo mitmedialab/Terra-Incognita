@@ -1208,9 +1208,9 @@ def login():
 		userID = request.form['userID']
 
 		if newusername == oldusername:
-			error="Your new username is the same as your old username"
+			error="Your new username is the same as your old username."
 		elif app.db_user_collection.find({ "username": newusername }).count():
-			error = "That username already exists"
+			error = "That username already exists. Try using a different name."
 		else:
 			r = app.db_user_collection.update(	{ "_id": ObjectId(userID)},
 												{ "$set" : {"username":newusername}})
@@ -1256,7 +1256,12 @@ def get_oauth_user(service, service_id):
 @app.route('/oauthorized/<service>')
 def oauthorized(service):
 	if service == 'facebook':
-		resp = facebook.authorized_response()
+		try:
+			resp = facebook.authorized_response()
+		except OAuthException as err:
+			return oauth_error(err)
+		if resp is None:
+			return oauth_error()
 		session['oauth_token'] = (resp['access_token'], '')
 		data = facebook.get('/me?fields=id,email,name').data
 		service_id = data['id']
@@ -1266,40 +1271,52 @@ def oauthorized(service):
 		else:
 			username = email.split('@')[0]
 	elif service == 'google':
-		resp = google.authorized_response()
+		try:
+			resp = google.authorized_response()
+		except OAuthException as err:
+			return oauth_error()
+		if resp is None:
+			return oauth_error()
 		session['oauth_token'] = (resp['access_token'], '')
 		data = google.get('userinfo').data
 		service_id = data['id']
 		username = data['email'].split('@')[0]
 	elif service == 'twitter':
-		resp = twitter.authorized_response()
+		try:
+			resp = twitter.authorized_response()
+		except OAuthException as err:
+			return oauth_error()
+		if resp is None:
+			return oauth_error()
 		session['oauth_token'] = (resp['oauth_token'], resp['oauth_token_secret'])
 		service_id = resp['user_id']
 		username = resp['screen_name']
 	else:
-		return redirect(url_for('login'))
+		return oauth_error()
 
-	if isinstance(resp, OAuthException):
-		return 'Access denied: %s' % resp.message
-	else:
-		user = get_oauth_user(service, service_id)
+	# Lookup user based on service and unique ID
+	user = get_oauth_user(service, service_id)
 
-		# If user does not currently exist
-		if user is None:
-			# Append '-1', '-2', ..., '-n' to username if it already exists
-			duplicates = 0
-			deduped_username = username
-			while app.db_user_collection.find({ "username": deduped_username }).count():
-				duplicates++
-				deduped_username = username + '-' + str(duplicates)
+	# If user does not currently exist
+	if user is None:
+		# Append '-1', '-2', ..., '-n' to username if it already exists
+		duplicates = 0
+		deduped_username = username
+		while app.db_user_collection.find({ "username": deduped_username }).count():
+			duplicates += 1
+			deduped_username = username + '-' + str(duplicates)
 
-			# Add the new user to the db
-			user = create_new_user(service, service_id, deduped_username)
-			user_id = app.db_user_collection.insert(user.__dict__)
-			user._id = user_id
+		# Add the new user to the db
+		user = create_new_user(service, service_id, deduped_username)
+		user_id = app.db_user_collection.insert(user.__dict__)
+		user._id = user_id
 
-		login_user(user)
+	login_user(user)
 	return redirect(url_for('login'))
+
+def oauth_error(err):
+	error = 'There was an error authenticating your account. Please try again, or use a different login service.'
+	return render_template('login.html', error=error)
 
 # Receives a single URL object from user and logs it through the text processing queue
 @app.route('/monitor/', methods=['POST','GET'])
