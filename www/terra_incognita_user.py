@@ -23,7 +23,7 @@ def create_new_user(service, service_id, username):
 	fields = {}
 	fields['service'] = service
 	fields['service_id'] = service_id
-	fields['username'] = username # TODO: append numbers if duplicate username
+	fields['username'] = username
 	fields['firstLoginDate'] = time.time() * 1000
 	fields['lastLoginDate'] = time.time() * 1000
 

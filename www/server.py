@@ -1284,7 +1284,12 @@ def oauthorized(service):
 	else:
 		user = get_oauth_user(service, service_id)
 		if user is None:
-			user = create_new_user(service, service_id, username)
+			duplicates = 0
+			deduped_username = username
+			while app.db_user_collection.find({ "username": username }).count():
+				duplicates++
+				deduped_username = username + '-' + str(duplicates)
+			user = create_new_user(service, service_id, deduped_username)
 			user_id = app.db_user_collection.insert(user.__dict__)
 			user._id = user_id
 		login_user(user)
