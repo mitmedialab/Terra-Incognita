@@ -1258,8 +1258,8 @@ def oauthorized(service):
 	if service == 'facebook':
 		try:
 			resp = facebook.authorized_response()
-		except OAuthException as err:
-			return oauth_error(err)
+		except OAuthException:
+			return oauth_error()
 		if resp is None:
 			return oauth_error()
 		session['oauth_token'] = (resp['access_token'], '')
@@ -1273,7 +1273,7 @@ def oauthorized(service):
 	elif service == 'google':
 		try:
 			resp = google.authorized_response()
-		except OAuthException as err:
+		except OAuthException:
 			return oauth_error()
 		if resp is None:
 			return oauth_error()
@@ -1284,7 +1284,7 @@ def oauthorized(service):
 	elif service == 'twitter':
 		try:
 			resp = twitter.authorized_response()
-		except OAuthException as err:
+		except OAuthException:
 			return oauth_error()
 		if resp is None:
 			return oauth_error()
@@ -1314,7 +1314,7 @@ def oauthorized(service):
 	login_user(user)
 	return redirect(url_for('login'))
 
-def oauth_error(err):
+def oauth_error():
 	error = 'There was an error authenticating your account. Please try again, or use a different login service.'
 	return render_template('login.html', error=error)
 
