@@ -1,48 +1,46 @@
 <html>
     <head>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-        <script src="https://login.persona.org/include.js" type="text/javascript"></script>
         <script src="/js/cookies.js"></script>
-        <script type="text/javascript">{{ auth_script|safe }}</script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     </head>
     <body>
         <div class="container">
-        {% if current_user.is_authenticated() %}
+        {% if current_user.is_authenticated %}
         <h1>Terra Incognita Dashboard</h1>
-        
+
         {% if hasSignedConsentForm and hasCompletedPreSurvey and not hasCompletedPostSurvey and needsToDoPostSurvey %}
             <p style="margin:50px">
-               <a href="/postsurvey/{{ current_user.get_id() }}" class="btn btn-danger btn-lg active" role="button">Complete Post-Study Survey Now</a>.  
-            </p>  
-       
+               <a href="/postsurvey/{{ current_user.get_id() }}" class="btn btn-danger btn-lg active" role="button">Complete Post-Study Survey Now</a>.
+            </p>
+
         {% endif %}
 
         {% if hasSignedConsentForm and hasCompletedPreSurvey %}
         <hr>
         <h3>How to launch Terra Incognita</h3>
         <p>Open a new tab in your browser with Cmd-T or Ctrl-T.</p>
-        
+
         {% endif %}
-        
+
         <hr>
             <h3>User Study Consent Form</h3>
             <p>
                 {% if hasSignedConsentForm == True %}
                 Thanks - You have signed the user study consent form. <a href="/consent/{{ current_user.get_id() }}">Click here</a> to view and print the form.
-                
+
                 {% else %}
                 <a href="/consent/{{ current_user.get_id() }}">Click here</a> to sign the user study consent form. You have to complete the consent form before using the software.
                 {% endif %}
-            </p>   
-        
+            </p>
+
         <hr>
             <h3>Pre-Study Survey</h3>
             {% if not hasCompletedPreSurvey %}
             <p>
                <a href="/presurvey/{{ current_user.get_id() }}">Please complete the pre-study survey. </a> You have to complete the survey before using the software.
-            </p>  
+            </p>
             {% else %}
                 Thanks - you completed the pre-study survey.
             {% endif %}
@@ -51,14 +49,14 @@
             {% if not hasCompletedPostSurvey and needsToDoPostSurvey %}
             <p>
                <a href="/postsurvey/{{ current_user.get_id() }}">Please complete the post-study survey</a>.  You have to complete the exit survey before continuing to use the software.
-            </p>  
+            </p>
             {% elif not hasCompletedPostSurvey %}
                 The post-study survey will be available after 30 days of using the application.
             {% else %}
-            
+
                 Thanks - you completed the post-study survey.
             {% endif %}
-        
+
             <hr>
             <h3>About Usernames</h3>
             <p><strong>Your current username is {{ current_user.username }}.</strong></p>
@@ -74,19 +72,22 @@
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             <hr>
-            <h3>Login/Logout</h3>
-            <p><strong>You are currently logged in to Terra Incognita with the email address {{ current_user.email }}.</strong></p>
-             <button id="browserid-logout">Logout</button>
+            <h3>Logout</h3>
+            <p><strong>You are currently logged in to Terra Incognita with {{ current_user.service | capitalize }}.</strong></p>
+            <a href="{{ url_for('logout') }}" class="btn btn-default">Logout</a>
             <script>
                 docCookies.setItem('terra-incognita-id', '{{ current_user.get_id() }}', 60*60*24*365);
-                
+
             </script>
         {% else %}
             <h3>You are currently not logged in.</h3>
             <script>
                 docCookies.removeItem('terra-incognita-id');
             </script>
-            <button id="browserid-login">Login</button>
+            <p>Create an account using one of the following services. If you already have an account, use the same service you signed up with:</p>
+            <a href="{{ url_for('oauth', service='facebook') }}" class="btn btn-default">Facebook</a>
+            <a href="{{ url_for('oauth', service='google') }}" class="btn btn-default">Google</a>
+            <a href="{{ url_for('oauth', service='twitter') }}" class="btn btn-default">Twitter</a>
         {% endif %}
         <hr>
             <h3>Help</h3>

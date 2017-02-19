@@ -1,5 +1,5 @@
 #	User class to handle login and some other stuff
-from flask.ext.login import UserMixin
+from flask_login import UserMixin
 import time
 
 
@@ -17,14 +17,14 @@ class TIUser(UserMixin):
 
 def get_user_from_DB_row(row):
 	return TIUser(row)
-					
 
-def create_new_user(email):
-	t = email.split('@')
-	stuff = {}
-	stuff["email"] = email
-	stuff["username"] = t[0]
-	stuff["firstLoginDate"] = time.time() * 1000
-	stuff["lastLoginDate"] = time.time() * 1000
 
-	return TIUser(stuff)
+def create_new_user(service, service_id, username):
+	fields = {}
+	fields['service'] = service
+	fields['service_id'] = service_id
+	fields['username'] = username # TODO: append numbers if duplicate username
+	fields['firstLoginDate'] = time.time() * 1000
+	fields['lastLoginDate'] = time.time() * 1000
+
+	return TIUser(fields)

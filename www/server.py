@@ -1,10 +1,11 @@
+from flask import Flask, Response, redirect, session, render_template, json, jsonify, request, make_response, url_for
+from flask_login import LoginManager, login_user, logout_user
+from flask_oauthlib.client import OAuth, OAuthException
+import pymongo
+from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson import BSON
 from bson import json_util
-from flask import Flask, Response, redirect, session, render_template, json, jsonify, request, make_response
-from flask.ext.browserid import BrowserID
-from flask.ext.login import LoginManager
-from pymongo import MongoClient
 from terra_incognita_user import *
 from recommendations_bitly import *
 import ConfigParser
@@ -13,7 +14,6 @@ import httplib
 import json
 import os
 import pprint
-import pymongo
 import requests
 import requests.exceptions
 from text_processing.textprocessing import *
@@ -61,72 +61,14 @@ logging.basicConfig(filename=os.path.join(LOG_DIR,'terra-flask-server.log'),leve
 log = logging.getLogger('server')
 log.info("---------------------------------------------------------------------------")
 
-# ------------------------- -------------------------------------
-# MOVE THIS SOMEWHERE ELSE
-# This callback is used to reload the user object from the user ID stored in the session.
-# It should take the unicode ID of a user, and return the corresponding user object.
-# It should return None (not raise an exception) if the ID is not valid.
-# (In that case, the ID will manually be removed from the session and processing will continue.)
-def get_user_by_id(id):
-	log.debug("server.py >> get_user_by_id")
-	user = None
-	for row in app.db_user_collection.find({ '_id': ObjectId(id) }):
-		user = get_user_from_DB_row(row)
-		user.lastLoginDate = time.time() * 1000
-		break
-	if (user is not None):
-		app.db_user_collection.save(user.__dict__)
-	return user
-
-
-#	Given the response from BrowserID, finds or creates a user.
-#	If a user can neither be found nor created, returns None.
-#	NOTE THAT ID must be converted to STRING from MongoDB
-def get_user_for_browserid(kwargs):
-	log.debug("server.py >> get_user_for_browserid")
-	for row in app.db_user_collection.find({ 'email': kwargs.get('email') }):
-		if row is not None:
-			return get_user_from_DB_row(row)
-	for row in app.db_user_collection.find({ '_id': kwargs.get('id') }):
-		if row is not None:
-			return get_user_from_DB_row(row)
-	# not found - create the user
-	return create_browserid_user(kwargs)
-
-
-#	Takes browserid response and creates a user.
-def create_browserid_user(kwargs):
-	log.debug("server.py >> create_browserid_user")
-	log.debug("server.py >> create_browserid_user >> kwargs")
-	log.debug(kwargs)
-	if kwargs['status'] == 'okay':
-		user = create_new_user(kwargs["email"])
-		user_id = app.db_user_collection.insert(user.__dict__)
-		user._id = user_id
-		return user
-	else:
-		return None
-
-# END MOVE THIS SOMEWHERE ELSE
-# ------------------------- -------------------------------------
-
-#Mozilla Persona
-login_manager = LoginManager()
-login_manager.user_loader(get_user_by_id)
-login_manager.init_app(app)
-
-browser_id = BrowserID()
-browser_id.user_loader(get_user_for_browserid)
-browser_id.init_app(app)
-
-#Index test 
+#Index test
 @app.route('/')
 @app.route('/index.html')
 @app.route('/index.htm')
 def hello():
 	return app.send_static_file('index.html')
 
-#Index test 
+#Index test
 @app.route('/1000cities')
 @app.route('/1000cities.html')
 @app.route('/1000cities.htm')
@@ -143,7 +85,7 @@ def consentForm(userID):
 
 	if request.method == 'GET':
 		user = app.db_user_collection.find({ "_id": ObjectId(userID)}).next()
-		
+
 		if "signed_consent" in user:
 			signature = user['signature']
 			signature_date = user['signature_date']
@@ -155,7 +97,7 @@ def consentForm(userID):
 		user["signature_date"] = request.form['signature_date']
 		user["researcher_signature_date"] = today.strftime('%m-%d-%Y')
 		userID = request.form['userID']
-		
+
 		if user["signature"] == "":
 			error="Please enter your signature."
 		elif user["signature_date"] == "":
@@ -172,11 +114,11 @@ def consentForm(userID):
 @app.route('/formsfilledout/<userID>/')
 @app.route('/formsfilledout/<userID>')
 def formsfilledout(userID):
-	
+
 
 	needsToDoPostSurvey = 0
 	userDoc = app.db_user_collection.find({ "_id": ObjectId(userID)},{"history-pre-installation":0}).next()
-	
+
 	hasSignedConsentForm = 1 if "signed_consent" in userDoc and int(userDoc["signed_consent"]) == 1 else 0
 	hasCompletedPreSurvey = 1 if "filled_out_presurvey" in userDoc and int(userDoc["filled_out_presurvey"]) == 1 else 0
 
@@ -185,17 +127,17 @@ def formsfilledout(userID):
 	hasCompletedPostSurvey = 1 if "filled_out_postsurvey" in userDoc and int(userDoc["filled_out_postsurvey"]) == 1 else 0
 	if (hasCompletedPostSurvey > 0 or not hasCompletedPreSurvey or not hasSignedConsentForm):
 		needsToDoPostSurvey = 0
-	
+
 	# check for having been in system at least 30 days
 	else:
 		firstLoginDate = datetime.datetime.fromtimestamp(int(userDoc["firstLoginDate"]/1000))
 		nowDate = datetime.datetime.now()
-	
+
 		dateDiff = nowDate - firstLoginDate
 		if ( dateDiff.days >= 30):
 			needsToDoPostSurvey = 1
 
-	return json.dumps({"needsToDoPostSurvey":needsToDoPostSurvey,"hasSignedConsentForm":hasSignedConsentForm, "hasCompletedPreSurvey":hasCompletedPreSurvey}, sort_keys=True, indent=4, default=json_util.default) 
+	return json.dumps({"needsToDoPostSurvey":needsToDoPostSurvey,"hasSignedConsentForm":hasSignedConsentForm, "hasCompletedPreSurvey":hasCompletedPreSurvey}, sort_keys=True, indent=4, default=json_util.default)
 
 @app.route('/postsurveyrankings/<userID>', methods=['GET', 'POST'])
 def postsurveyrankings(userID):
@@ -208,8 +150,8 @@ def postsurveyrankings(userID):
 			cityCount = row["totalcitiesvisited"]
 			break
 		ranking=ranking+1
-	
-	return json.dumps({"cityCount":cityCount,"totalUserCount":totalUserCount, "ranking":ranking}, sort_keys=True, indent=4, default=json_util.default) 
+
+	return json.dumps({"cityCount":cityCount,"totalUserCount":totalUserCount, "ranking":ranking}, sort_keys=True, indent=4, default=json_util.default)
 
 @app.route('/postsurvey/<userID>', methods=['GET', 'POST'])
 def postsurvey(userID):
@@ -217,7 +159,7 @@ def postsurvey(userID):
 	errorCount = 0
 	responses={}
 	postsurvey={}
-	
+
 
 	if request.method == 'POST':
 		user = app.db_user_collection.find({ "_id": ObjectId(userID)}).next()
@@ -233,7 +175,7 @@ def postsurvey(userID):
 						'Q10reflect_explain',
 						'Q11newplace',
 						'Q12newplace_explain',
-						'Q13badarticles',	
+						'Q13badarticles',
 						'Q14badarticles_explain',
 						'Q15goodarticles',
 						'Q16goodarticles_explain',
@@ -282,7 +224,7 @@ def presurvey(userID):
 						'Q9friendsabroad',
 						'Q10foreignfriends',
 						'Q11travel',
-						'Q12liveabroad'	
+						'Q12liveabroad'
 					]
 		for field in fields:
 			if field in request.form and len(request.form[field]) > 0:
@@ -310,7 +252,7 @@ def getUserCityCounts(userID):
 		{ "$group": {"_id": {"geonames_id":"$geodata.primaryCities.id" }, "count": {"$sum": 1}}},
 		{ "$sort" : { "count" : -1 } }
 	]
-	q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CITY_COUNT_PIPELINE ) 
+	q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=CITY_COUNT_PIPELINE )
 	return q["result"]
 
 # queries for all user visits by city
@@ -319,11 +261,11 @@ def getAllUserCityCounts():
 		{ "$unwind" : "$geodata.primaryCities" },
 		{ "$match" : { "preinstallation":{"$exists":0}, "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY } }},
 		{ "$group": {"_id": {"userID":"$userID", "geonames_id":"$geodata.primaryCities.id" }, "count": {"$sum": 1}}},
-		
+
 		{ "$group": {"_id": {"userID":"$_id.userID"}, "totalcitiesvisited": {"$sum": 1}}},
 		{ "$sort" : { "totalcitiesvisited" : -1 } }
 	]
-	q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=ALL_USERS_CITY_COUNT_PIPELINE ) 
+	q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=ALL_USERS_CITY_COUNT_PIPELINE )
 	return q["result"]
 
 #Send user their city data
@@ -331,18 +273,18 @@ def getAllUserCityCounts():
 @app.route('/user/<userID>')
 @app.route('/user/')
 def user(userID='52dbeee6bd028634678cd069'):
-	
+
 	if (userID is not None):
-		
+
 		userData = {"userID":userID,"username":getUsername(userID), "cities":[]}
-		
+
 		# removing last 10 history items for the moment
 		#cursor = app.db_user_history_collection.find({ "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY },"userID":userID }, {"typedCount":1,"title":1,"url":1,"lastVisitTime":1,"geodata.primaryCities":1,"visitCount":1}).sort([("lastVisitTime",-1)]).skip(0).limit(10)
 		#last10HistoryItems = list( record for record in cursor)
 		#userData["last10HistoryItems"] = last10HistoryItems
-		
+
 		cities = {}
-		
+
 		result = getUserCityCounts(userID)
 		for row in result:
 			geonames_id = row["_id"]["geonames_id"]
@@ -350,9 +292,9 @@ def user(userID='52dbeee6bd028634678cd069'):
 			cities[geonames_id] = count
 
 		userData["cities"] = cities
-		
 
-		return json.dumps(userData, sort_keys=True, indent=4, default=json_util.default) 
+
+		return json.dumps(userData, sort_keys=True, indent=4, default=json_util.default)
 	else:
 		return jsonify(error='No user ID specified')
 # exports all city clicks as counts
@@ -361,7 +303,7 @@ def user(userID='52dbeee6bd028634678cd069'):
 def totalusercount():
 	count = app.db_user_collection.find({}).count()
 	preinstallneedsprocessing = app.db_user_collection.find({ "history-pre-installation": {"$exists":1}, "history-pre-installation-processed":{"$exists":0}}).count()
-	return json.dumps({"count":count, "preinstallneedsprocessing":preinstallneedsprocessing}, sort_keys=True, indent=4, default=json_util.default) 
+	return json.dumps({"count":count, "preinstallneedsprocessing":preinstallneedsprocessing}, sort_keys=True, indent=4, default=json_util.default)
 
 # exports all city clicks as counts
 # exclude developers
@@ -373,7 +315,7 @@ def exportcities():
 		{ "$group": {"_id": {"cityID":"$cityID" }, "count": {"$sum": 1}}},
 		{ "$sort" : { "count" : -1 } }
 	]
-	q = app.db.command('aggregate', config.get('db','user_city_clicks_collection'), pipeline=CITY_CLICK_COUNT_PIPELINE ) 
+	q = app.db.command('aggregate', config.get('db','user_city_clicks_collection'), pipeline=CITY_CLICK_COUNT_PIPELINE )
 	for row in q["result"]:
 		cityID=row["_id"]["cityID"]
 		for city in THE1000CITIES:
@@ -401,7 +343,7 @@ def exportpresurvey():
 		for key in record:
 			if key != "_id":
 				new_row[key]=record[key]
-		
+
 		csvwriter.writerow(DictUnicodeProxy(new_row))
 
 	test_file.close()
@@ -424,7 +366,7 @@ def exportpostsurvey():
 						'Q10reflect_explain',
 						'Q11newplace',
 						'Q12newplace_explain',
-						'Q13badarticles',	
+						'Q13badarticles',
 						'Q14badarticles_explain',
 						'Q15goodarticles',
 						'Q16goodarticles_explain',
@@ -447,7 +389,7 @@ def exportpostsurvey():
 		for key in postsurvey:
 			if key != "_id":
 				new_row[key]=postsurvey[key]
-		
+
 		csvwriter.writerow(DictUnicodeProxy(new_row))
 
 	test_file.close()
@@ -465,14 +407,14 @@ def exportemailsforpostsurvey():
 		days=getPreinstallAndPostinstallDays(user)
 		if days["postinstallation.days"] >= 30:
 			emails.append(user["email"])
-	return json.dumps(emails, sort_keys=True, indent=4, default=json_util.default) 
-	
+	return json.dumps(emails, sort_keys=True, indent=4, default=json_util.default)
+
 # exports all user history records for counting and operating on
-# filter records that have no userID - bug that they ended up there anyways 
+# filter records that have no userID - bug that they ended up there anyways
 # excludes userIDs from creators of TI
 @app.route('/export/')
 def export():
-	
+
 	test_file = open(app.static_folder + '/data/exportUserHistoryCount.csv','wb')
 	fieldnames = ["userID","datetime", "humanDate", "hasGeo", "preinstallation","preinstallation.days","postinstallation.days"]
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
@@ -484,7 +426,7 @@ def export():
 	for user in users:
 		userID = str(user["_id"])
 		days=getPreinstallAndPostinstallDays(user)
-		
+
 		if (excludeUserFromStudyData(days)):
 			continue
 
@@ -520,7 +462,7 @@ def export():
 		else:
 			new_row["hasGeo"] =0
 		csvwriter.writerow(new_row)
-		
+
 	return app.send_static_file('data/exportUserHistoryCount.csv')
 
 class DictUnicodeProxy(object):
@@ -560,7 +502,7 @@ def getPreinstallAndPostinstallDays(userDoc):
 	if "firstLoginDate" not in userDoc:
 		userDaysResult["preinstallation.days"]=0
 		userDaysResult["postinstallation.days"]=0
-		return userDaysResult 
+		return userDaysResult
 
 	firstLoginDate = datetime.datetime.fromtimestamp(int(userDoc["firstLoginDate"]/1000))
 
@@ -605,7 +547,7 @@ def getPreinstallAndPostinstallDays(userDoc):
 	#PRE INSTALL COUNT
 	result = app.db_user_history_collection.find({"userID":str(userID), "preinstallation":{"$exists":1}}).count()
 	userDaysResult["preinstallation.count"] = result
-	
+
 	return userDaysResult
 
 # exports user browsing geo to see if geo diversity goes up post-TI-install
@@ -623,7 +565,7 @@ def exportgeo():
 	for user in users:
 		userID = str(user["_id"])
 		days=getPreinstallAndPostinstallDays(user)
-		
+
 		if (excludeUserFromStudyData(days)):
 			continue
 
@@ -648,9 +590,9 @@ def exportgeo():
 		{ "$group": {"_id": {"countrycode":"$geodata.primaryCountries" }, "count": {"$sum": 1}}},
 		{ "$sort" : { "count" : -1 } }
 		]
-		
+
 		# Preinstall country counts
-		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_PREINSTALL_PIPELINE ) 
+		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_PREINSTALL_PIPELINE )
 		for row in q["result"]:
 			new_row = {}
 			new_row["userID"] = userID
@@ -658,9 +600,9 @@ def exportgeo():
 			new_row["preinstallation.count"] = row["count"]
 			new_row["preinstallation.days"] = days["preinstallation.days"]
 			csvwriter.writerow(DictUnicodeProxy(new_row))
-			
+
 		# Postinstall country counts
-		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_POSTINSTALL_PIPELINE ) 
+		q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=COUNTRY_COUNT_POSTINSTALL_PIPELINE )
 		for row in q["result"]:
 			new_row = {}
 			new_row["userID"] = userID
@@ -689,13 +631,13 @@ def exportclicks():
 	for user in users:
 		userID = str(user["_id"])
 		days=getPreinstallAndPostinstallDays(user)
-		
+
 		if (excludeUserFromStudyData(days)):
 			continue
 		userIDs.append(userID)
 
 	print str(len(userIDs)) + " users meet the criteria"
-	
+
 	cursor = app.db_user_behavior_collection.find({ "userID":{"$in":userIDs}})
 
 	for record in cursor:
@@ -705,13 +647,13 @@ def exportclicks():
 			continue
 		else:
 			result =result.next()
-		
+
 		new_row = {}
 		if "recommendation_source" in record:
 			new_row["recommendation_source"] = record["recommendation_source"]
 		new_row["url"] = record["url"]
 		new_row["userID"] = record["userID"]
-		
+
 		new_row["random_city"] = record["random_city"]
 		new_row["clicked_at"] = record["clicked_at"]
 		new_row["ui_source"] = record["ui_source"]
@@ -729,7 +671,7 @@ def exportclicks():
 # excludes data from people who haven't been in the system for at least 5 days
 @app.route('/totalusers/')
 def totalusers():
-	
+
 	test_file = open(app.static_folder + '/data/totalusers.csv','wb')
 	fieldnames = ["totalusers"]
 	csvwriter = csv.DictWriter(test_file, delimiter=',', fieldnames=fieldnames)
@@ -738,19 +680,19 @@ def totalusers():
 	total=0
 
 	users = getUsersFilterCreators()
-	
+
 	for user in users:
 		days=getPreinstallAndPostinstallDays(user)
-		
+
 		if (excludeUserFromStudyData(days)):
 			continue
 		total=total+1
-		
+
 
 	new_row["totalusers"] = total
 	csvwriter.writerow(DictUnicodeProxy(new_row))
 	test_file.close()
-	
+
 	return app.send_static_file('data/totalusers.csv')
 
 @app.route('/report/<userID>')
@@ -758,12 +700,12 @@ def totalusers():
 def report(userID='5340168960de7dd9d8394aa7'):
 
 	#OK so I should have been storing the lastTimeVisited as a DATE type instead of number (UTC time)
-	#So now when I query, I will get user's entire history 2 ways (no geo & geo) and sort using python into day bins 
+	#So now when I query, I will get user's entire history 2 ways (no geo & geo) and sort using python into day bins
 	result = {}
 	firstLogin = app.db_user_collection.find({"_id":ObjectId(userID)},{"firstLoginDate":1}).next()["firstLoginDate"]
 
 	result["installDate"] = datetime.datetime.fromtimestamp( firstLogin/1000 ).strftime('%m/%d/%Y')
-	
+
 	# HISTORY WITH GEO
 	cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY } }, {"lastVisitTime":1,"preinstallation":1}).sort([("lastVisitTime",-1)])
 	result["count_historyWithGeo"] = cursor.count()
@@ -777,14 +719,14 @@ def report(userID='5340168960de7dd9d8394aa7'):
 		else:
 			historyWithGeo[dateKey] = 1
 	result["historyWithGeo"] = historyWithGeo
-	
 
-	
+
+
 	# HISTORY WITHOUT GEO
-	cursor = app.db_user_history_collection.find({"userID":userID, "$or" : 
-								[ {"geodata.primaryCountries": { "$exists": 0 }}, {"geodata.primaryCities.id": { "$nin": THE1000CITIES_IDS_ARRAY }} ] 
+	cursor = app.db_user_history_collection.find({"userID":userID, "$or" :
+								[ {"geodata.primaryCountries": { "$exists": 0 }}, {"geodata.primaryCities.id": { "$nin": THE1000CITIES_IDS_ARRAY }} ]
 								}, {"lastVisitTime":1,"preinstallation":1}).sort([("lastVisitTime",-1)])
-	
+
 	result["count_historyNoGeo"] = cursor.count()
 	historyNoGeo = dict()
 	for record in cursor:
@@ -795,13 +737,13 @@ def report(userID='5340168960de7dd9d8394aa7'):
 		else:
 			historyNoGeo[dateKey] = 1
 	result["historyNoGeo"] = historyNoGeo
-	
+
 
 	totalCount = app.db_user_history_collection.find({"userID":userID}).count()
 	result["count_total"]=totalCount
 
 	if result:
-		return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
+		return json.dumps(result, sort_keys=True, indent=4, default=json_util.default)
 	else:
 		return jsonify(error='Erreur. That is French.')
 
@@ -811,41 +753,41 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 	cityID = int(cityID)
 	result = {"userHistoryItemCollection":[], "systemHistoryItemCollection":[]}
 	#cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities": { "$elemMatch": { "id": int(cityID) } } }, {"url":1,"title":1}).sort([("lastVisitTime",-1)]).skip(0).limit(100)
-	
+
 	USER_CITY_HISTORY_PIPELINE = [
 		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": userID, "preinstallation":{"$exists":0} }},
 		{ "$unwind" : "$geodata.primaryCities" },
 		{ "$sort" : { "lastVisitTime" : 1, "geodata.primaryCities.recommended" : -1 } },
 		{ "$group": {"_id": {"url":"$url", "title":"$title"}, "recommended": { "$first" : "$geodata.primaryCities.recommended" }, "count": {"$sum": 1}}},
 		{ "$limit" : 50 },
-		
+
 	]
 	q = app.db_user_history_collection.aggregate(USER_CITY_HISTORY_PIPELINE)
 	for row in q["result"]:
 		if next((x for x in result["userHistoryItemCollection"] if "title" in x and "title" in row["_id"] and x["title"] == row["_id"]["title"]), None):
 			continue
-		else: 
+		else:
 			result["userHistoryItemCollection"].append({ "title": row["_id"]["title"], "url":row["_id"]["url"], "recommended":row["recommended"]})
-	
-	
+
+
 	SYSTEM_CITY_HISTORY_PIPELINE = [
 		{ "$match" : { "geodata.primaryCities.id": cityID, "geodata.primaryCities.recommended": {"$ne" : 0}, "userID": {"$ne" : userID}, "title":{"$ne":"" } }},
 		{ "$unwind" : "$geodata.primaryCities" },
 		{ "$sort" : { "geodata.primaryCities.recommended":-1, "lastVisitTime" : 1 } },
 		{ "$group": {"_id": {"url":"$url", "title":"$title" }, "recommended": { "$first" : "$geodata.primaryCities.recommended" }, "count": {"$sum": 1}}},
 		{ "$limit" : 50 },
-		
+
 	]
 	q = app.db_user_history_collection.aggregate(SYSTEM_CITY_HISTORY_PIPELINE)
 	systemHistoryItemCollection = []
-	
+
 	for row in q["result"]:
-	
+
 		#quick fix for duplicate titles showing up, really this should be done at DB level
 		if next((x for x in systemHistoryItemCollection if x["title"] == row["_id"]["title"]), None):
 			continue
 		systemHistoryItemCollection.append({ "title": row["_id"]["title"], "url":row["_id"]["url"], "recommended":row["recommended"]})
-		
+
 	# If not much in the way of system history, then grab recommendations from the recs DB
 	# then shuffle it -- randomize access so doesn't always show the top 20
 	if len(systemHistoryItemCollection) < 10:
@@ -859,22 +801,22 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 		for row in q["result"]:
 			if next((x for x in systemHistoryItemCollection if "title" in x and "title" in row["_id"] and x["title"] == row["_id"]["title"]), None):
 				continue
-			else: 
+			else:
 				systemHistoryItemCollection.append(row["_id"])
 		#systemHistoryItemCollection.extend(list(row["_id"] for row in q["result"]))
 		shuffle(systemHistoryItemCollection)
 	result["systemHistoryItemCollection"] = systemHistoryItemCollection
-	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
+	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default)
 
 @app.route('/recommend/<userID>/<cityID>/', methods=['GET'])
 @app.route('/recommend/', methods=['GET'])
 def recommend(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
 	cityID = int(cityID)
 	url=request.args.get('url')
-	
+
 	if len(url) < 1:
 		return json.dumps({"error":"no url"}, sort_keys=True, indent=4, default=json_util.default)
-	
+
 	if not url.startswith('http'):
 		url = "http://" + url
 	doc = {}
@@ -882,32 +824,32 @@ def recommend(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
 	doc = extractSingleURL(doc, url, config.get('extractor','extractor_url'))
 	if not "extractedText" in doc:
 		doc["title"] = url
-	
+
 	doc["source"] = "user"
 	doc["userID"] = userID
 	doc["geodata"] = {}
 	doc["geodata"]["primaryCities"] = []
 	doc["geodata"]["primaryCities"].append({"id" : cityID})
-	
+
 	doc = addCityGeoDataToDoc(doc)
-	
+
 	app.db_recommendation_collection.insert(doc)
-	return json.dumps({"response":"ok"}, sort_keys=True, indent=4, default=json_util.default) 
+	return json.dumps({"response":"ok"}, sort_keys=True, indent=4, default=json_util.default)
 
 @app.route('/like/<userID>/<cityID>', methods=['POST'])
 @app.route('/like/', methods=['GET'])
 def like(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
 	cityID = int(cityID)
-	
+
 	url=request.form['url']
-	
+
 
 	isThumbsUp=request.form['isThumbsUp']
 	if isThumbsUp == "true":
 		isThumbsUp=1
 	else:
 		isThumbsUp=0
-	
+
 	if url is None or len(url) < 1:
 		return json.dumps({"error":"no url"}, sort_keys=True, indent=4, default=json_util.default)
 
@@ -915,42 +857,42 @@ def like(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
 	# set recommended/not recommended property on geodata.primaryCities.city item
 	# because what they are giving feedback on is relevance of that article for that particular city
 	# article could still be good/bad rec related to a different geo
-	 
+
 	app.db_user_history_collection.update({	"userID":userID,
 												"url":url,
 												"geodata.primaryCities": { "$elemMatch": { "id": cityID } } },
 												{ "$set" : {"geodata.primaryCities.$.recommended": isThumbsUp } },
 												upsert=False,
 												multi=True)
-	
+
 	result = app.db.command({"getLastError" : 1})
-	return json.dumps({"response": "ok", "count" : result["n"]}, sort_keys=True, indent=4, default=json_util.default) 
+	return json.dumps({"response": "ok", "count" : result["n"]}, sort_keys=True, indent=4, default=json_util.default)
 
 @app.route('/citystats/<userID>/<cityID>')
 @app.route('/citystats/')
 def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 	cityID = int(cityID)
-	result = {	"firstVisitUsername":"", 
-				"mostRead":{}, 
-				"firstRecommendationUsername":"", 
+	result = {	"firstVisitUsername":"",
+				"mostRead":{},
+				"firstRecommendationUsername":"",
 				"mostRecommendations":{},
 				"currentUserStoryCount":"",
 				"currentUserRecommendationCount":""
 			}
 
 	if userID is None or cityID is None or str(userID) == "null" or str(cityID) =="null":
-		return json.dumps({"result":"error - null user or null city"}, sort_keys=True, indent=4, default=json_util.default) 
+		return json.dumps({"result":"error - null user or null city"}, sort_keys=True, indent=4, default=json_util.default)
 
 	currentUsername = getUsername(userID)
-	
+
 	#current user counts
 	result["currentUserStoryCount"] = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "userID" : userID, "preinstallation":{"$exists":0} }).skip(0).count()
-	
+
 	#recommendations come from two different collections and get added together
 	userRecs = app.db_recommendation_collection.find({"geodata.primaryCities.id" : cityID, "userID" : userID }).skip(0).count();
 	userHistoryRecs = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "geodata.primaryCities.recommended" : {"$exists" : 1}, "userID" : userID }).skip(0).count();
 	result["currentUserRecommendationCount"] = userRecs + userHistoryRecs;
-	
+
 	#first person to visit city
 	firstVisitUserID = ''
 	cursor = app.db_user_history_collection.find({"geodata.primaryCities.id" : cityID, "userID" : {"$exists" : "true"}, "preinstallation":{"$exists":0}}, {"userID" :1}).sort([("lastVisitTime",1)]).skip(0).limit(1)
@@ -961,7 +903,7 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 
 	#person with most articles read about city
 	USER_WITH_MOST_READ_PIPELINE = [
-		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"}, "preinstallation":{"$exists":0} }},	
+		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"}, "preinstallation":{"$exists":0} }},
 		{ "$group": {"_id": "$userID", "count": {"$sum": 1}}},
 		{ "$sort" : {"count" : -1} },
 		{ "$limit" : 1 },
@@ -969,9 +911,9 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 	q = app.db_user_history_collection.aggregate(USER_WITH_MOST_READ_PIPELINE)
 	if q["result"]:
 		mostReadUsername = getUsername(q["result"][0]["_id"])
-		result["mostRead"] = { 	"count" : q["result"][0]["count"], 
+		result["mostRead"] = { 	"count" : q["result"][0]["count"],
 								"username" : mostReadUsername,
-								"isCurrentUser" : "true" if mostReadUsername == currentUsername else "false"	
+								"isCurrentUser" : "true" if mostReadUsername == currentUsername else "false"
 							}
 
 	# first person to recommend article from city
@@ -998,13 +940,13 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 	# person with most recommendations from city
 	# do two queries because recommendations can be either new urls or "likes"
 	USER_WITH_MOST_RECOMMENDED_PIPELINE = [
-		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"} }},		
+		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"} }},
 		{ "$group": {"_id": "$userID", "count": {"$sum": 1}}},
 		{ "$sort" : {"count" : -1} },
 		{ "$limit" : 1 },
 	]
 	USER_WITH_MOST_HISTORY_RECOMMENDED_PIPELINE = [
-		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"}, "preinstallation":{"$exists":0}, "geodata.primaryCities.recommended": {"$exists":"true"} }},		
+		{ "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"}, "preinstallation":{"$exists":0}, "geodata.primaryCities.recommended": {"$exists":"true"} }},
 		{ "$group": {"_id": "$userID", "count": {"$sum": 1}}},
 		{ "$sort" : {"count" : -1} },
 		{ "$limit" : 1 },
@@ -1022,27 +964,27 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 		qResult = q2["result"][0]
 	if qResult:
 		mostRecommendationsUsername = getUsername(qResult["_id"])
-		result["mostRecommendations"] = { 	"count" : qResult["count"], 
+		result["mostRecommendations"] = { 	"count" : qResult["count"],
 											"username" : mostRecommendationsUsername,
 											"isCurrentUser" : "true" if mostRecommendationsUsername == currentUsername else "false"
 
 										}
 
-	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default) 
+	return json.dumps(result, sort_keys=True, indent=4, default=json_util.default)
 
 #Test function for various things
 @app.route('/testdb/')
 def testdb():
-	
+
 	ALL_USERS_CITY_COUNT_PIPELINE = [
 		{ "$unwind" : "$geodata.primaryCities" },
 		{ "$match" : { "preinstallation":{"$exists":0}, "geodata.primaryCities.id": { "$in": THE1000CITIES_IDS_ARRAY } }},
 		{ "$group": {"_id": {"userID":"$userID", "geonames_id":"$geodata.primaryCities.id" }, "count": {"$sum": 1}}},
-		
+
 		{ "$group": {"_id": {"userID":"$_id.userID"}, "totalcitiesvisited": {"$sum": 1}}},
 		{ "$sort" : { "totalcitiesvisited" : -1 } }
 	]
-	q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=ALL_USERS_CITY_COUNT_PIPELINE ) 
+	q = app.db.command('aggregate', config.get('db','user_history_item_collection'), pipeline=ALL_USERS_CITY_COUNT_PIPELINE )
 	for row in q["result"]:
 		print row
 
@@ -1072,7 +1014,7 @@ def logStoryClick(userID='52dbeee6bd028634678cd069',cityID=703448):
 	doc["url"] = request.form['url']
 
 	app.db_user_behavior_collection.insert(doc)
-	return json.dumps({"result":"ok"}, sort_keys=True, indent=4, default=json_util.default) 
+	return json.dumps({"result":"ok"}, sort_keys=True, indent=4, default=json_util.default)
 
 # Metrics: Log when a user clicks on a city in the app
 @app.route('/logcityclick/<userID>/<cityID>')
@@ -1082,7 +1024,7 @@ def logCityClick(userID='52dbeee6bd028634678cd069',cityID=703448):
 	doc["cityID"] = int(cityID)
 	doc["clicked_at"] = time.time() * 1000
 	app.db_user_city_clicks_collection.insert(doc)
-	return json.dumps({"result":"ok"}, sort_keys=True, indent=4, default=json_util.default) 
+	return json.dumps({"result":"ok"}, sort_keys=True, indent=4, default=json_util.default)
 
 # Send user to an exciting destination
 # 1/3 the time it gets a recommendation from bitly
@@ -1133,7 +1075,7 @@ def go(userID='52dbeee6bd028634678cd069',cityID=703448):
 	doc["url"] = url
 
 	app.db_user_behavior_collection.insert(doc)
-	
+
 	return redirect(url, code=302)
 
 @app.route('/history/<userID>', methods=['GET', 'POST'])
@@ -1144,7 +1086,7 @@ def processHistory(userID):
 		return 'I need to have a POST with some history data'
 	historyItems = json.loads(request.form['history'])
 	log.debug(str(len(historyItems)) + " in browser history")
-	
+
 	# save entire history object to DB - this is a backup in case the queue messes things up
 	app.db_user_collection.update({ "_id": ObjectId(userID)}, { "$set" : {"history-pre-installation":historyItems}})
 
@@ -1156,25 +1098,92 @@ def processHistory(userID):
 		if count == 0:
 			args = (historyObject, config, False);
 			start_text_processing_queue(*args)'''
-	
+
 	return 'Processing ' + str(len(historyItems)) + ' history items'
 
-#Login/Logout page AND change username
+# ------------------------- -------------------------------------
+# MOVE THIS SOMEWHERE ELSE
+# This callback is used to reload the user object from the user ID stored in the session.
+# It should take the unicode ID of a user, and return the corresponding user object.
+# It should return None (not raise an exception) if the ID is not valid.
+# (In that case, the ID will manually be removed from the session and processing will continue.)
+def get_user_by_id(id):
+	log.debug("server.py >> get_user_by_id")
+	user = None
+	for row in app.db_user_collection.find({ '_id': ObjectId(id) }):
+		user = get_user_from_DB_row(row)
+		user.lastLoginDate = time.time() * 1000
+		break
+	if (user is not None):
+		app.db_user_collection.save(user.__dict__)
+	return user
+
+# LoginManager
+login_manager = LoginManager()
+login_manager.user_loader(get_user_by_id)
+login_manager.init_app(app)
+
+# OAuth endpoints
+oauth = OAuth()
+
+facebook = oauth.remote_app('facebook',
+    base_url='https://graph.facebook.com/',
+    request_token_url=None,
+    access_token_url='/oauth/access_token',
+    authorize_url='https://www.facebook.com/dialog/oauth',
+    consumer_key=config.get('oauth', 'facebook_consumer_key'),
+    consumer_secret=config.get('oauth', 'facebook_consumer_secret'),
+    request_token_params={'scope': 'email'}
+)
+
+@facebook.tokengetter
+def get_facebook_token():
+    return session.get('oauth_token')
+
+google = oauth.remote_app('google',
+    base_url='https://www.googleapis.com/oauth2/v1/',
+    request_token_url=None,
+    access_token_method='POST',
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+	consumer_key=config.get('oauth', 'google_consumer_key'),
+	consumer_secret=config.get('oauth', 'google_consumer_secret'),
+    request_token_params={'scope': 'email'}
+)
+
+@google.tokengetter
+def get_google_token():
+    return session.get('oauth_token')
+
+twitter = oauth.remote_app('twitter',
+	base_url='https://api.twitter.com/1/',
+	request_token_url='https://api.twitter.com/oauth/request_token',
+	access_token_url='https://api.twitter.com/oauth/access_token',
+	authorize_url='https://api.twitter.com/oauth/authenticate',
+	consumer_key=config.get('oauth', 'twitter_consumer_key'),
+	consumer_secret=config.get('oauth', 'twitter_consumer_secret')
+)
+
+@twitter.tokengetter
+def get_twitter_token():
+    return session.get('oauth_token')
+
+# Login/Logout page AND change username
 @app.route('/login/', methods=['GET', 'POST'])
-def loginpage():
+def login():
 	error = ""
 	userID = ""
 	hasSignedConsentForm = False
 	hasCompletedPreSurvey = False
 	hasCompletedPostSurvey = False
 	needsToDoPostSurvey = False
-	
+
 	if "user_id" in session:
 		userID = session['user_id']
 	if userID != "":
 		needsToDoPostSurvey = 0
 		userDoc = app.db_user_collection.find({ "_id": ObjectId(userID)},{"history-pre-installation":0}).next()
-		
+
 		hasSignedConsentForm = 1 if "signed_consent" in userDoc and int(userDoc["signed_consent"]) == 1 else 0
 		hasCompletedPreSurvey = 1 if "filled_out_presurvey" in userDoc and int(userDoc["filled_out_presurvey"]) == 1 else 0
 
@@ -1183,31 +1192,103 @@ def loginpage():
 		hasCompletedPostSurvey = 1 if "filled_out_postsurvey" in userDoc and int(userDoc["filled_out_postsurvey"]) == 1 else 0
 		if (hasCompletedPostSurvey > 0 or not hasCompletedPreSurvey or not hasSignedConsentForm):
 			needsToDoPostSurvey = 0
-		
+
 		# check for having been in system at least 30 days
 		else:
 			firstLoginDate = datetime.datetime.fromtimestamp(int(userDoc["firstLoginDate"]/1000))
 			nowDate = datetime.datetime.now()
-		
+
 			dateDiff = nowDate - firstLoginDate
 			if ( dateDiff.days >= 30):
-				needsToDoPostSurvey = 1 
+				needsToDoPostSurvey = 1
 
 	if request.method == 'POST':
 		oldusername = request.form['oldusername']
 		newusername = request.form['newusername']
 		userID = request.form['userID']
-		
+
 		if newusername == oldusername:
 			error="Your new username is the same as your old username"
 		elif app.db_user_collection.find({ "username": newusername }).count():
 			error = "That username already exists"
 		else:
-			r = app.db_user_collection.update(	{ "_id": ObjectId(userID)}, 
+			r = app.db_user_collection.update(	{ "_id": ObjectId(userID)},
 												{ "$set" : {"username":newusername}})
-			
+
 	return render_template('login.html', error=error, needsToDoPostSurvey=needsToDoPostSurvey, hasSignedConsentForm=hasSignedConsentForm,hasCompletedPreSurvey=hasCompletedPreSurvey,hasCompletedPostSurvey=hasCompletedPostSurvey)
 
+# Logout
+@app.route('/logout/')
+def logout():
+	session.pop('oauth_token', None)
+	logout_user()
+	return redirect(url_for('login'))
+
+# OAuth by service
+@app.route('/oauth/<service>')
+def oauth(service):
+	callback_url = url_for('oauthorized',
+		_external=True,
+		service=service
+	)
+	if service == 'facebook':
+		return facebook.authorize(callback=callback_url)
+	elif service == 'google':
+		return google.authorize(callback=callback_url)
+	elif service == 'twitter':
+		return twitter.authorize(callback=callback_url)
+	else:
+		return redirect(url_for('login'))
+
+# Returns matching user for a service/id, otherwise returns None
+def get_oauth_user(service, service_id):
+	user = None
+	for row in app.db_user_collection.find({ 'service': service, 'service_id': service_id }):
+		user = get_user_from_DB_row(row)
+		break
+	if user is None:
+		return None
+	else:
+		user.lastLoginDate = time.time() * 1000
+		return user
+
+# Callback for OAuth
+@app.route('/oauthorized/<service>')
+def oauthorized(service):
+	if service == 'facebook':
+		resp = facebook.authorized_response()
+		session['oauth_token'] = (resp['access_token'], '')
+		data = facebook.get('/me?fields=id,email,name').data
+		service_id = data['id']
+		email = data['email']
+		if email is None:
+			username = data['name'].lower().replace(' ', '')
+		else:
+			username = email.split('@')[0]
+	elif service == 'google':
+		resp = google.authorized_response()
+		session['oauth_token'] = (resp['access_token'], '')
+		data = google.get('userinfo').data
+		service_id = data['id']
+		username = data['email'].split('@')[0]
+	elif service == 'twitter':
+		resp = twitter.authorized_response()
+		session['oauth_token'] = (resp['oauth_token'], resp['oauth_token_secret'])
+		service_id = resp['user_id']
+		username = resp['screen_name']
+	else:
+		return redirect(url_for('login'))
+
+	if isinstance(resp, OAuthException):
+		return 'Access denied: %s' % resp.message
+	else:
+		user = get_oauth_user(service, service_id)
+		if user is None:
+			user = create_new_user(service, service_id, username)
+			user_id = app.db_user_collection.insert(user.__dict__)
+			user._id = user_id
+		login_user(user)
+	return redirect(url_for('login'))
 
 # Receives a single URL object from user and logs it through the text processing queue
 @app.route('/monitor/', methods=['POST','GET'])
@@ -1218,7 +1299,7 @@ def processURL():
 		args = (historyObject, config, False);
 		start_text_processing_queue(*args)
 	else:
-		print "Was sent URL with no userID so I'm ignoring it"	
+		print "Was sent URL with no userID so I'm ignoring it"
 
 	return 'We is processing your URL dude - ' + historyObject["url"]
 
