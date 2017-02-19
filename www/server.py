@@ -1283,15 +1283,21 @@ def oauthorized(service):
 		return 'Access denied: %s' % resp.message
 	else:
 		user = get_oauth_user(service, service_id)
+
+		# If user does not currently exist
 		if user is None:
+			# Append '-1', '-2', ..., '-n' to username if it already exists
 			duplicates = 0
 			deduped_username = username
-			while app.db_user_collection.find({ "username": username }).count():
+			while app.db_user_collection.find({ "username": deduped_username }).count():
 				duplicates++
 				deduped_username = username + '-' + str(duplicates)
+
+			# Add the new user to the db
 			user = create_new_user(service, service_id, deduped_username)
 			user_id = app.db_user_collection.insert(user.__dict__)
 			user._id = user_id
+
 		login_user(user)
 	return redirect(url_for('login'))
 
