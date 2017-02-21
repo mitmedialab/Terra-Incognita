@@ -9,7 +9,7 @@ class TIUser(UserMixin):
 		for key in attributes:
 			setattr(self, key, attributes[key])
 	def __repr__(self):
-		return '<User %r>' % self.email
+		return '<User %r>' % self.username
 
 	def get_id(self):
 		return str(self._id)
