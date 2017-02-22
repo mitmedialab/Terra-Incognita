@@ -69,7 +69,7 @@ App.MapView = Backbone.View.extend({
 		if (this.userModel.get('loginURL') != '' && !this.userModel.get('authenticated'))
 			this.loginView = new App.LoginView({ model: this.userModel });
 		else if (this.userModel.get('loginURL') != ''){
-      $("#logoutURL").attr("href", this.userModel.get('loginURL').replace('login', 'logou'));
+      $("#logoutURL").attr("href", this.userModel.get('loginURL').replace('login', 'logout'));
 			$("#changeUsernameURL").attr("href", this.userModel.get('loginURL'));
 		}
 	},
