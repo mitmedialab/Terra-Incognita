@@ -3,13 +3,13 @@
  */
 App.MapView = Backbone.View.extend({
 	el: $("html"),
-	
+
 	initialize: function (options) {
 		App.debug('App.MapView.initialize()');
 		this.options = options || {};
-		
+
 		_.bindAll(this, 'render');
-		
+
 		// Create models
 
 		this.cityCollection = options.cityCollection;
@@ -21,10 +21,10 @@ App.MapView = Backbone.View.extend({
 
 		App.map = this.map;
 		this.citySelectorView = new App.CitySelectorView({cityCollection: this.cityCollection, model: this.userModel});
-		
+
 		var that = this;
 		this.userModel.on("change:userCityVisits", function() {
-			that.citySelectorView.render() 
+			that.citySelectorView.render()
 
 				/*if (that.cityZoomedView){
 						that.cityZoomedView.clearAll();
@@ -43,25 +43,25 @@ App.MapView = Backbone.View.extend({
 					isRandomCity = true;
 				}
 			    that.cityZoomedView = new App.CityZoomedView(
-					{	
+					{
 						model: that.cityCollection.getCityModel(cityID),
 						isRandomCity:isRandomCity
 					});
 			    // Create sub-views
-				
+
 			}
 			that.render();
 		})
-				
-			
+
+
 	},
-	
+
 	render: function () {
 		App.debug('App.MapView.render()')
-		if (this.userModel.get('username')) {	
+		if (this.userModel.get('username')) {
 			$("#hello").html('Hello, ' + this.userModel.get('username'));
-		} 
-		
+		}
+
 		return this;
 	},
 
@@ -69,7 +69,8 @@ App.MapView = Backbone.View.extend({
 		if (this.userModel.get('loginURL') != '' && !this.userModel.get('authenticated'))
 			this.loginView = new App.LoginView({ model: this.userModel });
 		else if (this.userModel.get('loginURL') != ''){
-			$("#loginURL, #changeUsernameURL").attr("href", this.userModel.get('loginURL'));
+      $("#logoutURL").attr("href", this.userModel.get('loginURL').replace('login', 'logou'));
+			$("#changeUsernameURL").attr("href", this.userModel.get('loginURL'));
 		}
 	},
 	renderFormsNotification: function(){
@@ -78,7 +79,7 @@ App.MapView = Backbone.View.extend({
 			this.formsNotificationView = new App.FormsNotificationView({ model: this.userModel });
 		}
 	},
-	
+
 	/*
 		Fun! getting random lat longs
 		lon range is -180 to +180
@@ -101,7 +102,7 @@ App.CityZoomedView = Backbone.View.extend({
 	},
 	initialize: function (options) {
 		App.debug('App.CityZoomedView.initialize()');
-		
+
 		this.options = options || {};
 		_.bindAll(this, 'render');
 		_.bindAll(this, 'clearAll');
@@ -109,7 +110,8 @@ App.CityZoomedView = Backbone.View.extend({
 		_.bindAll(this, 'submitHistoryItemRecommendation');
 		_.bindAll(this, 'logStoryClick');
 		this.isRandomCity = this.options.isRandomCity;
-		this.model.on('change',this.render,this);
+		this.model.on('change', this.render, this);
+    App.user.on('change:userID', this.render, this);
 		this.model.fetchReadingLists();
 		this.model.fetchCityStats();
 		this.randomWords = ["fun", "weird", "local","different","interesting","what","alternative","whoa", "notwar"];
@@ -128,22 +130,22 @@ App.CityZoomedView = Backbone.View.extend({
 		} else{
 			$('.system-story-row:gt(4)').hide();
 		}
-		
+
 
 	},
 	logStoryClick : function(event){
 		App.debug('App.CityZoomedView.logStoryClick()');
 		chrome.runtime.sendMessage({msg: "logStoryClick", "city_id": this.model.get("geonames_id"), "isRandomCity":(this.isRandomCity ? 1 : 0), "ui_source":  ($(event.target).hasClass("system-story") ? "system-story" : "user-story"), "url" : $(event.target).attr("href"), }, function(response) {
-		  App.debug(response)	  
+		  App.debug(response)
 		});
 	},
 	submitRecommendation : function( event) {
             event.preventDefault();
             //send to server. Upon return, update city stats to show user that their work paid off
             var that = this;
-			
+
             chrome.runtime.sendMessage({msg: "submitRecommendation", "city_id": this.model.get("geonames_id"), "url" : $("#url_recommendation").val()}, function(response) {
-			  
+
 			  if (response.result["response"] =="ok")
 				  	that.model.fetchCityStats();
 			});
@@ -160,7 +162,7 @@ App.CityZoomedView = Backbone.View.extend({
             chrome.runtime.sendMessage({msg: "submitHistoryItemRecommendation", "city_id" : this.model.get("geonames_id"), "url": url, "isThumbsUp" : isThumbsUp}, function(response) {
 			  App.debug(response)
 			  if (response.result["response"] =="ok")
-				  	
+
 				  	//$(event.target).addClass("glyphicon-chosen");
 				  	//$(event.target).parent().siblings().find(".glyphicon").addClass("glyphicon-unchosen");
 				  	//TODO: AWFUL! Must break up this view into subviews instead of re-fetching from server.
@@ -171,22 +173,22 @@ App.CityZoomedView = Backbone.View.extend({
 			});
             return false;
     },
-	
+
 	clearAll: function(){
 		App.debug('App.CityZoomedView.clearAll()');
 		this.minimap.removeFrom(App.map);
 		this.undelegateEvents();
 		this.unbind();
 		$(this.el).empty();
-		
+
 	},
 	render: function () {
 		App.debug('App.CityZoomedView.render()');
-		
+
 		App.map.setView([this.model.get("lat"), this.model.get("lon")], 12);
 		var that = this;
 
-		
+
 			if (!this.minimap){
 
 				var markerPos = new L.LatLng(that.model.get("lat"), that.model.get("lon"));
@@ -194,22 +196,22 @@ App.CityZoomedView = Backbone.View.extend({
 				var pin = new L.Icon({ iconUrl: "img/dot.png", iconAnchor: pinAnchor });
 				var cityMarker = L.marker(markerPos, { icon: pin });
 
-				
+
 				var tileLayer = L.mapbox.tileLayer('kanarinka.hcc1900i');
 				var cityLayerGroup = L.layerGroup([tileLayer, cityMarker]);
 				this.minimap = new L.Control.MiniMap(cityLayerGroup, {zoomLevelFixed:1, position:"bottomright"}).addTo(App.map);
 			}
-			
+
 		//random spot -- .setView([this.getRandomInRange(-90,90,3), this.getRandomInRange(-180,180,3)], 9);
-		
-		var html = this.template({ 	randomWord: this.randomWords[Math.floor(Math.random() * this.randomWords.length)], 
-									randomSaying: this.randomSayings[Math.floor(Math.random() * this.randomSayings.length)], 
-									population : this.addCommas(this.model.get("pop")), 
-									cityID : this.model.get("geonames_id"), 
-									city_name: this.model.get("city_name"), 
-									country_name:this.model.get("country_name"), 
-									userStories:this.model.get("userHistoryItemCollection"), 
-									systemStories:this.model.get("systemHistoryItemCollection"), 
+
+		var html = this.template({ 	randomWord: this.randomWords[Math.floor(Math.random() * this.randomWords.length)],
+									randomSaying: this.randomSayings[Math.floor(Math.random() * this.randomSayings.length)],
+									population : this.addCommas(this.model.get("pop")),
+									cityID : this.model.get("geonames_id"),
+									city_name: this.model.get("city_name"),
+									country_name:this.model.get("country_name"),
+									userStories:this.model.get("userHistoryItemCollection"),
+									systemStories:this.model.get("systemHistoryItemCollection"),
 									cityStats : this.model.get("cityStats"),
 									userID : App.user.get("userID"),
 									serverURL : App.serverURL,
@@ -247,9 +249,9 @@ App.CitySelectorView = Backbone.View.extend({
 		//this.model.on('change:userCityVisits', this.render,this);
 		this.rawCitiesData = options.cityCollection.rawCitiesData;
 
-	    if(this.model.get("userCityVisits") && Object.keys(this.model.get("userCityVisits")).length != 0)	
+	    if(this.model.get("userCityVisits") && Object.keys(this.model.get("userCityVisits")).length != 0)
 			this.render();
-		
+
 	},
 	render: function () {
 		App.debug('App.CitySelectorView.render()');
@@ -257,7 +259,7 @@ App.CitySelectorView = Backbone.View.extend({
 		var html = this.template({ visitedCityCount : Object.keys(this.model.get("userCityVisits")).length });
 
 		this.$el.html(html);
-		
+
 		this.$el.appendTo('body');
 
 		var margin = {top: 0, right: 0, bottom: 0, left: 0},
@@ -270,36 +272,36 @@ App.CitySelectorView = Backbone.View.extend({
 		var y = d3.scale.linear()
 			.range([height, 0]);
 
-		var filler = function(d) { 
+		var filler = function(d) {
 				if (d.cityVisitCount > 0)
 					return "#555";
-				else 
+				else
 					//return "#efe3cb"; //light land
 					return "#cdb368"; //dark land
 					//return "#c0d47d"; //green land
-					//return "#a5dada"; //blue 
+					//return "#a5dada"; //blue
 			};
 		var svg = d3.select("body").append("svg")
 			.attr("width", width + margin.left + margin.right)
 			.attr("height", height + margin.top + margin.bottom)
 			.append("g")
 			//.attr("transform", "scale(2,1),translate(-254,0)");
-			
+
 		var data = this.rawCitiesData;
 
 		x.domain(data.map(function(d) { return d.city_name; }));
 		var that = this;
-		y.domain([0, d3.max(data, function(d) { 
+		y.domain([0, d3.max(data, function(d) {
 			d.cityVisitCount = that.model.getCityVisitCount(d.geonames_id);
-			return d.cityVisitCount; 
+			return d.cityVisitCount;
 		})]);
 
 		svg.selectAll(".bar")
 			.data(data)
 		  .enter().append("rect")
 			.attr("class", "bar")
-			.attr("x", function(d) { 
-			  return Math.round(x(d.city_name)); 
+			.attr("x", function(d) {
+			  return Math.round(x(d.city_name));
 			})
 			.attr("width", function(d) { return Math.round(x.rangeBand() + x(d.city_name)) - Math.round( x(d.city_name) ); })
 			.attr("y", function(d) { return 0; })
@@ -311,7 +313,7 @@ App.CitySelectorView = Backbone.View.extend({
 			.attr("fill", filler)
 			.attr("fill-opacity", 1)
 			.on("click", function(d, i){
-				
+
 				var cityModel = App.router.cityCollection.getCityModel(d.geonames_id);
 				if (App.router.mapView.cityZoomedView){
 					App.router.mapView.cityZoomedView.clearAll();
@@ -324,9 +326,9 @@ App.CitySelectorView = Backbone.View.extend({
 				chrome.runtime.sendMessage({msg: "logCityClick", "city_id":d.geonames_id}, function(response){
 					//console.log("Logged city click")
 				});
-				
+
 			})
-			.on("mouseover", function(d) {   
+			.on("mouseover", function(d) {
 
 				d3.select(this).attr('fill-opacity', 1.0);
 				that.$el.text(d.continent_name.toUpperCase() + " :: " + d.country_name + " :: " +d.city_name);
@@ -335,11 +337,11 @@ App.CitySelectorView = Backbone.View.extend({
 				} else {
 					that.$el.css({left:d3.mouse(this)[0],bottom:height+1});
 				}
-				   
-			})                  
-			.on("mouseout", function(d) {       
+
+			})
+			.on("mouseout", function(d) {
 				d3.select(this).attr('fill-opacity', filler);
-				that.$el.html(html); 
+				that.$el.html(html);
 				that.$el.css({left:0,bottom:height+1});
 			});
 
@@ -357,7 +359,7 @@ App.LoginView = Backbone.View.extend({
 		App.debug('App.LoginView.initialize()');
 		this.options = options || {};
 		_.bindAll(this, 'render');
-		
+
 		//this.model.on('unauthorized', this.error);
 		//this.model.on('change',this.render,this);
 		this.render();
@@ -367,17 +369,17 @@ App.LoginView = Backbone.View.extend({
 	},
 	render: function () {
 		App.debug('App.LoginView.render()');
-	
+
 		var html = this.template({ loginURL : this.model.get("loginURL") });
 		this.$el.html(html);
-		
+
 		//call window into being
 		this.$el.find('#login-modal').modal();
-		
+
 		return this;
 	},
-	
-	
+
+
 });
 /**
  * FormsNotificationView modal.
@@ -389,7 +391,7 @@ App.FormsNotificationView = Backbone.View.extend({
 		App.debug('App.FormsNotificationView.initialize()');
 		this.options = options || {};
 		_.bindAll(this, 'render');
-		
+
 		//this.model.on('unauthorized', this.error);
 		//this.model.on('change',this.render,this);
 		this.render();
@@ -400,13 +402,13 @@ App.FormsNotificationView = Backbone.View.extend({
 	render: function () {
 		App.debug('App.FormsNotificationView.render()');
 		var linkURL = this.model.get("serverURL");
-		
+
 		if (this.model.get("hasSignedConsentForm") == 0){
 			linkURL = linkURL + "consent/" + this.model.get("userID")
-		} 
+		}
 		else if (this.model.get("hasCompletedPreSurvey") ==0){
 			linkURL = linkURL + "presurvey/" + this.model.get("userID")
-		} 
+		}
 		else if(this.model.get("needsToDoPostSurvey") != null && this.model.get("needsToDoPostSurvey") == 1){
 			linkURL = linkURL + "postsurvey/" + this.model.get("userID")
 		}
@@ -419,6 +421,6 @@ App.FormsNotificationView = Backbone.View.extend({
 		})
 		return this;
 	},
-	
-	
+
+
 });

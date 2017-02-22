@@ -1,8 +1,8 @@
 /*
 	SERVER
 */
-	var SERVER_URL = "https://terra-incognita.co/";
-	var COOKIE_PATH ="https://terra-incognita.co/login/";
+  var SERVER_URL = "http://localhost:5000/";
+  var COOKIE_PATH ="http://localhost:5000/login/"
 
 /*
 	LOCAL TESTING
