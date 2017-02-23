@@ -2,8 +2,10 @@
     <head>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script src="/js/cookies.js"></script>
+        <script src="//use.fontawesome.com/e4a0cd0fcf.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap-social.min.css') }}">
     </head>
     <body>
         <div class="container">
@@ -88,9 +90,15 @@
                 docCookies.removeItem('terra-incognita-id');
             </script>
             <p>Create an account using one of the following services. If you already have an account, use the same service you signed up with:</p>
-            <a href="{{ url_for('oauth', service='facebook') }}" class="btn btn-default">Facebook</a>
-            <a href="{{ url_for('oauth', service='google') }}" class="btn btn-default">Google</a>
-            <a href="{{ url_for('oauth', service='twitter') }}" class="btn btn-default">Twitter</a>
+            <a href="{{ url_for('oauth', service='facebook') }}" class="btn btn-social btn-facebook">
+                <span class="fa fa-facebook"></span> Facebook
+            </a>
+            <a href="{{ url_for('oauth', service='google') }}" class="btn btn-social btn-google">
+                <span class="fa fa-google"></span> Google
+            </a>
+            <a href="{{ url_for('oauth', service='twitter') }}" class="btn btn-social btn-twitter">
+                <span class="fa fa-twitter"></span> Twitter
+            </a>
         {% endif %}
         <hr>
             <h3>Help</h3>
