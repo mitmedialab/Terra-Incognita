@@ -22,6 +22,7 @@ import logging
 from random import shuffle,randint
 import datetime
 import csv
+from unidecode import unidecode
 
 
 # constants
@@ -1100,32 +1101,37 @@ def get_recommended_reddit_url(cityID):
     else:
         subreddits = reddit.subreddit('worldnews')
 
-    log.debug("Searching Reddit for " + placedata['city_name'] + ", " + placedata['country_name'])
-    results = subreddits.search(placedata['city_name'], sort='top', time_filter='week')
+    city_name = unidecode(placedata['city_name'].decode('utf-8')) # remove accents
+    country_name = placedata['country_name']
+
+    log.debug("Searching Reddit for " + city_name + ", " + country_name)
+    results = subreddits.search(city_name, sort='top', time_filter='week')
 
     try:
         suggestion = results.next()
         log.debug("Article found: " + suggestion.title)
         return suggestion.url
     except StopIteration:
-        results = subreddits.search(placedata['city_name'], sort='new')
+        results = subreddits.search(city_name, sort='new')
 
     try:
         suggestion = results.next()
         log.debug("Article found: " + suggestion.title)
         return suggestion.url
     except StopIteration:
-        results = subreddits.search(placedata['country_name'], sort='top', time_filter='week')
+        results = subreddits.search(country_name, sort='top', time_filter='week')
 
     try:
         suggestion = results.next()
         log.debug("Article found: " + suggestion.title)
         return suggestion.url
     except StopIteration:
-        results = subreddits.search(placedata['country_name'], sort='new')
+        results = subreddits.search(country_name, sort='new')
 
     try:
         suggestion = results.next()
+        while (suggestion.link_flair_text == 'Unconfirmed'):
+            suggestion = results.next() # skip unconfirmed submissions
         log.debug("Article found: " + suggestion.title)
         return suggestion.url
     except StopIteration:
