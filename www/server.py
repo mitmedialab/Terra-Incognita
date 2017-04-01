@@ -764,7 +764,8 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
 
     ]
     q = app.db_user_history_collection.aggregate(USER_CITY_HISTORY_PIPELINE)
-    for row in q["result"]:
+    for row in q:
+    #for row in q["result"]:
         if next((x for x in result["userHistoryItemCollection"] if "title" in x and "title" in row["_id"] and x["title"] == row["_id"]["title"]), None):
             continue
         else:
@@ -782,7 +783,8 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
     q = app.db_user_history_collection.aggregate(SYSTEM_CITY_HISTORY_PIPELINE)
     systemHistoryItemCollection = []
 
-    for row in q["result"]:
+    for row in q:
+    #for row in q["result"]:
 
         #quick fix for duplicate titles showing up, really this should be done at DB level
         if next((x for x in systemHistoryItemCollection if x["title"] == row["_id"]["title"]), None):
@@ -799,7 +801,8 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
             { "$limit" : 20 },
         ]
         q = app.db_recommendation_collection.aggregate(RECOMMENDATION_PIPELINE)
-        for row in q["result"]:
+        for row in q:
+        #for row in q["result"]:
             if next((x for x in systemHistoryItemCollection if "title" in x and "title" in row["_id"] and x["title"] == row["_id"]["title"]), None):
                 continue
             else:
@@ -910,7 +913,8 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
         { "$limit" : 1 },
     ]
     q = app.db_user_history_collection.aggregate(USER_WITH_MOST_READ_PIPELINE)
-    if q["result"]:
+    for row in q:
+    #if q["result"]:
         mostReadUsername = getUsername(q["result"][0]["_id"])
         result["mostRead"] = { 	"count" : q["result"][0]["count"],
                                 "username" : mostReadUsername,
@@ -955,14 +959,22 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
     q = app.db_recommendation_collection.aggregate(USER_WITH_MOST_RECOMMENDED_PIPELINE)
     q2 = app.db_user_history_collection.aggregate(USER_WITH_MOST_HISTORY_RECOMMENDED_PIPELINE)
     qResult = False
-    if q["result"] and q2["result"]:
-        qResult = q["result"][0]
-        if q["result"][0]["count"] < q2["result"][0]["count"]:
-            qResult = q2["result"][0]
-    elif q["result"]:
-        qResult = q["result"][0]
-    elif q2["result"]:
-        qResult = q2["result"][0]
+    
+    r1 = list(q)
+    r2 = list(q2)
+    if len(r1) > 0 and len(r2) > 0:
+    #if q["result"] and q2["result"]:
+        s1 = r1[0]
+        s2 = r2[0]
+        qResult = s1[0]
+        if s1[0]["count"] < s2[0]["count"]:
+            qResult = s2[0]
+    elif len(r1) > 0 > 0:
+    #elif q["result"]:
+        qResult = s1[0]
+    elif len(r2) > 0:
+    #elif q2["result"]:
+        qResult = s2[0]
     if qResult:
         mostRecommendationsUsername = getUsername(qResult["_id"])
         result["mostRecommendations"] = { 	"count" : qResult["count"],

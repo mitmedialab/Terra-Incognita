@@ -1,15 +1,17 @@
 /*
 	SERVER
-*/
+
+
   var SERVER_URL = "https://terra-incognita.co/";
   var COOKIE_PATH ="https://terra-incognita.co/login/";
+*/
 
 /*
 	LOCAL TESTING
-
-	var SERVER_URL = "http://localhost:5000/";
-	var COOKIE_PATH ="http://localhost:5000/login/";
 */
+var SERVER_URL = "http://localhost:5000/";
+var COOKIE_PATH ="http://localhost:5000/login/";
+
 var LOGIN_PAGE = "login/";
 var LOGIN_URL = SERVER_URL + LOGIN_PAGE;
 var DAYS_HISTORY = 45;

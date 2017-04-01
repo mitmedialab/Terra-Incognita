@@ -1,3 +1,16 @@
+BUILD SPRING 2017
+-----------------------------------------------------
+- Upgrade pymongo on Beryl to at least 3.4.0
+
+
+WORKING WITH PYTHON VIRTUAL ENV
+-----------------------------------------------------
+sudo pip install virtualenv
+virtualenv venv
+
+ACTIVATE: source venv/bin/activate
+DEACTIVATE: deactivate
+
 SET PYTHON BREAKPOINT
 -----------------------------------------------------------
 Run locally after restart - one in each terminal:

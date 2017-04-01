@@ -67,7 +67,7 @@ def extractSingleURL(doc, url,extractorURL):
 	return doc
 
 # pull out geodata for single text from CLIFF_CLAVIN
-# optionall merge with existing geodata
+# optional merge with existing geodata
 def geoparseSingleText(text,geoserver):
 	result = {}
 	try:
@@ -78,10 +78,10 @@ def geoparseSingleText(text,geoserver):
 
 		if r.status_code == 200:
 			json = r.json()
-
+			
 			if "results" in json.keys():
 				json = json["results"]
-
+			
 				#store people for the moment in case we need it later
 				if "people" in json.keys():
 					result["people"] = json["people"]
@@ -96,6 +96,7 @@ def geoparseSingleText(text,geoserver):
 						result["primaryStates"] = json["states"]
 					if "countries" in json:
 						result["primaryCountries"] = json["countries"]
+
 
 	except requests.exceptions.RequestException as e:
 		print "ERROR RequestException " + str(e)
@@ -248,7 +249,7 @@ def start_text_processing_queue(*args,**kwargs):
 		print "This document is not in the DB"
 
 		# Content Extraction
-		doc = extractSingleURL(doc, doc["url"], config.get('extractor','extractor_url'))
+		doc = extractSingleURL(doc, doc["url"], config.get('extractor','extractor_url')) 
 
 		if ("extractedText" not in doc or doc["extractedText"] == "") and not isRecommendation:
 			print "No extracted Text returned, but saving to DB for user metrics"

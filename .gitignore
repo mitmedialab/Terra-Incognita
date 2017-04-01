@@ -124,3 +124,6 @@ analysis/Download_ExportCityClicks_07172014,json
 analysis/Download_ExportCityClicks_07172014.json
 
 analysis/images/cityclicks.png
+
+www/venv/*
+
