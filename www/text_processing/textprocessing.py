@@ -73,7 +73,7 @@ def geoparseSingleText(text,geoserver):
 	try:
 		
 		params = {'q':text,'replaceAllDemonyms':'true'}
-		
+	
 		r = requests.post(geoserver, data=params)
 
 		if r.status_code == 200:
@@ -87,9 +87,9 @@ def geoparseSingleText(text,geoserver):
 					result["people"] = json["people"]
 
 				#map CLIFF format to TERRA format, drop place mentions because we don't need them
-				if "places" in json.keys() and "about" in json["places"].keys():
+				if "places" in json.keys() and "focus" in json["places"].keys():
 					
-					json = json["places"]["about"]
+					json = json["places"]["focus"]
 					if "cities" in json:
 						result["primaryCities"] = json["cities"]
 					if "states" in json:
@@ -150,7 +150,9 @@ def lookupContinentAndRegion(geodata):
 		region = {}
 		continent = {}
 		for geocode in COUNTRIES:
-			if geocode["country_code"].strip() == country.strip():
+
+			if geocode["country_code"].strip() == country["countryCode"].strip():
+				print "country is " + geocode["country_code"]
 				region["country_code"] = geocode["country_code"]
 				region["region_name"] = geocode["region_name"]
 				region["region_code"] = geocode["region_code"]
@@ -241,7 +243,8 @@ def start_text_processing_queue(*args,**kwargs):
 		print "new doc ID is " + doc["_id"]
 
 		# make sure doc doesn't already exist
-		alreadyAdded = db_collection.find({"userID":doc["userID"], "lastVisitTime":doc["lastVisitTime"], "url":doc["url"]}).count()
+		# alreadyAdded = db_collection.find({"userID":doc["userID"], "lastVisitTime":doc["lastVisitTime"], "url":doc["url"]}).count()
+		alreadyAdded = db_collection.find({"userID":doc["userID"], "url":doc["url"]}).count()
 		
 	if alreadyAdded > 0:
 		print "Already added this document for this user. I'm ignoring it now."
