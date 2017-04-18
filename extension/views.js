@@ -24,6 +24,7 @@ App.MapView = Backbone.View.extend({
 
 		var that = this;
 		this.userModel.on("change:userCityVisits", function() {
+			
 			that.citySelectorView.render()
 
 				/*if (that.cityZoomedView){
@@ -31,6 +32,8 @@ App.MapView = Backbone.View.extend({
 				}*/
 			//Only render if city zoomed view hasn't been set up already
 			//This is to try to patch the loading 3x bug
+
+			
 			if (!that.cityZoomedView){
 				var cityID ="";
 				var isRandomCity = true;
@@ -51,6 +54,7 @@ App.MapView = Backbone.View.extend({
 
 			}
 			that.render();
+			
 		})
 
 
@@ -104,14 +108,15 @@ App.CityZoomedView = Backbone.View.extend({
 		App.debug('App.CityZoomedView.initialize()');
 
 		this.options = options || {};
-		_.bindAll(this, 'render');
+		// COMMENT 4/16/17 _.bindAll(this, 'render');
 		_.bindAll(this, 'clearAll');
 		_.bindAll(this, 'submitRecommendation');
 		_.bindAll(this, 'submitHistoryItemRecommendation');
 		_.bindAll(this, 'logStoryClick');
 		this.isRandomCity = this.options.isRandomCity;
 		this.model.on('change', this.render, this);
-    App.user.on('change:userID', this.render, this);
+    
+    App.user.on('change:userID');
 		this.model.fetchReadingLists();
 		this.model.fetchCityStats();
 		this.randomWords = ["fun", "weird", "local","different","interesting","what","alternative","whoa", "notwar"];

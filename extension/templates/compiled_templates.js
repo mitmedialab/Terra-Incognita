@@ -1,4 +1,11 @@
 TEMPLATES=[];
+TEMPLATES['city-test-template']=function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='\n  You are trying to figure out your own code. What is up?\n';
+}
+return __p;
+}
 TEMPLATES['city-selector-template']=function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
@@ -187,4 +194,4 @@ __p+='\n              <h4 class="submit-recommendation">Submit a recommendation 
 __p+='\n          </div>\n        \n\n\n        </div>\n        \n        \n';
 }
 return __p;
-} 
+}
