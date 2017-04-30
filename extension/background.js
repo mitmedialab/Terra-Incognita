@@ -93,6 +93,18 @@ chrome.runtime.onMessage.addListener(
 				xhr.send();
 				return true;
 		}
+    else if (request.msg == 'loadRandomUrl') {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', SERVER_URL + 'reddit/' + request.city_id, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          randomUrlJSON = JSON.parse(xhr.responseText);
+          sendResponse({'randomUrl': randomUrlJSON.url});
+        }
+      }
+      xhr.send();
+      return true;
+    }
 		else if (request.msg == "submitRecommendation")
 		{
 				var xhr = new XMLHttpRequest();

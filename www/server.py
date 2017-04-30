@@ -8,6 +8,7 @@ from bson import BSON
 from bson import json_util
 from terra_incognita_user import *
 import praw
+import prawcore
 import ConfigParser
 import time
 import httplib
@@ -959,7 +960,7 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
     q = app.db_recommendation_collection.aggregate(USER_WITH_MOST_RECOMMENDED_PIPELINE)
     q2 = app.db_user_history_collection.aggregate(USER_WITH_MOST_HISTORY_RECOMMENDED_PIPELINE)
     qResult = False
-    
+
     r1 = list(q)
     r2 = list(q2)
     if len(r1) > 0 and len(r2) > 0:
@@ -1045,37 +1046,30 @@ def logCityClick(userID='52dbeee6bd028634678cd069',cityID=703448):
 # 1/3 the time it gets a recommendation from another user
 
 # if the latter two methods don't work then fall back on reddit
-@app.route('/go/')
-@app.route('/go/<cityID>')
-@app.route('/go/<userID>/<cityID>')
+@app.route('/go/<userID>/<cityID>', methods=['POST'])
 def go(userID='52dbeee6bd028634678cd069',cityID=703448):
     cityID = int(cityID)
-    url = ''
+    url = ""
     random = randint(0,2)
     recommendationSource = ""
     if random == 0:
-        log.debug("Recommendation from Reddit")
-        recommendationSource = "reddit"
-        url = get_recommended_reddit_url(cityID)
-    elif random == 1:
         log.debug("Recommendation from recommendation collection")
         recommendationSource = "recommendation_collection"
         count = app.db_recommendation_collection.find({ "geodata.primaryCities.id": cityID }, {url:1}).count()
         if count:
             doc = app.db_recommendation_collection.find({ "geodata.primaryCities.id": cityID }).skip(randint(0, count - 1)).limit(1).next()
             url = doc["url"]
-    elif random == 2:
+    elif random == 1:
         log.debug("Recommendation from user history collection")
         recommendationSource = "user_history_collection"
         count = app.db_user_history_collection.find({ "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID} }, {url:1}).count()
         if count:
             doc = app.db_user_history_collection.find({ "geodata.primaryCities.id": cityID, "userID": {"$ne" : userID} }).skip(randint(0, count - 1)).limit(1).next()
             url = doc["url"]
-
-    if not url:
+    else:
+        log.debug("Recommendation from Reddit")
         recommendationSource = "reddit"
-        log.debug("Fallback recommendation from Reddit")
-        url = get_recommended_reddit_url(cityID)
+        url = request.form["url"]
 
     #Red Button Metric: Log to the DB that they clicked on the red button, when, and where we sent them
     doc = {}
@@ -1084,12 +1078,17 @@ def go(userID='52dbeee6bd028634678cd069',cityID=703448):
     doc["clicked_at"] = time.time() * 1000
     doc["ui_source"] = "redbutton"
     doc["recommendation_source"] = recommendationSource
-    doc["random_city"] = int(request.args.get('r')) #should be 1 or 0
+    doc["random_city"] = int(request.args.get("r")) #should be 1 or 0
     doc["url"] = url
 
     app.db_user_behavior_collection.insert(doc)
 
     return redirect(url, code=302)
+
+# JSON endpoint for reddit URL
+@app.route('/reddit/<cityID>', methods=['GET'])
+def get_reddit_json(cityID):
+    return jsonify(url=get_recommended_reddit_url(int(cityID)))
 
 # Return a recommended story from /r/worldnews
 def get_recommended_reddit_url(cityID):
@@ -1121,33 +1120,51 @@ def get_recommended_reddit_url(cityID):
 
     try:
         suggestion = results.next()
+        while (suggestion.link_flair_text == 'Unconfirmed'):
+            suggestion = results.next()
         log.debug("Article found: " + suggestion.title)
         return suggestion.url
     except StopIteration:
         results = subreddits.search(city_name, sort='new')
-
-    try:
-        suggestion = results.next()
-        log.debug("Article found: " + suggestion.title)
-        return suggestion.url
-    except StopIteration:
-        results = subreddits.search(country_name, sort='top', time_filter='week')
-
-    try:
-        suggestion = results.next()
-        log.debug("Article found: " + suggestion.title)
-        return suggestion.url
-    except StopIteration:
-        results = subreddits.search(country_name, sort='new')
+    except prawcore.exceptions.ServerError:
+        log.debug("503 error, redirecting to Global Voices")
+        return "http://globalvoicesonline.org"
 
     try:
         suggestion = results.next()
         while (suggestion.link_flair_text == 'Unconfirmed'):
-            suggestion = results.next() # skip unconfirmed submissions
+            suggestion = results.next()
+        log.debug("Article found: " + suggestion.title)
+        return suggestion.url
+    except StopIteration:
+        results = subreddits.search(country_name, sort='top', time_filter='week')
+    except prawcore.exceptions.ServerError:
+        log.debug("503 error, redirecting to Global Voices")
+        return "http://globalvoicesonline.org"
+
+    try:
+        suggestion = results.next()
+        while (suggestion.link_flair_text == 'Unconfirmed'):
+            suggestion = results.next()
+        log.debug("Article found: " + suggestion.title)
+        return suggestion.url
+    except StopIteration:
+        results = subreddits.search(country_name, sort='new')
+    except prawcore.exceptions.ServerError:
+        log.debug("503 error, redirecting to Global Voices")
+        return "http://globalvoicesonline.org"
+
+    try:
+        suggestion = results.next()
+        while (suggestion.link_flair_text == 'Unconfirmed'):
+            suggestion = results.next()
         log.debug("Article found: " + suggestion.title)
         return suggestion.url
     except StopIteration:
         log.debug("No article found, redirecting to Global Voices")
+        return "http://globalvoicesonline.org"
+    except prawcore.exceptions.ServerError:
+        log.debug("503 error, redirecting to Global Voices")
         return "http://globalvoicesonline.org"
 
 @app.route('/history/<userID>', methods=['GET', 'POST'])

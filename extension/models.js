@@ -1,5 +1,5 @@
 App.UserModel = Backbone.Model.extend({
-	
+
 	id: 'login',
 	defaults: {
 		authenticated: false,
@@ -14,10 +14,10 @@ App.UserModel = Backbone.Model.extend({
 		_.bindAll(this, 'logUserStatus');
 		_.bindAll(this, 'checkUserForms');
 		_.bindAll(this, 'logUserForms');
-		
+
 		var that = this;
 		//User's city visits are cached in localstorage or else loaded from file
-		chrome.storage.local.get("userCityVisits", 
+		chrome.storage.local.get("userCityVisits",
 										function(result){
 											if (Object.keys(result).length === 0){
 												var userCityVisits = {};
@@ -28,7 +28,7 @@ App.UserModel = Backbone.Model.extend({
 												that.set({"userCityVisits" : result["userCityVisits"]});
 											}
 										});
-		
+
 		this.checkUserStatus();
 
 	},
@@ -82,19 +82,19 @@ App.UserModel = Backbone.Model.extend({
 	// Cache user city visits to local storage
 	loadUser: function(json){
 		App.debug('App.UserModel.loadUser()');
-		this.set({	
+		this.set({
 					'userCityVisits' : json.cities,
 					'username' : json.username
 				 });
 		chrome.storage.local.set({'userCityVisits': json.cities}, function() {
           App.debug('Updated userCityVisits saved to local storage');
         });
-		
+
 	}
 });
 
 /*
-	App.CityModel - A city, when the user has visited it, what stories they read in relation, and 
+	App.CityModel - A city, when the user has visited it, what stories they read in relation, and
 					what stories users overall have read about that city
 		cityID
 		lat
@@ -117,17 +117,18 @@ App.UserModel = Backbone.Model.extend({
 */
 App.CityModel = Backbone.Model.extend({
 	idAttribute : 'geonames_id',
+  randomUrl: '',
 	defaults: {
 
 	},
-	
+
 	initialize: function () {
 		App.debug('App.CityModel.initialize()');
 	},
 	fetchReadingLists: function(){
 		App.debug('App.CityModel.fetchReadingLists()');
 		var that = this;
-		
+
 		chrome.runtime.sendMessage({msg: "loadReadingLists", "city_id": this.get("geonames_id")}, function(response) {
 		  that.loadReadingLists(response.readingLists);
 		});
@@ -142,7 +143,7 @@ App.CityModel = Backbone.Model.extend({
 	fetchCityStats: function(){
 		App.debug('App.CityModel.fetchCityStats()');
 		var that = this;
-		
+
 		chrome.runtime.sendMessage({msg: "loadCityStats", "city_id": this.get("geonames_id")}, function(response) {
 		  that.loadCityStats(response.cityStats);
 		});
@@ -152,12 +153,23 @@ App.CityModel = Backbone.Model.extend({
 		this.set({
 					'cityStats': new App.CityStatsModel(cityStats),
 				});
-	}
+	},
+  fetchRandomUrl: function(){
+    App.debug('App.CityModel.fetchRandomUrl()');
+    var that = this;
+
+    chrome.runtime.sendMessage({
+      'msg': 'loadRandomUrl',
+      'city_id': this.get('geonames_id')
+    }, function(response) {
+      that.set({'randomUrl': response.randomUrl});
+    });
+  }
 
 });
 /*
 	City Collection stores cities as raw data until the model is created by user
-	looking at the city and fetching articles related to it. 
+	looking at the city and fetching articles related to it.
 
 	This is because creating 1000 city models in the browser makes for bad performance!
 */
@@ -166,9 +178,9 @@ App.CityCollection = Backbone.Collection.extend({
     defaults: { rawData : [] },
     initialize: function (models, options) {
 		App.debug('App.CityCollection.initialize()');
-		if (options)	
+		if (options)
 			this.rawCitiesData = options.rawCitiesData;
-		
+
 	},
 	/*
 		gets city model from collection
@@ -193,11 +205,11 @@ App.CityCollection = Backbone.Collection.extend({
 		var city = this.rawCitiesData[Math.round( Math.random() * this.rawCitiesData.length-1 )];
 		return this.getCityModel(city.geonames_id);
 	},
-	
+
 });
 App.CityStatsModel = Backbone.Model.extend({
 	defaults: {},
-	
+
 	initialize: function () {
 		App.debug('App.CityStatsModel.initialize()');
 	}
@@ -212,7 +224,7 @@ App.CityStatsModel = Backbone.Model.extend({
 */
 App.HistoryItemModel = Backbone.Model.extend({
 	defaults: {},
-	
+
 	initialize: function () {
 		App.debug('App.HistoryItemModel.initialize()');
 	}
@@ -234,7 +246,7 @@ App.HistoryItemCollection = Backbone.Collection.extend({
 */
 App.CompassModel = Backbone.Model.extend({
 	defaults: {},
-	
+
 	initialize: function () {
 		App.debug('App.CompassModel.initialize()');
 	}
