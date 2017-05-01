@@ -1269,7 +1269,7 @@ def login():
 
     if "user_id" in session:
         userID = session['user_id']
-    if userID not None and userID != "" and userID != "None":
+    if userID is not None and userID != "" and userID != "None":
         needsToDoPostSurvey = 0
         userDoc = app.db_user_collection.find({ "_id": ObjectId(userID)},{"history-pre-installation":0}).next()
 
