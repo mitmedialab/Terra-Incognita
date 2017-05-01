@@ -19,7 +19,9 @@ Through PIP or easy_install:
 
 - Flask Browser ID - https://pypi.python.org/pypi/Flask-BrowserID
 
-- Bitly Python API - https://github.com/bitly/bitly-api-python
+- ~~Bitly Python API - https://github.com/bitly/bitly-api-python~~
+
+- Reddit API - https://www.reddit.com/dev/api/
 
 Services:
 
