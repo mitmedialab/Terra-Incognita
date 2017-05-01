@@ -223,11 +223,17 @@ App.CityZoomedView = Backbone.View.extend({
 									isCapitalCity : this.model.get("capital") == 1 ? true : false
 								});
 		this.$el.html(html);
-    if (this.model.get('randomUrl')) {
-      this.$('.btn-go')
-        .attr('href', this.model.get('randomUrl'))
-        .removeClass('disabled');
-    }
+	    if (this.model.get('randomUrl')) {
+	      this.$('.btn-go')
+	        .attr('href', this.model.get('randomUrl'));
+	    } 
+	    else {
+	    	// Fill the red button with a URL to google news for that place in the meantime while waiting for reddit
+	    	// Better behavior would be to scrape first entry from gnews and put it here but this is fallback til we do that
+	    	var googleNews = "https://www.google.com/search?tbm=nws&q=";
+	    	var q = this.model.get('city_name') + " " + this.model.get('country_name');
+	    	this.$('.btn-go').attr('href', googleNews + q);
+	    }
 
 		return this;
 	},
