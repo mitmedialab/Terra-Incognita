@@ -15,7 +15,7 @@
           <p>You are not logged in to Terra Incognita. Please click below to login once and youll be set for awhile after that.</p>
         </div>
         <div class="modal-footer">
-          
+
           <a role="button" class="btn btn-primary" href="<%= loginURL %>">Login Now</a>
         </div>
       </div>
@@ -27,8 +27,8 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          
-          
+
+
           <% if (hasSignedConsentForm == "0") { %>
           <h4 class="modal-title">User Consent Form</h4>
           <% } else if (hasCompletedPreSurvey == "0"){ %>
@@ -38,7 +38,7 @@
             <%}%>
         </div>
         <div class="modal-body">
-          
+
           <% if (hasSignedConsentForm == "0") { %>
           <p>Sorry for the interruption! You cannot use Terra Incognita until you fill out the user consent form. </p>
           <% } else if (hasCompletedPreSurvey == "0"){ %>
@@ -50,55 +50,55 @@
             <%}%>
         </div>
         <div class="modal-footer">
-          
+
           <a role="button" class="btn btn-primary" href="<%= linkURL %>">Click here to complete</a>
         </div>
       </div>
     </div>
   </div>
 </script>
-<script id="city-zoomed-reading-lists" type="text/template">  
-        
+<script id="city-zoomed-reading-lists" type="text/template">
+
         <div id="city-zoomed"><h1><%= city_name %>, <%= country_name %></h1>
         <% if (population != "0") { %>
           <p id="city-zoomed-population" class="city-stats"><%= isCapitalCity ? "Capital City, " : "" %> pop. <%= population %></p>
         <% } %>
-         
-          <div class="city-stats">            
-            <% if (cityStats) { 
+
+          <div class="city-stats">
+            <% if (cityStats) {
               %>
                <div id="top-reader">
-                
+
                 <% if (!_.isEmpty(cityStats.get("mostRead")) ) { %>
-                  <p><span style="text-transform:uppercase">Top Reader</span>: <%= cityStats.get("mostRead")["username"] %> 
+                  <p><span style="text-transform:uppercase">Top Reader</span>: <%= cityStats.get("mostRead")["username"] %>
                   <% if (cityStats.get("mostRead")["isCurrentUser"] == "true"){%> - YOU! <% } %>(<%= cityStats.get("mostRead")["count"] %>)
                   </p>
                 <% } %>
 
-                
-                  </div>
-        
-                <div id="top-recommender">
-                
 
-                
+                  </div>
+
+                <div id="top-recommender">
+
+
+
 
                 <% if (!_.isEmpty(cityStats.get("mostRecommendations")) ) { %>
-                  <p><span style="text-transform:uppercase">Top Recommender</span>: <%= cityStats.get("mostRecommendations")["username"] %> 
+                  <p><span style="text-transform:uppercase">Top Recommender</span>: <%= cityStats.get("mostRecommendations")["username"] %>
                   <% if (cityStats.get("mostRecommendations")["isCurrentUser"] == "true"){%> - YOU!<% } %> (<%= cityStats.get("mostRecommendations")["count"]%>)
                 <% } %>
                 </p>
-                  
-                 
-                     
-                  
+
+
+
+
                 </div>
             <% } %>
             </div>
             <div id="go-now">
-                <a href="<%= serverURL %>go/<%= userID %>/<%= cityID %>?r=<%= isRandomCity %>" role="button" class="btn btn-lg btn-danger btn-go"><%= randomSaying %></a>
-                
-            </div> 
+                <a href="#" role="button" class="btn btn-lg btn-danger btn-go"><%= randomSaying %></a>
+
+            </div>
             <!--<img src="../img/hr.png">-->
             <div id="what-people-read">
               <% if (systemStories && systemStories.size() > 0) { %>
@@ -106,7 +106,7 @@
                 <table class="table table-condensed">
                   <thead>
                         <tr>
-                          <th><%=systemStories.size() == 1 ? "1" : (systemStories.size() >= 5 ? "5" : systemStories.size() )%> Things to Read 
+                          <th><%=systemStories.size() == 1 ? "1" : (systemStories.size() >= 5 ? "5" : systemStories.size() )%> Things to Read
                               <% if (systemStories.size() > 5) { %>
                               (<a href="#" class="show-all-system-stories"><%= "See all " + systemStories.size()  %></a>)
                               <% } %>
@@ -115,11 +115,11 @@
                       </thead>
                     <tbody>
 
-                    
-                      <% if (systemStories) { 
+
+                      <% if (systemStories) {
                         var count = 1;
-                        systemStories.each(function(story){ 
-                          
+                        systemStories.each(function(story){
+
 
                         rec = story.get('recommended');
                             hasBeenReviewed = (rec != null);
@@ -131,17 +131,17 @@
                                 isThumbsUp = false;
                               }
                             }
-                            
+
                           %>
                         <tr class="system-story-row" style="<%= count > 5 ? 'display:none' : '' %>"><td><% if (isThumbsUp) {%><span class="glyphicon glyphicon-thumbs-up"></span><%}%><a class="system-story" href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
-                    <% 
+                    <%
                         count++;
 
                       });
                       } %>
                     </tbody>
-                </table> 
-              </div> 
+                </table>
+              </div>
               <% } %>
 
               <% if (userStories && userStories.size() > 0) { %>
@@ -153,8 +153,8 @@
                         </tr>
                       </thead>
                     <tbody>
-                       <% if (userStories) { 
-                        userStories.each(function(story){ 
+                       <% if (userStories) {
+                        userStories.each(function(story){
                             rec = story.get('recommended');
                             hasBeenReviewed = (rec != null);
                             if (hasBeenReviewed){
@@ -166,10 +166,10 @@
                             }
                           %>
                         <tr><td><a href="<%=story.get('url')%>" title="I recommend this!"><span class="glyphicon glyphicon-thumbs-up <%= hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-chosen' : 'glyphicon-unchosen') : '' %>"></span></a> <a href="<%=story.get('url')%>" title="I do not recommend this!"><span class="glyphicon glyphicon-thumbs-down <%= hasBeenReviewed ? ( isThumbsUp ? 'glyphicon-unchosen' : 'glyphicon-chosen') : '' %> " style="padding-right:10px"></span></a> <a class="user-story" href="<%=story.get('url')%>"><%=story.get('title') == "" ? story.get('url').slice(0,40) + "..." : story.get('title') %></a></td></tr>
-                    <% }); 
+                    <% });
                       } %>
                     </tbody>
-                </table>  
+                </table>
               </div>
               <% } %>
               </div>
@@ -183,12 +183,12 @@
               </form>
             <% } %>
           </div>
-        
+
 
 
         </div>
-        
-        
+
+
 </script>
 <script type="text/javascript">
 	sources = $("script[id]").map(function(i, s){

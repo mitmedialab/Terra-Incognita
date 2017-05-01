@@ -8,7 +8,7 @@ var tabToCityMap ={};
 function checkLoggedIn(callback){
 	chrome.cookies.get({ url: COOKIE_PATH, name: USER_COOKIE },
 			function (cookie) {
-				if (cookie && cookie.value && !cookie.value=="") {
+				if (cookie && cookie.value && cookie.value != "") {
 						console.log("user logged in");
 						IS_LOGGED_IN = true;
 						USER_ID = cookie.value;
@@ -16,11 +16,11 @@ function checkLoggedIn(callback){
 					console.log("user not logged in");
 					IS_LOGGED_IN = false;
 					USER_ID = null;
-					
+
 				}
 				callback();
 		});
-	
+
 }
 function initBackground(){
 	if (DEBUG) {console.log("initBackground");}
@@ -44,30 +44,30 @@ chrome.runtime.onMessage.addListener(
 		if (request.msg == "checkFormsFilledOut")
 		{
 				var xhr = new XMLHttpRequest();
-				
+
 				xhr.open("GET",SERVER_URL + 'formsfilledout/' + USER_ID + '/', true);
-				
+
 				xhr.onreadystatechange = function() {
 					if (xhr.readyState == 4) {
-						
+
 						forms = JSON.parse(xhr.responseText);
 						console.log(forms);
-						
+
 						sendResponse({needsToDoPostSurvey: forms["needsToDoPostSurvey"],hasSignedConsentForm: forms["hasSignedConsentForm"], hasCompletedPreSurvey: forms["hasCompletedPreSurvey"]});
 					}
 				}
 				xhr.send();
 				return true;
-		}		
+		}
 		else if (request.msg == "loadReadingLists")
 		{
 				var xhr = new XMLHttpRequest();
-				
+
 				xhr.open("GET",SERVER_URL + 'readinglist/' + USER_ID + '/' + request.city_id, true);
-				
+
 				xhr.onreadystatechange = function() {
 					if (xhr.readyState == 4) {
-						
+
 						readingListJSON = JSON.parse(xhr.responseText);
 						console.log(readingListJSON);
 						sendResponse({readingLists: readingListJSON});
@@ -79,12 +79,12 @@ chrome.runtime.onMessage.addListener(
 		else if (request.msg == "loadCityStats")
 		{
 				var xhr = new XMLHttpRequest();
-				
+
 				xhr.open("GET",SERVER_URL + 'citystats/' + USER_ID + '/' + request.city_id, true);
-				
+
 				xhr.onreadystatechange = function() {
 					if (xhr.readyState == 4) {
-						
+
 						cityStatsJSON = JSON.parse(xhr.responseText);
 						console.log(cityStatsJSON);
 						sendResponse({cityStats: cityStatsJSON});
@@ -93,15 +93,27 @@ chrome.runtime.onMessage.addListener(
 				xhr.send();
 				return true;
 		}
+    else if (request.msg == 'loadRandomUrl') {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', SERVER_URL + 'reddit/' + request.city_id, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          randomUrlJSON = JSON.parse(xhr.responseText);
+          sendResponse({'randomUrl': randomUrlJSON.url});
+        }
+      }
+      xhr.send();
+      return true;
+    }
 		else if (request.msg == "submitRecommendation")
 		{
 				var xhr = new XMLHttpRequest();
-				
+
 				xhr.open("GET",SERVER_URL + 'recommend/' + USER_ID + '/' + request.city_id +'?url=' + request.url, true);
-				
+
 				xhr.onreadystatechange = function() {
 					if (xhr.readyState == 4) {
-						
+
 						resultJSON = JSON.parse(xhr.responseText);
 						console.log(resultJSON);
 						sendResponse({result: resultJSON});
@@ -113,12 +125,12 @@ chrome.runtime.onMessage.addListener(
 		else if (request.msg == "logCityClick")
 		{
 				var xhr = new XMLHttpRequest();
-				
+
 				xhr.open("GET",SERVER_URL + 'logcityclick/' + USER_ID + '/' + request.city_id, true);
-				
+
 				xhr.onreadystatechange = function() {
 					if (xhr.readyState == 4) {
-						
+
 						resultJSON = JSON.parse(xhr.responseText);
 						console.log(resultJSON);
 						sendResponse({result: resultJSON});
@@ -135,7 +147,7 @@ chrome.runtime.onMessage.addListener(
 																console.log(resultJSON);
 																sendResponse({result: resultJSON});
 															});
-				
+
 				return true;
 
 		}
@@ -147,7 +159,7 @@ chrome.runtime.onMessage.addListener(
 																console.log(resultJSON);
 																sendResponse({result: resultJSON});
 															});
-				
+
 				return true;
 		}
 		else if (request.msg == "saveCityFromTab")
@@ -164,7 +176,7 @@ chrome.runtime.onMessage.addListener(
 				return true;
 		}
 		else if (request.msg == "checkForCityInTab")
-		{	
+		{
 				var cityID = "";
 				var tabID = sender.tab.id;
 				if (tabID in tabToCityMap){
@@ -184,15 +196,15 @@ chrome.runtime.onMessage.addListener(
 */
 chrome.runtime.onInstalled.addListener(function(details) {
 	if (DEBUG) {console.log("onInstalled");}
-	
-	chrome.storage.local.get("terraIncognitaUserHistory", 
+
+	chrome.storage.local.get("terraIncognitaUserHistory",
 			function(result){
 				if ("terraIncognitaUserHistory" in result){
 					var val = result["terraIncognitaUserHistory"]
 					console.log("terraIncognitaUserHistory" + " is " + val)
 					console.log("User pre-installation history has already been saved.")
 				} else{
-					
+
 					console.log("Launching new tab because they installed TI for the first time")
 					chrome.tabs.create({
 					    url: 'chrome://newtab'
@@ -202,8 +214,8 @@ chrome.runtime.onInstalled.addListener(function(details) {
 					var startCollecting = today.getTime() - DAYS_HISTORY*24*60*60*1000;
 					filteredResults = [];
 
-					chrome.history.search({text: '', startTime:startCollecting, maxResults:1000000000}, function(results) 
-						{ 
+					chrome.history.search({text: '', startTime:startCollecting, maxResults:1000000000}, function(results)
+						{
 							for (var i = 0;i<results.length;i++){
 								var result = results[i];
 								if (keepURL(result.url)){
@@ -213,13 +225,13 @@ chrome.runtime.onInstalled.addListener(function(details) {
 							console.log(filteredResults.length + " results after filtering");
 							chrome.storage.local.set({"terraIncognitaUserHistory":filteredResults});
 						});
-					
-					
+
+
 				}
 			});
 
-	
-	
+
+
 });
 
 
@@ -230,61 +242,58 @@ chrome.tabs.onCreated.addListener(function(tab) {
 	console.log('New tab created');
 
 	if (USER_ID != null){
-
 		/*
 			Check if we should send their prior browsing history or if we've already done that
 		*/
-		chrome.storage.local.get("terraIncognitaUserHistory", 
-												function(result){
-													if ("terraIncognitaUserHistory" in result){
-														var val = result["terraIncognitaUserHistory"]
-														if (val != "done"){
-															console.log("Posting history data to the server")
-															postData('history/' + USER_ID + '/', {"history":JSON.stringify(val)}, function(){
-																chrome.storage.local.set({"terraIncognitaUserHistory":"done"});
-															});
-															
-														}
-													} 
-												});
-		
-		/*
-			Then get user information like cities visited, etc
-		*/
-		var xhr = new XMLHttpRequest();
-		xhr.open("GET",SERVER_URL + 'user/' + USER_ID, true);
-		xhr.onreadystatechange = function() {
-			if (xhr.readyState == 4) {
-				
-				USER_JSON = JSON.parse(xhr.responseText);
-				console.log(USER_JSON);
-
-				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-				  chrome.tabs.sendMessage(tabs[0].id, {user: USER_JSON}, function(response) {
-				    console.log(response);
-				  });
-				});
+		chrome.storage.local.get("terraIncognitaUserHistory", function(result) {
+			if ("terraIncognitaUserHistory" in result){
+				var val = result["terraIncognitaUserHistory"]
+				if (val != "done"){
+					console.log("Posting history data to the server")
+					postData('history/' + USER_ID + '/', {"history":JSON.stringify(val)}, function(){
+						chrome.storage.local.set({"terraIncognitaUserHistory":"done"});
+					});
+				}
 			}
-		}
-		xhr.send();
+		});
 	}
-	
 });
 
 /*
-	Tab changes or new tab 
+	Tab changes or new tab
 */
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 		console.log("onUpdated")
-		if (changeInfo.status == "loading" && changeInfo.url != "undefined"){
+    if (changeInfo.status == "complete" && tab.url == "chrome://newtab/") {
+      /*
+        Get user information like cities visited, etc
+      */
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET",SERVER_URL + 'user/' + USER_ID, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+
+          USER_JSON = JSON.parse(xhr.responseText);
+          console.log(USER_JSON);
+
+          chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, {user: USER_JSON}, function(response) {
+              console.log(response);
+            });
+          });
+        }
+      }
+      xhr.send();
+    }
+		else if (changeInfo.status == "loading" && changeInfo.url != "undefined"){
 						urlMap[tabId] = true;
 		}
 		else if (urlMap[tabId] && changeInfo.status == "complete"){
 			urlMap[tabId] = false;
-			
+
 			checkLoggedIn(function(){
 
-				// Only log URLs from people that are logged in, otherwise have no way of connecting people 
+				// Only log URLs from people that are logged in, otherwise have no way of connecting people
 				// to browsing
 				if (USER_ID){
 					//retrieve latest URL from history so we get the metadata
@@ -297,7 +306,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 							postData('monitor/', {'logURL': JSON.stringify(historyObject)}, null);
 						}
 					});
-				} 
+				}
 			});
 		}
 });
@@ -324,9 +333,9 @@ chrome.browserAction.onClicked.addListener(function(tab) {
    openNewTab();
 });
 
-/* 
+/*
 	Terra Incognita only looks at news sites as defined by MediaCloud - www.mediacloud.org.
-	It doesn't analyze your email, facebook, twitter. 
+	It doesn't analyze your email, facebook, twitter.
 */
 function keepURL(url){
 	//first check url against blacklist
@@ -346,12 +355,12 @@ function keepURL(url){
 
 /*
 	Handles post requests to server
-	IMPORTANT - if your params contain JSON objects you should call JSON.stringify on them before 
+	IMPORTANT - if your params contain JSON objects you should call JSON.stringify on them before
 	sending them to this method
 */
 function postData(routeName, params, successCallback){
 	console.log("Route: " + routeName);
-	
+
 	var http = new XMLHttpRequest();
 
 	//Prepare key value pairs for submitting
@@ -365,7 +374,7 @@ function postData(routeName, params, successCallback){
 		newParams = newParams + key + "=" + encodeURIComponent(data);
 		});
 
-	
+
 	http.open("POST", SERVER_URL + routeName, false);
 	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
@@ -378,6 +387,3 @@ function postData(routeName, params, successCallback){
 	};
 	http.send(newParams);
 }
-
-
-
