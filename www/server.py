@@ -1266,10 +1266,13 @@ def login():
     hasCompletedPreSurvey = False
     hasCompletedPostSurvey = False
     needsToDoPostSurvey = False
+    userIsAuthenticated = False
 
     if "user_id" in session:
         userID = session['user_id']
+        userIsAuthenticated = True
     if userID is not None and userID != "" and userID != "None":
+        userIsAuthenticated = True
         needsToDoPostSurvey = 0
         userDoc = app.db_user_collection.find({ "_id": ObjectId(userID)},{"history-pre-installation":0}).next()
 
@@ -1304,7 +1307,7 @@ def login():
             r = app.db_user_collection.update(	{ "_id": ObjectId(userID)},
                                                 { "$set" : {"username":newusername}})
 
-    return render_template('login.html', error=error, needsToDoPostSurvey=needsToDoPostSurvey, hasSignedConsentForm=hasSignedConsentForm,hasCompletedPreSurvey=hasCompletedPreSurvey,hasCompletedPostSurvey=hasCompletedPostSurvey)
+    return render_template('login.html', error=error, needsToDoPostSurvey=needsToDoPostSurvey, hasSignedConsentForm=hasSignedConsentForm,hasCompletedPreSurvey=hasCompletedPreSurvey,hasCompletedPostSurvey=hasCompletedPostSurvey,userIsAuthenticated=userIsAuthenticated)
 
 # Logout
 @app.route('/logout/')

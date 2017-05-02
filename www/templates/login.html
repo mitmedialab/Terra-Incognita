@@ -9,7 +9,7 @@
     </head>
     <body>
         <div class="container">
-        {% if current_user.is_authenticated %}
+        {% if userIsAuthenticated %}
         <h1>Terra Incognita Dashboard</h1>
 
         {% if hasSignedConsentForm and hasCompletedPreSurvey and not hasCompletedPostSurvey and needsToDoPostSurvey %}
