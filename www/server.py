@@ -1,6 +1,6 @@
 from flask import Flask, Response, redirect, session, render_template, json, jsonify, request, make_response, url_for
-from flask_login import LoginManager, login_user, logout_user
 from flask_oauthlib.client import OAuth, OAuthException
+from flask_login import LoginManager, login_user, logout_user
 import pymongo
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -276,7 +276,7 @@ def getAllUserCityCounts():
 @app.route('/user/')
 def user(userID='52dbeee6bd028634678cd069'):
 
-    if (userID is not None):
+    if (userID is not None and userID is not "null"):
 
         userData = {"userID":userID,"username":getUsername(userID), "cities":[]}
 
@@ -1199,6 +1199,10 @@ def processHistory(userID):
 def get_user_by_id(id):
     log.debug("server.py >> get_user_by_id")
     user = None
+
+    #issue with cookies storing user id as string "None"
+    if id is None or id is "None" or id is "null" or id is "":
+        return user
     for row in app.db_user_collection.find({ '_id': ObjectId(id) }):
         user = get_user_from_DB_row(row)
         user.lastLoginDate = time.time() * 1000

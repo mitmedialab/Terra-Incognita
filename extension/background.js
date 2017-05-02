@@ -268,22 +268,24 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
       /*
         Get user information like cities visited, etc
       */
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET",SERVER_URL + 'user/' + USER_ID, true);
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4) {
+      if (USER_ID != null){
+	      var xhr = new XMLHttpRequest();
+	      xhr.open("GET",SERVER_URL + 'user/' + USER_ID, true);
+	      xhr.onreadystatechange = function() {
+	        if (xhr.readyState == 4) {
 
-          USER_JSON = JSON.parse(xhr.responseText);
-          console.log(USER_JSON);
+	          USER_JSON = JSON.parse(xhr.responseText);
+	          console.log(USER_JSON);
 
-          chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, {user: USER_JSON}, function(response) {
-              console.log(response);
-            });
-          });
-        }
-      }
-      xhr.send();
+	          chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+	            chrome.tabs.sendMessage(tabs[0].id, {user: USER_JSON}, function(response) {
+	              console.log(response);
+	            });
+	          });
+	        }
+	      }
+	      xhr.send();
+		}
     }
 		else if (changeInfo.status == "loading" && changeInfo.url != "undefined"){
 						urlMap[tabId] = true;
