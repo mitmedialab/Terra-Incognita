@@ -916,31 +916,14 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
         { "$sort" : {"count" : -1} },
         { "$limit" : 1 },
     ]
-    USER_WITH_MOST_HISTORY_RECOMMENDED_PIPELINE = [
-        { "$match" : { "geodata.primaryCities.id": cityID, "userID": {"$exists":"true"}, "preinstallation":{"$exists":0}, "geodata.primaryCities.recommended": {"$exists":"true"} }},
-        { "$group": {"_id": "$userID", "count": {"$sum": 1}}},
-        { "$sort" : {"count" : -1} },
-        { "$limit" : 1 },
-    ]
+    
     q = app.db_recommendation_collection.aggregate(USER_WITH_MOST_RECOMMENDED_PIPELINE)
-    q2 = app.db_user_history_collection.aggregate(USER_WITH_MOST_HISTORY_RECOMMENDED_PIPELINE)
-    qResult = False
-
+    
     r1 = list(q)
-    r2 = list(q2)
-    if len(r1) > 0 and len(r2) > 0:
-    #if q["result"] and q2["result"]:
+    if len(r1) > 0:
         s1 = r1[0]
-        s2 = r2[0]
         qResult = s1[0]
-        if s1[0]["count"] < s2[0]["count"]:
-            qResult = s2[0]
-    elif len(r1) > 0 > 0:
-    #elif q["result"]:
-        qResult = s1[0]
-    elif len(r2) > 0:
-    #elif q2["result"]:
-        qResult = s2[0]
+        
     if qResult:
         mostRecommendationsUsername = getUsername(qResult["_id"])
         result["mostRecommendations"] = { 	"count" : qResult["count"],
