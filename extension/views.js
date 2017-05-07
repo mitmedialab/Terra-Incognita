@@ -114,6 +114,7 @@ App.CityZoomedView = Backbone.View.extend({
     App.user.on('change:userID', this.render, this);
 		this.model.fetchReadingLists();
 		this.model.fetchCityStats();
+    
     if (!this.model.get('randomUrl')) {
       this.model.fetchRandomUrl();
     }

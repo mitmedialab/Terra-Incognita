@@ -135,10 +135,15 @@ App.CityModel = Backbone.Model.extend({
 	},
 	loadReadingLists: function(readingLists){
 		App.debug('App.CityModel.loadReadingLists()');
+		App.debug('readingLists["systemHistoryItemCollection"] size is ' + readingLists["systemHistoryItemCollection"].length)
 		this.set({
 					'userHistoryItemCollection': new App.HistoryItemCollection(readingLists["userHistoryItemCollection"]),
 					'systemHistoryItemCollection': new App.HistoryItemCollection(readingLists["systemHistoryItemCollection"])
+					/* if you want a random URL from system stories
+						'randomUrl': readingLists["systemHistoryItemCollection"][Math.floor((Math.random() * readingLists["systemHistoryItemCollection"].length))]['url']
+					*/
 				});
+
 	},
 	fetchCityStats: function(){
 		App.debug('App.CityModel.fetchCityStats()');

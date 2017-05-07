@@ -788,28 +788,28 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
     #for row in q["result"]:
 
         #quick fix for duplicate titles showing up, really this should be done at DB level
-        if next((x for x in systemHistoryItemCollection if x["title"] == row["_id"]["title"]), None):
-            continue
+        #if next((x for x in systemHistoryItemCollection if x["title"] == row["_id"]["title"]), None):
+        #    continue
         systemHistoryItemCollection.append({ "title": row["_id"]["title"], "url":row["_id"]["url"], "recommended":row["recommended"]})
 
     # If not much in the way of system history, then grab recommendations from the recs DB
     # then shuffle it -- randomize access so doesn't always show the top 20
-    if len(systemHistoryItemCollection) < 10:
-        RECOMMENDATION_PIPELINE = [
-            { "$match" : { "geodata.primaryCities.id": cityID, "title":{"$ne":"" } }},
-            { "$sort" : { "_id" : 1 } },
-            { "$group": {"_id": {"url":"$url", "title":"$title" }, "count": {"$sum": 1}}},
-            { "$limit" : 20 },
-        ]
-        q = app.db_recommendation_collection.aggregate(RECOMMENDATION_PIPELINE)
-        for row in q:
+    #if len(systemHistoryItemCollection) < 10:
+    #    RECOMMENDATION_PIPELINE = [
+    #        { "$match" : { "geodata.primaryCities.id": cityID, "title":{"$ne":"" } }},
+    #       { "$sort" : { "_id" : 1 } },
+    #        { "$group": {"_id": {"url":"$url", "title":"$title" }, "count": {"$sum": 1}}},
+    #        { "$limit" : 20 },
+    #    ]
+    #    q = app.db_recommendation_collection.aggregate(RECOMMENDATION_PIPELINE)
+    #   for row in q:
         #for row in q["result"]:
-            if next((x for x in systemHistoryItemCollection if "title" in x and "title" in row["_id"] and x["title"] == row["_id"]["title"]), None):
-                continue
-            else:
-                systemHistoryItemCollection.append(row["_id"])
+    #        if next((x for x in systemHistoryItemCollection if "title" in x and "title" in row["_id"] and x["title"] == row["_id"]["title"]), None):
+    #            continue
+    #        else:
+    #            systemHistoryItemCollection.append(row["_id"])
         #systemHistoryItemCollection.extend(list(row["_id"] for row in q["result"]))
-        shuffle(systemHistoryItemCollection)
+    #    shuffle(systemHistoryItemCollection)
     result["systemHistoryItemCollection"] = systemHistoryItemCollection
     return json.dumps(result, sort_keys=True, indent=4, default=json_util.default)
 

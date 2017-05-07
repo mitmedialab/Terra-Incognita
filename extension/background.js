@@ -104,6 +104,7 @@ chrome.runtime.onMessage.addListener(
       }
       xhr.send();
       return true;
+      
     }
 		else if (request.msg == "submitRecommendation")
 		{
