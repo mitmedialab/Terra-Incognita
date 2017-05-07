@@ -761,7 +761,7 @@ def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
     systemHistoryLookup = {}
     userHistoryLookup = {}
     
-    for row in app.db_user_history_collection.find({"geodata.primaryCities.id":cityID}, {"_id":1,"userID":1,"title":1,"url":1,"recommended":1}).sort([("lastVisitTime",-1)]):
+    for row in app.db_user_history_collection.find({"geodata.primaryCities.id":cityID}, {"_id":1,"userID":1,"title":1,"url":1,"recommended":1}).limit( 50 ).sort([("lastVisitTime",-1)]):
         recommended = None
         if "recommended" in row:
             recommended = row["recommended"]
