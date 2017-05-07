@@ -754,63 +754,28 @@ def report(userID='5340168960de7dd9d8394aa7'):
 def get_reading_list(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
     cityID = int(cityID)
     result = {"userHistoryItemCollection":[], "systemHistoryItemCollection":[]}
-    #cursor = app.db_user_history_collection.find({"userID":userID, "geodata.primaryCities": { "$elemMatch": { "id": int(cityID) } } }, {"url":1,"title":1}).sort([("lastVisitTime",-1)]).skip(0).limit(100)
-
-    USER_CITY_HISTORY_PIPELINE = [
-        { "$match" : { "geodata.primaryCities.id": cityID, "userID": userID, "preinstallation":{"$exists":0} }},
-        { "$unwind" : "$geodata.primaryCities" },
-        { "$sort" : { "lastVisitTime" : 1, "geodata.primaryCities.recommended" : -1 } },
-        { "$group": {"_id": {"url":"$url", "title":"$title"}, "recommended": { "$first" : "$geodata.primaryCities.recommended" }, "count": {"$sum": 1}}},
-        { "$limit" : 50 },
-
-    ]
-    q = app.db_user_history_collection.aggregate(USER_CITY_HISTORY_PIPELINE)
-    for row in q:
-    #for row in q["result"]:
-        if next((x for x in result["userHistoryItemCollection"] if "title" in x and "title" in row["_id"] and x["title"] == row["_id"]["title"]), None):
-            continue
-        else:
-            result["userHistoryItemCollection"].append({ "title": row["_id"]["title"], "url":row["_id"]["url"], "recommended":row["recommended"]})
-
-
-    SYSTEM_CITY_HISTORY_PIPELINE = [
-        { "$match" : { "geodata.primaryCities.id": cityID, "geodata.primaryCities.recommended": {"$ne" : 0}, "userID": {"$ne" : userID}, "title":{"$ne":"" } }},
-        { "$unwind" : "$geodata.primaryCities" },
-        { "$sort" : { "geodata.primaryCities.recommended":-1, "lastVisitTime" : 1 } },
-        { "$group": {"_id": {"url":"$url", "title":"$title" }, "recommended": { "$first" : "$geodata.primaryCities.recommended" }, "count": {"$sum": 1}}},
-        { "$limit" : 50 },
-
-    ]
-    q = app.db_user_history_collection.aggregate(SYSTEM_CITY_HISTORY_PIPELINE)
+    
     systemHistoryItemCollection = []
+    userHistoryItemCollection = []
 
-    for row in q:
-    #for row in q["result"]:
+    systemHistoryLookup = {}
+    userHistoryLookup = {}
+    
+    for row in app.db_user_history_collection.find({"geodata.primaryCities.id":cityID}, {"_id":1,"userID":1,"title":1,"url":1,"recommended":1}).sort([("lastVisitTime",-1)]):
+        recommended = None
+        if "recommended" in row:
+            recommended = row["recommended"]
+        if row["title"] not in systemHistoryLookup:
+            systemHistoryItemCollection.append({ "title": row["title"], "url":row["url"], "recommended":recommended})
+            systemHistoryLookup[row["title"]] = "logged"
+        if row["userID"] == userID:
+            if row["title"] not in userHistoryLookup:
+                userHistoryItemCollection.append({ "title": row["title"], "url":row["url"], "recommended":recommended})
+                userHistoryLookup[row["title"]] = "logged"
 
-        #quick fix for duplicate titles showing up, really this should be done at DB level
-        #if next((x for x in systemHistoryItemCollection if x["title"] == row["_id"]["title"]), None):
-        #    continue
-        systemHistoryItemCollection.append({ "title": row["_id"]["title"], "url":row["_id"]["url"], "recommended":row["recommended"]})
 
-    # If not much in the way of system history, then grab recommendations from the recs DB
-    # then shuffle it -- randomize access so doesn't always show the top 20
-    #if len(systemHistoryItemCollection) < 10:
-    #    RECOMMENDATION_PIPELINE = [
-    #        { "$match" : { "geodata.primaryCities.id": cityID, "title":{"$ne":"" } }},
-    #       { "$sort" : { "_id" : 1 } },
-    #        { "$group": {"_id": {"url":"$url", "title":"$title" }, "count": {"$sum": 1}}},
-    #        { "$limit" : 20 },
-    #    ]
-    #    q = app.db_recommendation_collection.aggregate(RECOMMENDATION_PIPELINE)
-    #   for row in q:
-        #for row in q["result"]:
-    #        if next((x for x in systemHistoryItemCollection if "title" in x and "title" in row["_id"] and x["title"] == row["_id"]["title"]), None):
-    #            continue
-    #        else:
-    #            systemHistoryItemCollection.append(row["_id"])
-        #systemHistoryItemCollection.extend(list(row["_id"] for row in q["result"]))
-    #    shuffle(systemHistoryItemCollection)
     result["systemHistoryItemCollection"] = systemHistoryItemCollection
+    result["userHistoryItemCollection"] = userHistoryItemCollection
     return json.dumps(result, sort_keys=True, indent=4, default=json_util.default)
 
 @app.route('/recommend/<userID>/<cityID>/', methods=['GET'])
@@ -915,9 +880,9 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
     ]
     q = app.db_user_history_collection.aggregate(USER_WITH_MOST_READ_PIPELINE)
     for row in q:
-    #if q["result"]:
-        mostReadUsername = getUsername(q["result"][0]["_id"])
-        result["mostRead"] = { 	"count" : q["result"][0]["count"],
+
+        mostReadUsername = getUsername(row["_id"])
+        result["mostRead"] = { 	"count" : row["count"],
                                 "username" : mostReadUsername,
                                 "isCurrentUser" : "true" if mostReadUsername == currentUsername else "false"
                             }
