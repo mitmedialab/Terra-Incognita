@@ -117,7 +117,7 @@ App.UserModel = Backbone.Model.extend({
 */
 App.CityModel = Backbone.Model.extend({
 	idAttribute : 'geonames_id',
-  randomUrl: '',
+    randomUrl: '',
 	defaults: {
 
 	},
@@ -130,7 +130,8 @@ App.CityModel = Backbone.Model.extend({
 		var that = this;
 
 		chrome.runtime.sendMessage({msg: "loadReadingLists", "city_id": this.get("geonames_id")}, function(response) {
-		  
+		  console.log("GEONAMES ID " + that.get("geonames_id"))
+		  console.log(App.router.mapView.cityZoomedView.model.get("geonames_id"))
 		  if (that.get("geonames_id") == App.router.mapView.cityZoomedView.model.get("geonames_id")){
 		  	that.loadReadingLists(response.readingLists);
 		  }
@@ -153,7 +154,9 @@ App.CityModel = Backbone.Model.extend({
 		var that = this;
 
 		chrome.runtime.sendMessage({msg: "loadCityStats", "city_id": this.get("geonames_id")}, function(response) {
-		  that.loadCityStats(response.cityStats);
+		  if (that.get("geonames_id") == App.router.mapView.cityZoomedView.model.get("geonames_id")){
+			  that.loadCityStats(response.cityStats);
+		  }
 		});
 	},
 	loadCityStats: function(cityStats){
@@ -171,9 +174,9 @@ App.CityModel = Backbone.Model.extend({
       'city_id': this.get('geonames_id')
     }, function(response) {
     	//Only update the UI if they haven't shifted to a new city
-    	//if (that.get("geonames_id") == App.router.mapView.cityZoomedView.model.get("geonames_id")){
-    	//	that.set({'randomUrl': response.randomUrl});
-    	//}
+    	if (that.get("geonames_id") == App.router.mapView.cityZoomedView.model.get("geonames_id")){
+    		that.set({'randomUrl': response.randomUrl});
+    	}
     });
   
   }

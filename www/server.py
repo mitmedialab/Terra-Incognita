@@ -838,6 +838,7 @@ def like(userID='53303d525ae18c2083bcc6f9',cityID=4990729):
     result = app.db.command({"getLastError" : 1})
     return json.dumps({"response": "ok", "count" : result["n"]}, sort_keys=True, indent=4, default=json_util.default)
 
+# TODO - super slow. needs refactoring
 @app.route('/citystats/<userID>/<cityID>')
 @app.route('/citystats/')
 def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
