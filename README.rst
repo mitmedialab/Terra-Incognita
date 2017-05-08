@@ -9,7 +9,7 @@ Configuration
 
 Dependencies:
 
-- MongoDB
+- MongoDB - need 3.4.0 or higher
 
 Through PIP or easy_install:
 
@@ -37,5 +37,10 @@ What needs to be running for Terra Incognita to do its work
 - MongoDB
 - CLIFF CLAVIN - accessed over http
 - Boilerpipe Server - accessed over http
+
+MongoDB Configuration
+=====
+Create an index on the user history items collection like this:
+db.user_history_items.createIndex( { "lastVisitTime": -1 } )
 
 

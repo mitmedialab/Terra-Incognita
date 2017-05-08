@@ -920,6 +920,7 @@ def citystats(userID='53303d525ae18c2083bcc6f9',cityID=4930956):
     q = app.db_recommendation_collection.aggregate(USER_WITH_MOST_RECOMMENDED_PIPELINE)
     
     r1 = list(q)
+    qResult = None
     if len(r1) > 0:
         s1 = r1[0]
         qResult = s1[0]

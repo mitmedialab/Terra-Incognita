@@ -130,7 +130,10 @@ App.CityModel = Backbone.Model.extend({
 		var that = this;
 
 		chrome.runtime.sendMessage({msg: "loadReadingLists", "city_id": this.get("geonames_id")}, function(response) {
-		  that.loadReadingLists(response.readingLists);
+		  
+		  if (that.get("geonames_id") == App.router.mapView.cityZoomedView.model.get("geonames_id")){
+		  	that.loadReadingLists(response.readingLists);
+		  }
 		});
 	},
 	loadReadingLists: function(readingLists){
@@ -167,8 +170,12 @@ App.CityModel = Backbone.Model.extend({
       'msg': 'loadRandomUrl',
       'city_id': this.get('geonames_id')
     }, function(response) {
-      that.set({'randomUrl': response.randomUrl});
+    	//Only update the UI if they haven't shifted to a new city
+    	//if (that.get("geonames_id") == App.router.mapView.cityZoomedView.model.get("geonames_id")){
+    	//	that.set({'randomUrl': response.randomUrl});
+    	//}
     });
+  
   }
 
 });
